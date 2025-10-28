@@ -1,0 +1,268 @@
+// Hero Section Styles
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.cyberpunk-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.hero-text {
+  color: white;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.text-gradient {
+  background: linear-gradient(45deg, #00f5ff, #ff00ff, #00ff00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: #888;
+  font-weight: 300;
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #ccc;
+  margin-bottom: 2rem;
+  max-width: 500px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #00f5ff, #ff00ff);
+  color: white;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #00f5ff;
+  border: 2px solid #00f5ff;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00f5ff;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero-preview {
+  position: relative;
+}
+
+.discord-preview {
+  background: #2c2f33;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.discord-header {
+  background: #23272a;
+  padding: 1rem;
+  border-bottom: 1px solid #40444b;
+}
+
+.server-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.server-avatar {
+  width: 40px;
+  height: 40px;
+  background: #5865f2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+}
+
+.server-details h3 {
+  color: white;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.online-count {
+  color: #43b581;
+  font-size: 0.9rem;
+}
+
+.discord-channels {
+  padding: 1rem;
+  background: #2c2f33;
+}
+
+.channel-category h4 {
+  color: #8e9297;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 1px;
+}
+
+.channel-list {
+  margin-bottom: 1rem;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  color: #8e9297;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.channel-item:hover {
+  color: white;
+}
+
+.channel-item.active {
+  color: white;
+}
+
+.channel-icon {
+  font-weight: bold;
+}
+
+.member-count {
+  margin-left: auto;
+  font-size: 0.8rem;
+}
+
+.discord-messages {
+  padding: 1rem;
+  background: #36393f;
+  border-top: 1px solid #40444b;
+}
+
+.message {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.message-avatar {
+  width: 32px;
+  height: 32px;
+  background: #5865f2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+  flex-shrink: 0;
+}
+
+.message-content {
+  flex: 1;
+}
+
+.author {
+  color: white;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.text {
+  color: #dcddde;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .hero-stats {
+    justify-content: center;
+  }
+}

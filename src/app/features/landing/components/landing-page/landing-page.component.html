@@ -1,0 +1,27 @@
+<div class="landing-page">
+  <!-- Hero Section -->
+  <app-hero-section
+    [totalRevolts]="revolts.length"
+    [totalMembers]="getTotalMembers()"
+    [totalRaised]="getTotalRaised()"
+    (getStarted)="onGetStarted()"
+    (browseRevolts)="onBrowseRevolts()">
+  </app-hero-section>
+
+  <!-- Revolts Browse Section -->
+  <app-revolts-browse
+    [revolts]="revolts"
+    [isLoading]="isLoading"
+    (revoltClick)="onRevoltClick($event)"
+    (joinRevolt)="onJoinRevolt($event)"
+    (donateToRevolt)="onDonateToRevolt($event)">
+  </app-revolts-browse>
+
+  <!-- Donation Modal -->
+  <app-anonymous-donation-modal
+    *ngIf="showDonationModal"
+    [revolt]="selectedRevolt"
+    (close)="onCloseDonationModal()"
+    (donationComplete)="onDonationComplete($event)">
+  </app-anonymous-donation-modal>
+</div>

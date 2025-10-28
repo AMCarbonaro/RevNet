@@ -1,0 +1,102 @@
+<section class="hero-section">
+  <!-- Cyberpunk Background Effects -->
+  <div class="cyberpunk-bg">
+    <div class="matrix-rain"></div>
+    <div class="neon-grid"></div>
+    <div class="scanlines"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-text">
+      <h1 class="hero-title">
+        <span class="text-gradient">Revolution Network</span>
+        <br>
+        <span class="hero-subtitle">Discord for Activists</span>
+      </h1>
+      
+      <p class="hero-description">
+        Join revolutionary communities, organize movements, and fund causes that matter. 
+        Experience the power of Discord-like collaboration for social change.
+      </p>
+
+      <div class="hero-actions">
+        <button 
+          class="btn-primary btn-large"
+          (click)="getStarted.emit()">
+          <i class="icon-rocket"></i>
+          Get Started
+        </button>
+        
+        <button 
+          class="btn-secondary btn-large"
+          (click)="browseRevolts.emit()">
+          <i class="icon-compass"></i>
+          Browse Revolts
+        </button>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number">{{ totalRevolts | number }}</span>
+          <span class="stat-label">Active Revolts</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">${{ (totalRaised / 100) | number:'1.0-0' }}</span>
+          <span class="stat-label">Raised</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{{ totalMembers | number }}</span>
+          <span class="stat-label">Members</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Discord-like Preview -->
+    <div class="hero-preview">
+      <div class="discord-preview">
+        <div class="discord-header">
+          <div class="server-info">
+            <div class="server-avatar">R</div>
+            <div class="server-details">
+              <h3>Revolution Network</h3>
+              <span class="online-count">{{ totalMembers | number }} members online</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="discord-channels">
+          <div class="channel-category">
+            <h4>🌍 Active Revolts</h4>
+            <div class="channel-list">
+              <div class="channel-item active">
+                <span class="channel-icon">#</span>
+                <span class="channel-name">climate-action</span>
+                <span class="member-count">1.2k</span>
+              </div>
+              <div class="channel-item">
+                <span class="channel-icon">#</span>
+                <span class="channel-name">social-justice</span>
+                <span class="member-count">856</span>
+              </div>
+              <div class="channel-item">
+                <span class="channel-icon">#</span>
+                <span class="channel-name">community-organizing</span>
+                <span class="member-count">2.1k</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="discord-messages">
+          <div class="message">
+            <div class="message-avatar">U</div>
+            <div class="message-content">
+              <span class="author">Activist</span>
+              <span class="text">Let's make change happen!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

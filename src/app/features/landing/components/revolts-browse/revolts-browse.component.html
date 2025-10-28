@@ -1,0 +1,136 @@
+<section id="revolts-section" class="revolts-browse">
+  <div class="container">
+    <div class="section-header">
+      <h2>Featured Revolts</h2>
+      <p>Join revolutionary communities making real change</p>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="search-filters">
+      <div class="search-bar">
+        <input
+          type="text"
+          placeholder="Search revolts..."
+          [(ngModel)]="searchQuery"
+          (input)="onSearch()">
+        <i class="icon-search"></i>
+      </div>
+
+      <div class="filters">
+        <select [(ngModel)]="selectedCategory" (change)="onFilterChange()">
+          <option value="">All Categories</option>
+          <option value="activism">Activism</option>
+          <option value="environment">Environment</option>
+          <option value="social-justice">Social Justice</option>
+          <option value="education">Education</option>
+          <option value="community">Community</option>
+        </select>
+
+        <select [(ngModel)]="sortBy" (change)="onFilterChange()">
+          <option value="popular">Most Popular</option>
+          <option value="recent">Recently Created</option>
+          <option value="active">Most Active</option>
+          <option value="funding">Most Funded</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Revolts Grid -->
+    <div class="revolts-grid" *ngIf="!isLoading; else loadingTemplate">
+      <div 
+        class="revolt-card" 
+        *ngFor="let revolt of filteredRevolts; trackBy: trackByRevoltId"
+        (click)="onRevoltClick(revolt)">
+        
+        <!-- Revolt Header -->
+        <div class="revolt-header">
+          <div class="revolt-avatar">
+            <img [src]="revolt.icon" [alt]="revolt.name" *ngIf="revolt.icon">
+            <span class="avatar-fallback" *ngIf="!revolt.icon">{{ revolt.name.charAt(0) }}</span>
+          </div>
+          <div class="revolt-info">
+            <h3 class="revolt-title">{{ revolt.name }}</h3>
+            <p class="revolt-description">{{ revolt.description }}</p>
+            <div class="revolt-meta">
+              <span class="category-tag" [class]="'category-' + revolt.category">
+                {{ revolt.category | titlecase }}
+              </span>
+              <span class="member-count">
+                <i class="icon-users"></i>
+                {{ revolt.memberCount | number }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revolt Stats -->
+        <div class="revolt-stats">
+          <div class="stat">
+            <span class="stat-value">${{ (revolt.currentFunding / 100) | number:'1.0-0' }}</span>
+            <span class="stat-label">Raised</span>
+          </div>
+        </div>
+
+        <!-- Funding Progress -->
+        <div class="funding-progress" *ngIf="revolt.acceptDonations">
+          <div class="progress-bar">
+            <div 
+              class="progress-fill"
+              [style.width.%]="getFundingProgress(revolt)">
+            </div>
+          </div>
+          <div class="progress-text">
+            {{ getFundingProgress(revolt) | number:'1.0-0' }}% of ${{ (revolt.fundingGoal! / 100) | number:'1.0-0' }} goal
+          </div>
+        </div>
+
+        <!-- Revolt Actions -->
+        <div class="revolt-actions-bottom">
+          <button 
+            class="btn-primary btn-small"
+            (click)="onJoinRevolt(revolt, $event)">
+            Join Revolt
+          </button>
+          <button 
+            *ngIf="revolt.acceptDonations"
+            class="btn-secondary btn-small"
+            (click)="onDonate(revolt, $event)">
+            <i class="icon-heart"></i>
+            Donate
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Template -->
+    <ng-template #loadingTemplate>
+      <div class="loading-grid">
+        <div 
+          class="revolt-card-skeleton"
+          *ngFor="let i of [1,2,3,4,5,6]">
+          <div class="skeleton-header">
+            <div class="skeleton-avatar"></div>
+            <div class="skeleton-text">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line short"></div>
+            </div>
+          </div>
+          <div class="skeleton-stats">
+            <div class="skeleton-stat"></div>
+            <div class="skeleton-stat"></div>
+            <div class="skeleton-stat"></div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- Load More -->
+    <div class="load-more" *ngIf="hasMore && !isLoading">
+      <button 
+        class="btn-outline"
+        (click)="loadMore()">
+        Load More Revolts
+      </button>
+    </div>
+  </div>
+</section>

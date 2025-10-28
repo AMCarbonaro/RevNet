@@ -1,0 +1,127 @@
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h3>Donate to {{ revolt?.name }}</h3>
+      <button 
+        class="close-btn"
+        (click)="close.emit()">
+        <i class="icon-x"></i>
+      </button>
+    </div>
+
+    <div class="modal-content">
+      <!-- Revolt Info -->
+      <div class="revolt-info">
+        <div class="revolt-icon">
+          <img 
+            *ngIf="revolt?.icon" 
+            [src]="revolt?.icon" 
+            [alt]="revolt?.name">
+          <div 
+            *ngIf="!revolt?.icon" 
+            class="revolt-initials">
+            {{ getRevoltInitials(revolt?.name || '') }}
+          </div>
+        </div>
+        <div class="revolt-details">
+          <h4>{{ revolt?.name }}</h4>
+          <p>{{ revolt?.shortDescription }}</p>
+        </div>
+      </div>
+
+      <!-- Donation Form -->
+      <form 
+        [formGroup]="donationForm" 
+        (ngSubmit)="onSubmit()"
+        class="donation-form">
+        
+        <!-- Amount Selection -->
+        <div class="amount-section">
+          <label>Donation Amount</label>
+          <div class="amount-options">
+            <button 
+              *ngFor="let amount of presetAmounts"
+              type="button"
+              class="amount-btn"
+              [class.selected]="selectedAmount === amount"
+              (click)="selectAmount(amount)">
+              ${{ (amount / 100) | number:'1.0-0' }}
+            </button>
+          </div>
+          
+          <div class="custom-amount">
+            <input
+              type="number"
+              formControlName="amount"
+              placeholder="Custom amount"
+              min="1"
+              max="10000"
+              step="1">
+            <span class="currency">USD</span>
+          </div>
+        </div>
+
+        <!-- Donor Info (Optional) -->
+        <div class="donor-section">
+          <label>
+            <input 
+              type="checkbox" 
+              formControlName="includeDonorInfo">
+            Include my information (optional)
+          </label>
+          
+          <div class="donor-fields" *ngIf="donationForm.get('includeDonorInfo')?.value">
+            <input
+              type="text"
+              formControlName="donorName"
+              placeholder="Your name (optional)">
+            <input
+              type="email"
+              formControlName="donorEmail"
+              placeholder="Your email (optional)">
+          </div>
+        </div>
+
+        <!-- Message (Optional) -->
+        <div class="message-section">
+          <label>Message (optional)</label>
+          <textarea
+            formControlName="message"
+            placeholder="Leave a message of support..."
+            rows="3"
+            maxlength="500">
+          </textarea>
+          <div class="char-count">
+            {{ donationForm.get('message')?.value?.length || 0 }}/500
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="donation-summary">
+          <div class="summary-row">
+            <span>Donation Amount:</span>
+            <span>${{ (donationForm.value.amount || 0) / 100 | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Processing Fee:</span>
+            <span>${{ (getProcessingFee() / 100) | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total:</span>
+            <span>${{ (getTotalAmount() / 100) | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="submit"
+          class="btn-primary btn-large"
+          [disabled]="donationForm.invalid || isProcessing">
+          <i *ngIf="!isProcessing" class="icon-heart"></i>
+          <i *ngIf="isProcessing" class="icon-loader animate-spin"></i>
+          {{ isProcessing ? 'Processing...' : 'Donate Now' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

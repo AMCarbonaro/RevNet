@@ -1,0 +1,36 @@
+name: revnet3
+version: 1.0.0
+
+# DigitalOcean App Platform Configuration
+# This file is for reference - actual deployment is done through DigitalOcean App Platform UI or doctl CLI
+
+services:
+  revnet3:
+    image: revnet3:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=${MONGODB_URI}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - FRONTEND_URL=${FRONTEND_URL}
+    volumes:
+      - /app/logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local
