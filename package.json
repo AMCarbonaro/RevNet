@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
+    "serve:prod": "npx serve -s dist/revnet -l 3000",
     "build:ssr": "ng build --configuration production && ng run revnet:build-ssr:production",
     "serve:ssr": "ng run revnet:serve-ssr",
     "watch": "ng build --watch --configuration development",
