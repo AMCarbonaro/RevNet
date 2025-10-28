@@ -1,18 +1,25 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RevoltsModule } from './modules/revolts/revolts.module';
 import { DonationsModule } from './modules/donations/donations.module';
 import { PlatformModule } from './modules/platform/platform.module';
+import { TestEntity } from './entities/test.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/revnet'),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.MONGODB_URI || process.env.DATABASE_URL, // Using MONGODB_URI for compatibility
+      entities: [TestEntity],
+      synchronize: process.env.NODE_ENV !== 'production', // Only in development
+      logging: false, // Disable logging for production
+    }),
     RevoltsModule,
     DonationsModule,
     PlatformModule,
