@@ -60,8 +60,21 @@
     </div>
   </div>
 
+  <!-- Locked Letter State -->
+  <div *ngIf="!isLoading && isLocked" class="locked-state">
+    <div class="locked-icon">
+      <i class="fas fa-lock"></i>
+    </div>
+    <h3>Letter Locked</h3>
+    <p>You need to complete the previous letter before accessing this one.</p>
+    <button (click)="goBack()" class="btn-secondary">
+      <i class="icon-arrow-left"></i>
+      Back to Letters
+    </button>
+  </div>
+
   <!-- Error State -->
-  <div *ngIf="!isLoading && !letter" class="error-state">
+  <div *ngIf="!isLoading && !letter && !isLocked" class="error-state">
     <div class="error-icon">
       <i class="icon-x"></i>
     </div>
@@ -73,3 +86,4 @@
     </button>
   </div>
 </div>
+

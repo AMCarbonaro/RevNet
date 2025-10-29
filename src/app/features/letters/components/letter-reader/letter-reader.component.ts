@@ -23,6 +23,7 @@ export class LetterReaderComponent implements OnInit, OnDestroy, AfterViewInit {
   progress = 0;
   letterId = 0;
   isCompleted = false;
+  isLocked = false;
   private routeSubscription?: Subscription;
   private swipeSubscription?: Subscription;
 
@@ -119,6 +120,20 @@ export class LetterReaderComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadLetter(id: number): void {
     console.log('Loading letter with ID:', id);
+    
+    // Check if letter is unlocked before loading
+    const user = this.authService.getCurrentUser();
+    if (user && id > 1) {
+      const isUnlocked = this.lettersService.isLetterUnlocked({ id } as Letter, user.letterProgress);
+      if (!isUnlocked) {
+        console.log('Letter is locked');
+        this.isLocked = true;
+        this.isLoading = false;
+        return;
+      }
+    }
+    
+    this.isLocked = false;
     this.lettersService.getLetter(id).subscribe({
       next: (letter) => {
         console.log('Letter loaded successfully:', letter.title);
