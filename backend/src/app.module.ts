@@ -11,16 +11,19 @@ import { LettersModule } from './modules/letters/letters.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
-      entities: [TestEntity],
-      synchronize: process.env.NODE_ENV !== 'production', // Only in development
-      logging: false, // Disable logging for production
-      ssl: {
-        rejectUnauthorized: false, // Required for Render PostgreSQL
-      },
-    }),
+    // Only configure TypeORM if DATABASE_URL is provided
+    ...(process.env.DATABASE_URL ? [
+      TypeOrmModule.forRoot({
+        type: 'postgres',
+        url: process.env.DATABASE_URL,
+        entities: [TestEntity],
+        synchronize: process.env.NODE_ENV !== 'production', // Only in development
+        logging: false, // Disable logging for production
+        ssl: {
+          rejectUnauthorized: false, // Required for Render PostgreSQL
+        },
+      })
+    ] : []),
     LettersModule,
   ],
   controllers: [AppController],
