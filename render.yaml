@@ -4,7 +4,7 @@ services:
     name: revnet3-frontend
     env: node
     plan: free
-    buildCommand: npm run build
+    buildCommand: npm ci && npm run build:prod
     startCommand: npx serve -s dist/revnet -l 3000
     envVars:
       - key: NODE_ENV
