@@ -1,0 +1,121 @@
+<div class="revolts-page">
+  <!-- Header -->
+  <header class="revolts-header">
+    <div class="container">
+      <div class="header-content">
+        <button class="back-btn" (click)="goBack()">
+          <i class="icon-arrow-left"></i>
+          Back to Home
+        </button>
+        <h1 class="page-title">
+          <span class="text-gradient">Active Revolts</span>
+        </h1>
+        <p class="page-subtitle">Join the revolution and make a difference</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Category Filter -->
+  <section class="category-filter">
+    <div class="container">
+      <div class="filter-tabs">
+        <button 
+          *ngFor="let category of categories"
+          class="filter-tab"
+          [class.active]="selectedCategory === category.id"
+          (click)="selectedCategory = category.id">
+          <span class="category-icon">{{ category.icon }}</span>
+          <span class="category-name">{{ category.name }}</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Revolts Grid -->
+  <main class="revolts-main">
+    <div class="container">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading revolts...</p>
+      </div>
+
+      <!-- Revolts Grid -->
+      <div *ngIf="!isLoading" class="revolts-grid">
+        <div 
+          *ngFor="let revolt of filteredRevolts" 
+          class="revolt-card"
+          (click)="onRevoltClick(revolt)">
+          
+          <!-- Revolt Image -->
+          <div class="revolt-image">
+            <div class="revolt-status" [class]="revolt.status">
+              {{ revolt.status | titlecase }}
+            </div>
+            <div class="revolt-category">{{ revolt.category | titlecase }}</div>
+          </div>
+
+          <!-- Revolt Content -->
+          <div class="revolt-content">
+            <h3 class="revolt-name">{{ revolt.name }}</h3>
+            <p class="revolt-description">{{ revolt.description }}</p>
+            
+            <!-- Tags -->
+            <div class="revolt-tags">
+              <span *ngFor="let tag of revolt.tags" class="tag">{{ tag }}</span>
+            </div>
+
+            <!-- Stats -->
+            <div class="revolt-stats">
+              <div class="stat">
+                <i class="icon-users"></i>
+                <span>{{ revolt.memberCount | number }} members</span>
+              </div>
+              <div class="stat">
+                <i class="icon-dollar"></i>
+                <span>${{ revolt.currentFunding | number:'1.0-0' }} raised</span>
+              </div>
+            </div>
+
+            <!-- Funding Progress -->
+            <div class="funding-progress">
+              <div class="progress-bar">
+                <div 
+                  class="progress-fill" 
+                  [style.width.%]="getFundingProgress(revolt)">
+                </div>
+              </div>
+              <div class="progress-text">
+                <span>${{ revolt.currentFunding | number:'1.0-0' }} of ${{ revolt.fundingGoal | number:'1.0-0' }}</span>
+                <span>{{ getFundingProgress(revolt) | number:'1.0-0' }}%</span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="revolt-actions">
+              <button 
+                class="btn-primary btn-small"
+                (click)="onJoinRevolt(revolt); $event.stopPropagation()">
+                <i class="icon-plus"></i>
+                Join Revolt
+              </button>
+              <button 
+                class="btn-secondary btn-small"
+                (click)="onDonateToRevolt(revolt); $event.stopPropagation()">
+                <i class="icon-heart"></i>
+                Donate
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && filteredRevolts.length === 0" class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No revolts found</h3>
+        <p>Try selecting a different category or check back later for new revolts.</p>
+      </div>
+    </div>
+  </main>
+</div>

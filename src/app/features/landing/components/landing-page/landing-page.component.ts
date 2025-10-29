@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { HeroSectionComponent } from '../hero-section/hero-section.component';
 import { RevoltsBrowseComponent } from '../revolts-browse/revolts-browse.component';
 import { AnonymousDonationModalComponent } from '../anonymous-donation-modal/anonymous-donation-modal.component';
@@ -17,6 +18,8 @@ export class LandingPageComponent implements OnInit {
   isLoading = false;
   selectedRevolt: Revolt | null = null;
   showDonationModal = false;
+
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.loadRevolts();
@@ -121,7 +124,7 @@ export class LandingPageComponent implements OnInit {
 
   onBrowseRevolts(): void {
     console.log('Browse Revolts clicked');
-    document.getElementById('revolts-section')?.scrollIntoView({ behavior: 'smooth' });
+    this.router.navigate(['/revolts']);
   }
 
   onRevoltClick(revolt: Revolt): void {
