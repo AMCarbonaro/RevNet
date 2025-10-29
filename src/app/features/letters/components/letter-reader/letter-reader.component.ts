@@ -72,11 +72,14 @@ export class LetterReaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private handleSwipe(swipeEvent: any): void {
+    console.log('Swipe detected:', swipeEvent);
     if (swipeEvent.direction === 'left') {
       // Swipe left = next letter
+      console.log('Swipe left - going to next letter');
       this.goToNextLetter();
     } else if (swipeEvent.direction === 'right') {
       // Swipe right = previous letter
+      console.log('Swipe right - going to previous letter');
       this.goToPreviousLetter();
     }
   }

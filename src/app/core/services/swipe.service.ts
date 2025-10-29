@@ -19,18 +19,47 @@ export class SwipeService {
   private endX = 0;
   private endY = 0;
   private minSwipeDistance = 50;
+  private maxVerticalSwipeDistance = 100; // Prevent accidental vertical swipes
+  
+  // Store event handlers to properly remove them
+  private touchStartHandler?: (e: TouchEvent) => void;
+  private touchMoveHandler?: (e: TouchEvent) => void;
+  private touchEndHandler?: (e: TouchEvent) => void;
   
   addSwipeListener(element: HTMLElement): void {
-    element.addEventListener('touchstart', (e) => {
+    console.log('Adding swipe listener to element:', element);
+    
+    // Create bound event handlers
+    this.touchStartHandler = (e: TouchEvent) => {
+      console.log('Touch start detected');
       this.startX = e.touches[0].clientX;
       this.startY = e.touches[0].clientY;
-    }, { passive: true });
+    };
     
-    element.addEventListener('touchend', (e) => {
+    this.touchMoveHandler = (e: TouchEvent) => {
+      // Prevent scrolling during horizontal swipes
+      if (e.touches.length === 1) {
+        const deltaX = Math.abs(e.touches[0].clientX - this.startX);
+        const deltaY = Math.abs(e.touches[0].clientY - this.startY);
+        
+        // If horizontal movement is greater than vertical, prevent default scrolling
+        if (deltaX > deltaY) {
+          e.preventDefault();
+        }
+      }
+    };
+    
+    this.touchEndHandler = (e: TouchEvent) => {
+      console.log('Touch end detected');
       this.endX = e.changedTouches[0].clientX;
       this.endY = e.changedTouches[0].clientY;
       this.handleSwipe(element);
-    }, { passive: true });
+    };
+    
+    // Add event listeners
+    element.addEventListener('touchstart', this.touchStartHandler, { passive: true });
+    element.addEventListener('touchmove', this.touchMoveHandler, { passive: false });
+    element.addEventListener('touchend', this.touchEndHandler, { passive: true });
   }
   
   private handleSwipe(element: HTMLElement): void {
@@ -38,27 +67,43 @@ export class SwipeService {
     const deltaY = this.endY - this.startY;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     
+    console.log('Swipe calculation:', {
+      deltaX,
+      deltaY,
+      distance,
+      minSwipeDistance: this.minSwipeDistance,
+      maxVerticalSwipeDistance: this.maxVerticalSwipeDistance
+    });
+    
     if (distance < this.minSwipeDistance) {
+      console.log('Swipe distance too small:', distance);
       return;
     }
     
-    let direction: 'left' | 'right' | 'up' | 'down';
-    
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      direction = deltaX > 0 ? 'right' : 'left';
+    // Only handle horizontal swipes for letter navigation
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaY) < this.maxVerticalSwipeDistance) {
+      const direction = deltaX > 0 ? 'right' : 'left';
+      console.log('Valid swipe detected:', direction);
+      
+      this.swipeSubject.next({
+        direction,
+        element,
+        distance
+      });
     } else {
-      direction = deltaY > 0 ? 'down' : 'up';
+      console.log('Swipe not horizontal enough or too vertical');
     }
-    
-    this.swipeSubject.next({
-      direction,
-      element,
-      distance
-    });
   }
   
   removeSwipeListener(element: HTMLElement): void {
-    element.removeEventListener('touchstart', () => {});
-    element.removeEventListener('touchend', () => {});
+    if (this.touchStartHandler) {
+      element.removeEventListener('touchstart', this.touchStartHandler);
+    }
+    if (this.touchMoveHandler) {
+      element.removeEventListener('touchmove', this.touchMoveHandler);
+    }
+    if (this.touchEndHandler) {
+      element.removeEventListener('touchend', this.touchEndHandler);
+    }
   }
 }
