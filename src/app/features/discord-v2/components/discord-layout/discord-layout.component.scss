@@ -1,0 +1,17 @@
+@import '../../styles/variables';
+
+.discord-layout {
+  display: grid;
+  grid-template-columns: $server-width $sidebar-width 1fr;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: $discord-bg-primary;
+
+  &__servers,
+  &__sidebar,
+  &__chat {
+    height: 100vh;
+    overflow: hidden;
+  }
+}

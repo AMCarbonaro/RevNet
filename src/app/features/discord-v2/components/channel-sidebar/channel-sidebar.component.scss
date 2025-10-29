@@ -1,0 +1,74 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.channel-sidebar {
+  background: $discord-bg-secondary;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+
+  &__header {
+    padding: $space-4;
+    border-bottom: 1px solid $discord-bg-accent;
+    background: $discord-bg-secondary;
+  }
+
+  &__content {
+    padding: $space-2;
+    overflow-y: auto;
+    @include scrollbar-thin;
+  }
+
+  &__user-panel {
+    background: $discord-bg-secondary;
+    border-top: 1px solid $discord-bg-accent;
+    padding: $space-2;
+  }
+}
+
+.channel-item {
+  padding: $space-2 $space-3;
+  color: $discord-text-muted;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background: $discord-bg-accent;
+    color: $discord-text-normal;
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background: $discord-blurple;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.username {
+  color: $discord-text-normal;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.status {
+  color: $discord-text-muted;
+  font-size: 12px;
+}
