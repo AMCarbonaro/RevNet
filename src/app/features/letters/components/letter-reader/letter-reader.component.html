@@ -31,11 +31,18 @@
     <p>Loading letter...</p>
   </div>
 
-  <!-- Letter Content -->
-  <div *ngIf="!isLoading && letter" class="letter-content" #letterContent>
-    <h1 class="letter-title">{{ letter.title }}</h1>
-    
-    <div class="letter-body" [innerHTML]="letter.content"></div>
+        <!-- Letter Content -->
+        <div *ngIf="!isLoading && letter" class="letter-content" #letterContent>
+          <!-- Swipe Indicator -->
+          <div class="swipe-indicator">
+            <i class="fas fa-arrow-left"></i>
+            <span>Swipe to navigate</span>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+          
+          <h1 class="letter-title">{{ letter.title }}</h1>
+          
+          <div class="letter-body" [innerHTML]="letter.content"></div>
     
     <!-- Letter Actions -->
     <div class="letter-actions">
