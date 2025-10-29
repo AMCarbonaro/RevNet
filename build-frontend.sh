@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-echo "Installing dependencies..."
-npm ci
+echo "Installing all dependencies (including dev dependencies)..."
+npm install
 
 echo "Building Angular application..."
 npm run build
