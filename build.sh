@@ -2,9 +2,9 @@
 set -e
 
 echo "Installing dependencies..."
-npm install
+npm ci
 
 echo "Building frontend..."
-npm run build:prod
+npm run build
 
 echo "Build completed successfully!"
