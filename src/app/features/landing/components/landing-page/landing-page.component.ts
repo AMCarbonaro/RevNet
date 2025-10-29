@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HeroSectionComponent } from '../hero-section/hero-section.component';
-import { RevoltsBrowseComponent } from '../revolts-browse/revolts-browse.component';
 import { AnonymousDonationModalComponent } from '../anonymous-donation-modal/anonymous-donation-modal.component';
 import { Revolt } from '@core/models/revolt.model';
+import { RevoltService } from '@core/services/revolt.service';
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, HeroSectionComponent, RevoltsBrowseComponent, AnonymousDonationModalComponent],
+  imports: [CommonModule, HeroSectionComponent, AnonymousDonationModalComponent],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
 })
@@ -19,7 +19,10 @@ export class LandingPageComponent implements OnInit {
   selectedRevolt: Revolt | null = null;
   showDonationModal = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private revoltService: RevoltService
+  ) {}
 
   ngOnInit(): void {
     this.loadRevolts();
@@ -27,93 +30,16 @@ export class LandingPageComponent implements OnInit {
 
   loadRevolts(): void {
     this.isLoading = true;
-    // Mock data for now - replace with actual service call
-    setTimeout(() => {
-      this.revolts = [
-        {
-          _id: '1',
-          name: 'Climate Action Now',
-          description: 'Join the fight against climate change with direct action and community organizing.',
-          shortDescription: 'Fighting climate change through direct action',
-          category: 'environment',
-          tags: ['climate', 'environment', 'activism'],
-          isPublic: true,
-          isFull: false,
-          memberCount: 1250,
-          channelCount: 8,
-          messageCount: 15420,
-          acceptDonations: true,
-          currentFunding: 2500000, // $25,000 in cents
-          fundingGoal: 10000000, // $100,000 in cents
-          isFeatured: true,
-          settings: {
-            allowInvites: true,
-            requireApproval: false,
-            maxMembers: 5000
-          },
-          channelIds: [],
-          memberIds: [],
-          ownerId: 'owner1',
-          createdAt: new Date('2024-01-15'),
-          updatedAt: new Date('2024-10-28')
-        },
-        {
-          _id: '2',
-          name: 'Social Justice Warriors',
-          description: 'Organizing for equality, justice, and human rights in our communities.',
-          shortDescription: 'Fighting for equality and justice',
-          category: 'social-justice',
-          tags: ['justice', 'equality', 'rights'],
-          isPublic: true,
-          isFull: false,
-          memberCount: 890,
-          channelCount: 6,
-          messageCount: 12300,
-          acceptDonations: true,
-          currentFunding: 1800000, // $18,000 in cents
-          fundingGoal: 5000000, // $50,000 in cents
-          isFeatured: true,
-          settings: {
-            allowInvites: true,
-            requireApproval: true,
-            maxMembers: 2000
-          },
-          channelIds: [],
-          memberIds: [],
-          ownerId: 'owner2',
-          createdAt: new Date('2024-02-20'),
-          updatedAt: new Date('2024-10-28')
-        },
-        {
-          _id: '3',
-          name: 'Community Education Hub',
-          description: 'Free educational resources and workshops for underserved communities.',
-          shortDescription: 'Free education for all',
-          category: 'education',
-          tags: ['education', 'community', 'learning'],
-          isPublic: true,
-          isFull: false,
-          memberCount: 2100,
-          channelCount: 12,
-          messageCount: 28900,
-          acceptDonations: true,
-          currentFunding: 3200000, // $32,000 in cents
-          fundingGoal: 7500000, // $75,000 in cents
-          isFeatured: true,
-          settings: {
-            allowInvites: true,
-            requireApproval: false,
-            maxMembers: 3000
-          },
-          channelIds: [],
-          memberIds: [],
-          ownerId: 'owner3',
-          createdAt: new Date('2024-03-10'),
-          updatedAt: new Date('2024-10-28')
-        }
-      ];
-      this.isLoading = false;
-    }, 1000);
+    this.revoltService.getPublicRevolts({ limit: 100 }).subscribe({
+      next: (response) => {
+        this.revolts = response.data;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading revolts:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
   onGetStarted(): void {
