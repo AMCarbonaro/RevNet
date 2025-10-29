@@ -1,0 +1,637 @@
+.letters-dashboard {
+  min-height: 100vh;
+  background: #1E2124; // discord-darkest
+  color: #DCDDDE; // discord-text
+}
+
+// Hero Section
+.hero-section {
+  background: linear-gradient(135deg, #1E2124 0%, #2C2F33 100%);
+  padding: 4rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+
+.text-gradient {
+  background: linear-gradient(45deg, #00f5ff, #ff00ff, #00ff88);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: #72767D; // discord-textMuted
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+// Progress Card
+.progress-card {
+  background: #2C2F33; // discord-dark
+  border: 1px solid #40444B; // discord-lighter
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.progress-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.progress-percentage {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00f5ff;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #23272A; // discord-darker
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(45deg, #00f5ff, #ff00ff);
+  border-radius: 6px;
+  transition: width 0.8s ease;
+}
+
+.progress-stats {
+  text-align: center;
+  color: #72767D; // discord-textMuted
+  font-size: 1.1rem;
+}
+
+// Loading State
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #40444B; // discord-lighter
+  border-top: 4px solid #00f5ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 2rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Main Content
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+// Section Titles
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  background: linear-gradient(45deg, #00f5ff, #ff00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Books Section
+.books-section {
+  margin-bottom: 4rem;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.book-card {
+  background: #2C2F33; // discord-dark
+  border: 1px solid #40444B; // discord-lighter
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.book-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(45deg, #00f5ff, #ff00ff);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 245, 255, 0.1);
+  border-color: #00f5ff;
+}
+
+.book-card:hover::before {
+  opacity: 1;
+}
+
+.book-card.completed::before {
+  opacity: 1;
+  background: linear-gradient(45deg, #00ff88, #00d4ff);
+}
+
+.book-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.book-icon {
+  font-size: 3rem;
+  margin-right: 1.5rem;
+}
+
+.book-info {
+  flex: 1;
+}
+
+.book-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: #DCDDDE; // discord-text
+}
+
+.book-description {
+  color: #72767D; // discord-textMuted
+  margin: 0;
+  line-height: 1.4;
+}
+
+.book-progress {
+  margin-top: 1rem;
+}
+
+.book-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #23272A; // discord-darker
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.book-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.book-progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #72767D; // discord-textMuted
+}
+
+// Letters Section
+.letters-section {
+  margin-bottom: 4rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 0.75rem 1.5rem;
+  background: #23272A; // discord-darker
+  border: 1px solid #40444B; // discord-lighter
+  border-radius: 8px;
+  color: #72767D; // discord-textMuted
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.filter-tab:hover {
+  background: #2C2F33; // discord-dark
+  color: #DCDDDE; // discord-text
+  border-color: #00f5ff;
+}
+
+.filter-tab.active {
+  background: linear-gradient(45deg, #00f5ff, #ff00ff);
+  color: #1E2124; // discord-darkest
+  border-color: transparent;
+}
+
+.letters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.letter-card {
+  background: #2C2F33; // discord-dark
+  border: 1px solid #40444B; // discord-lighter
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.letter-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(45deg, #00f5ff, #ff00ff);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.letter-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 245, 255, 0.1);
+  border-color: #00f5ff;
+}
+
+.letter-card:hover::before {
+  opacity: 1;
+}
+
+.letter-card.unlocked {
+  border-color: #00f5ff;
+}
+
+.letter-card.unlocked::before {
+  opacity: 1;
+}
+
+.letter-card.completed {
+  border-color: #00ff88;
+  background: linear-gradient(135deg, #2C2F33, #1E2124);
+}
+
+.letter-card.completed::before {
+  opacity: 1;
+  background: linear-gradient(45deg, #00ff88, #00d4ff);
+}
+
+.letter-card.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #23272A; // discord-darker
+}
+
+.letter-card.locked:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: #40444B; // discord-lighter
+}
+
+.letter-card.locked::before {
+  display: none;
+}
+
+.letter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.letter-number {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #00f5ff;
+  background: rgba(0, 245, 255, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+}
+
+.letter-status {
+  font-size: 1.2rem;
+}
+
+.letter-status .fa-check-circle {
+  color: #00ff88;
+}
+
+.letter-status .fa-book-open {
+  color: #00f5ff;
+}
+
+.letter-status .fa-lock {
+  color: #72767D; // discord-textMuted
+}
+
+.letter-content {
+  margin-bottom: 1rem;
+}
+
+.letter-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  color: #DCDDDE; // discord-text
+  line-height: 1.3;
+}
+
+.letter-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.letter-book {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.letter-time {
+  color: #72767D; // discord-textMuted
+}
+
+.letter-footer {
+  border-top: 1px solid #40444B; // discord-lighter
+  padding-top: 1rem;
+}
+
+.unlocks {
+  font-size: 0.9rem;
+}
+
+.unlocks-label {
+  color: #72767D; // discord-textMuted
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.unlocks-text {
+  color: #00f5ff;
+}
+
+// Revolution Section
+.revolution-section {
+  margin-bottom: 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.revolution-card {
+  background: linear-gradient(135deg, #2C2F33 0%, #36393F 100%);
+  border: 2px solid #00f5ff;
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 245, 255, 0.1);
+}
+
+.revolution-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 245, 255, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.revolution-content {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2rem;
+}
+
+.revolution-icon {
+  font-size: 4rem;
+  color: #00f5ff;
+  margin-bottom: 1.5rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.revolution-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #DCDDDE;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #00f5ff, #ff00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.revolution-description {
+  font-size: 1.1rem;
+  color: #B9BBBE;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.revolution-btn {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(45deg, #00f5ff, #ff00ff);
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  padding: 1.2rem 3rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 10px 25px rgba(0, 245, 255, 0.3);
+}
+
+.revolution-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0, 245, 255, 0.4);
+  background: linear-gradient(45deg, #00e6f2, #ff00e6);
+}
+
+.revolution-btn:active {
+  transform: translateY(-1px);
+}
+
+.revolution-btn i {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.revolution-btn:hover i {
+  transform: translateX(3px);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 2rem 1rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .main-content {
+    padding: 0 1rem 2rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-tabs {
+    justify-content: center;
+  }
+
+  .books-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .revolution-card {
+    padding: 2rem 1.5rem;
+    margin: 0 1rem;
+  }
+
+  .revolution-title {
+    font-size: 2rem;
+  }
+
+  .revolution-description {
+    font-size: 1rem;
+  }
+
+  .revolution-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+
+  .letters-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .book-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .book-icon {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+}

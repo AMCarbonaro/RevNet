@@ -11,6 +11,7 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 export class HeroSectionComponent {
   @Output() getStarted = new EventEmitter<void>();
   @Output() browseRevolts = new EventEmitter<void>();
+  @Output() demoLogin = new EventEmitter<void>();
 
   @Input() totalRevolts = 0;
   @Input() totalMembers = 0;

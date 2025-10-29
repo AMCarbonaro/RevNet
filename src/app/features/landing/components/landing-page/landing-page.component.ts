@@ -5,6 +5,7 @@ import { HeroSectionComponent } from '../hero-section/hero-section.component';
 import { AnonymousDonationModalComponent } from '../anonymous-donation-modal/anonymous-donation-modal.component';
 import { Revolt } from '@core/models/revolt.model';
 import { RevoltService } from '@core/services/revolt.service';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -21,7 +22,8 @@ export class LandingPageComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private revoltService: RevoltService
+    private revoltService: RevoltService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -43,14 +45,21 @@ export class LandingPageComponent implements OnInit {
   }
 
   onGetStarted(): void {
-    console.log('Get Started clicked');
-    // Navigate to registration or scroll to revolts
-    document.getElementById('revolts-section')?.scrollIntoView({ behavior: 'smooth' });
+    this.router.navigate(['/register']);
   }
 
   onBrowseRevolts(): void {
     console.log('Browse Revolts clicked');
     this.router.navigate(['/revolts']);
+  }
+
+  onDemoLogin(): void {
+    console.log('Demo login clicked');
+    this.authService.demoLogin('full').then(() => {
+      this.router.navigate(['/letters']);
+    }).catch(error => {
+      console.error('Demo login failed:', error);
+    });
   }
 
   onRevoltClick(revolt: Revolt): void {

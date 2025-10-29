@@ -1,0 +1,138 @@
+<div class="letters-dashboard">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="text-gradient">Anthony Letters</span>
+      </h1>
+      <p class="hero-subtitle">Your revolutionary education journey</p>
+      
+      <!-- Progress Card -->
+      <div class="progress-card">
+        <div class="progress-header">
+          <h3>Overall Progress</h3>
+          <span class="progress-percentage">{{ progress | number:'1.0-0' }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progress"></div>
+        </div>
+        <div class="progress-stats">
+          <span>{{ user?.letterProgress?.completedLetters?.length || 0 }} of 30 letters completed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading your revolutionary journey...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading" class="main-content">
+    <!-- Book Progress Section -->
+    <div class="books-section">
+      <h2 class="section-title">Your Journey Through the Books</h2>
+      <div class="books-grid">
+        <div 
+          *ngFor="let book of bookData" 
+          class="book-card"
+          [class.completed]="getBookProgress(book.id) === 100">
+          
+          <div class="book-header">
+            <div class="book-icon">{{ book.icon }}</div>
+            <div class="book-info">
+              <h3 class="book-title">{{ book.name }}</h3>
+              <p class="book-description">{{ book.description }}</p>
+            </div>
+          </div>
+          
+          <div class="book-progress">
+            <div class="book-progress-bar">
+              <div 
+                class="book-progress-fill" 
+                [style.width.%]="getBookProgress(book.id)"
+                [style.background]="book.gradient">
+              </div>
+            </div>
+            <div class="book-progress-text">
+              <span>{{ getBookProgress(book.id) | number:'1.0-0' }}% Complete</span>
+              <span>{{ getCompletedInBook(book.id) }}/{{ getTotalInBook(book.id) }} letters</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Letters Grid -->
+    <div class="letters-section">
+      <div class="section-header">
+        <h2 class="section-title">All Letters</h2>
+        <div class="filter-tabs">
+          <button 
+            *ngFor="let filter of letterFilters" 
+            class="filter-tab"
+            [class.active]="selectedFilter === filter.id"
+            (click)="setFilter(filter.id)">
+            {{ filter.name }}
+          </button>
+        </div>
+      </div>
+      
+      <div class="letters-grid">
+        <div 
+          *ngFor="let letter of filteredLetters; trackBy: trackByLetterId"
+          class="letter-card"
+          [class.unlocked]="isLetterUnlocked(letter)"
+          [class.completed]="isLetterCompleted(letter.id)"
+          [class.locked]="!isLetterUnlocked(letter)"
+          (click)="onLetterClick(letter)">
+          
+          <div class="letter-header">
+            <div class="letter-number">#{{ letter.id }}</div>
+            <div class="letter-status">
+              <i *ngIf="isLetterCompleted(letter.id)" class="fas fa-check-circle"></i>
+              <i *ngIf="isLetterUnlocked(letter) && !isLetterCompleted(letter.id)" class="fas fa-book-open"></i>
+              <i *ngIf="!isLetterUnlocked(letter)" class="fas fa-lock"></i>
+            </div>
+          </div>
+          
+          <div class="letter-content">
+            <h3 class="letter-title">{{ letter.title }}</h3>
+            <div class="letter-meta">
+              <span class="letter-book" [style.color]="getBookColor(letter.book)">{{ letter.book | titlecase }}</span>
+              <span class="letter-time">{{ letter.estimatedReadTime }} min read</span>
+            </div>
+          </div>
+          
+          <div class="letter-footer" *ngIf="letter.unlocks.length > 0">
+            <div class="unlocks">
+              <span class="unlocks-label">Unlocks:</span>
+              <span class="unlocks-text">{{ letter.unlocks.join(', ') }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enter The Revolution Button -->
+    <div class="revolution-section" *ngIf="user?.letterProgress?.canAccessDiscord">
+      <div class="revolution-card">
+        <div class="revolution-content">
+          <div class="revolution-icon">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <div class="revolution-text">
+            <h2 class="revolution-title">Revolution Complete!</h2>
+            <p class="revolution-description">You've completed all 30 Anthony Letters. You're ready to join the revolution.</p>
+          </div>
+        </div>
+        <button class="revolution-btn" (click)="enterRevolution()">
+          <i class="fas fa-arrow-right"></i>
+          Enter The Revolution
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

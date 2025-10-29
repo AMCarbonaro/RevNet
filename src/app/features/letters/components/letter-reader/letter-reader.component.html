@@ -1,0 +1,57 @@
+<div class="letter-container">
+  <!-- Header -->
+  <div class="letter-header">
+    <button (click)="goBack()" class="back-button">
+      <i class="icon-arrow-left"></i>
+      Back to Letters
+    </button>
+    
+    <div class="letter-meta" *ngIf="letter">
+      <span class="book-badge">{{ letter.book }}</span>
+      <span class="read-time">{{ letter.estimatedReadTime }} min read</span>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner">
+      <i class="icon-loader animate-spin"></i>
+    </div>
+    <p>Loading letter...</p>
+  </div>
+
+  <!-- Letter Content -->
+  <div *ngIf="!isLoading && letter" class="letter-content">
+    <h1>{{ letter.title }}</h1>
+    
+    <div class="letter-body" [innerHTML]="letter.content"></div>
+    
+    <!-- Letter Actions -->
+    <div class="letter-actions">
+      <button 
+        *ngIf="!isCompleted" 
+        (click)="goToNextLetter()"
+        class="complete-btn">
+        <i class="icon-arrow-right"></i>
+        Next Letter
+      </button>
+      <div *ngIf="isCompleted" class="completed-message">
+        <i class="icon-check-circle"></i>
+        <span>Letter completed!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !letter" class="error-state">
+    <div class="error-icon">
+      <i class="icon-x"></i>
+    </div>
+    <h3>Letter Not Found</h3>
+    <p>The requested letter could not be found.</p>
+    <button (click)="goBack()" class="btn-secondary">
+      <i class="icon-arrow-left"></i>
+      Back to Letters
+    </button>
+  </div>
+</div>

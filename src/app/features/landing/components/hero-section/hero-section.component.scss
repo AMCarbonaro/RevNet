@@ -42,9 +42,16 @@
 
 .text-gradient {
   background: linear-gradient(45deg, #00f5ff, #ff00ff, #00ff00);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .hero-subtitle {
@@ -65,9 +72,10 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 3rem;
+  animation: slideInUp 1s ease-out 0.5s both;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary, .btn-secondary, .btn-demo {
   padding: 1rem 2rem;
   border: none;
   border-radius: 8px;
@@ -78,17 +86,56 @@
   gap: 0.5rem;
   transition: all 0.3s ease;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInScale 0.8s ease-out both;
+}
+
+.btn-primary {
+  animation-delay: 0.7s;
+}
+
+.btn-secondary {
+  animation-delay: 0.9s;
+}
+
+.btn-demo {
+  animation-delay: 1.1s;
 }
 
 .btn-primary {
   background: linear-gradient(45deg, #00f5ff, #ff00ff);
   color: white;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 245, 255, 0.3);
+    background: linear-gradient(45deg, #00e6f2, #ff00e6);
+  }
 }
 
 .btn-secondary {
   background: transparent;
   color: #00f5ff;
   border: 2px solid #00f5ff;
+  
+  &:hover {
+    background: rgba(0, 245, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 245, 255, 0.2);
+  }
+}
+
+.btn-demo {
+  background: linear-gradient(45deg, #ff6b35, #f7931e);
+  color: white;
+  border: none;
+  
+  &:hover {
+    background: linear-gradient(45deg, #ff5722, #ff9800);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+  }
 }
 
 .hero-stats {
@@ -105,6 +152,20 @@
   font-size: 2rem;
   font-weight: 700;
   color: #00f5ff;
+  animation: float 3s ease-in-out infinite;
+}
+
+.stat-item:nth-child(2) .stat-number {
+  animation-delay: 0.5s;
+}
+
+.stat-item:nth-child(3) .stat-number {
+  animation-delay: 1s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 .stat-label {
@@ -123,6 +184,12 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: glow 4s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+  50% { box-shadow: 0 20px 40px rgba(0, 245, 255, 0.1), 0 0 20px rgba(0, 245, 255, 0.1); }
 }
 
 .discord-header {
@@ -194,6 +261,12 @@
 
 .channel-item.active {
   color: white;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 .channel-icon {

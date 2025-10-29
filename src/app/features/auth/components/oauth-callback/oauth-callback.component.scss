@@ -1,0 +1,20 @@
+.callback-loading {
+  min-height: 100vh;
+  background: var(--discord-darkest);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+
+  .loading-spinner {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--neon-cyan);
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+  }
+}
