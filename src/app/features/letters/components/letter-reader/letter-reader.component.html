@@ -1,13 +1,24 @@
-<div class="letter-container">
+<div class="letter-reader">
   <!-- Header -->
   <div class="letter-header">
-    <button (click)="goBack()" class="back-button">
+    <button (click)="goBack()" class="back-btn">
       <i class="icon-arrow-left"></i>
       Back to Letters
     </button>
     
+    <div class="letter-nav">
+      <button (click)="goToPreviousLetter()" class="nav-btn" [disabled]="!letter || letter.id <= 1">
+        <i class="icon-arrow-left"></i>
+        Previous
+      </button>
+      <button (click)="goToNextLetter()" class="nav-btn" [class.complete-mode]="letter && letter.id >= 30" [disabled]="!letter || letter.id > 30">
+        {{ letter && letter.id >= 30 ? 'Complete' : 'Next' }}
+        <i class="icon-arrow-right"></i>
+      </button>
+    </div>
+    
     <div class="letter-meta" *ngIf="letter">
-      <span class="book-badge">{{ letter.book }}</span>
+      <span class="book-badge">{{ letter.book | titlecase }}</span>
       <span class="read-time">{{ letter.estimatedReadTime }} min read</span>
     </div>
   </div>
@@ -21,8 +32,8 @@
   </div>
 
   <!-- Letter Content -->
-  <div *ngIf="!isLoading && letter" class="letter-content">
-    <h1>{{ letter.title }}</h1>
+  <div *ngIf="!isLoading && letter" class="letter-content" #letterContent>
+    <h1 class="letter-title">{{ letter.title }}</h1>
     
     <div class="letter-body" [innerHTML]="letter.content"></div>
     
@@ -31,9 +42,16 @@
       <button 
         *ngIf="!isCompleted" 
         (click)="goToNextLetter()"
-        class="complete-btn">
+        class="action-btn primary">
         <i class="icon-arrow-right"></i>
         Next Letter
+      </button>
+      <button 
+        *ngIf="isCompleted" 
+        (click)="goToNextLetter()"
+        class="action-btn secondary">
+        <i class="icon-arrow-right"></i>
+        Continue
       </button>
       <div *ngIf="isCompleted" class="completed-message">
         <i class="icon-check-circle"></i>

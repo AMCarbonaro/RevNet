@@ -34,7 +34,13 @@ export class LandingPageComponent implements OnInit {
     this.isLoading = true;
     this.revoltService.getPublicRevolts({ limit: 100 }).subscribe({
       next: (response) => {
-        this.revolts = response.data;
+        // Handle backend response structure: { data: { items: Revolt[], total: number } }
+        if (response.data && 'items' in response.data) {
+          this.revolts = (response.data as any).items;
+        } else {
+          // Fallback to direct array if structure is different
+          this.revolts = Array.isArray(response.data) ? response.data : [];
+        }
         this.isLoading = false;
       },
       error: (error) => {

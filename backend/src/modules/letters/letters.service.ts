@@ -377,4 +377,40 @@ export class LettersService {
       }
     };
   }
+
+  async updateLetterProgress(letterId: number, completed: boolean): Promise<{ data: any }> {
+    // For now, return mock response
+    // In a real app, this would update the database
+    return {
+      data: {
+        letterId,
+        completed,
+        unlockedFeatures: this.getUnlockedFeatures([letterId]),
+        canAccessDiscord: letterId === 30,
+        nextLetter: letterId < 30 ? letterId + 1 : null
+      }
+    };
+  }
+
+  private getUnlockedFeatures(completedLetters: number[]): string[] {
+    const features: string[] = [];
+    
+    if (completedLetters.length >= 7) {
+      features.push('join_existing_revolts');
+    }
+    
+    if (completedLetters.length >= 15) {
+      features.push('create_local_revolts');
+    }
+    
+    if (completedLetters.length >= 28) {
+      features.push('create_national_revolts');
+    }
+    
+    if (completedLetters.length >= 30) {
+      features.push('discord_interface_access', 'revolutionary_badge');
+    }
+    
+    return features;
+  }
 }

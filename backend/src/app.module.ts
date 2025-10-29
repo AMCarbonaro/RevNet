@@ -5,6 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TestEntity } from './entities/test.entity';
 import { LettersModule } from './modules/letters/letters.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { RevoltsModule } from './modules/revolts/revolts.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { LettersModule } from './modules/letters/letters.module';
       })
     ] : []),
     LettersModule,
+    AuthModule,
+    RevoltsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

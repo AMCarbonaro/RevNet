@@ -111,9 +111,11 @@ export class LettersDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Simple fix: reload the page to ensure everything works properly
-    if (!sessionStorage.getItem('letters_page_loaded')) {
-      sessionStorage.setItem('letters_page_loaded', 'true');
+    // Enhanced fix: always refresh on letters dashboard to ensure navigation works
+    if (!sessionStorage.getItem('letters_dashboard_loaded')) {
+      sessionStorage.setItem('letters_dashboard_loaded', 'true');
+      // Clear any previous letter page flags
+      sessionStorage.removeItem('letters_page_loaded');
       window.location.reload();
       return;
     }
