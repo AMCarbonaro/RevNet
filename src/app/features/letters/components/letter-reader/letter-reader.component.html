@@ -34,12 +34,6 @@
 
         <!-- Letter Content -->
         <div *ngIf="!isLoading && letter" class="letter-content" #letterContent>
-          <!-- Swipe Indicator - Mobile Only -->
-          <div class="swipe-indicator" *ngIf="isMobile">
-            <i class="fas fa-arrow-left"></i>
-            <span>Swipe to navigate</span>
-            <i class="fas fa-arrow-right"></i>
-          </div>
           
           <h1 class="letter-title">{{ letter.title }}</h1>
           
