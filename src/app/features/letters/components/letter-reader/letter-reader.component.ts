@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ElementRef, 
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { Subscription, fromEvent } from 'rxjs';
 import { LettersService } from '../../../../core/services/letters.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { SwipeService } from '../../../../core/services/swipe.service';
@@ -24,8 +24,10 @@ export class LetterReaderComponent implements OnInit, OnDestroy, AfterViewInit {
   letterId = 0;
   isCompleted = false;
   isLocked = false;
+  isMobile = false; // Track mobile state
   private routeSubscription?: Subscription;
   private swipeSubscription?: Subscription;
+  private resizeSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +39,9 @@ export class LetterReaderComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    // Initialize mobile state
+    this.isMobile = this.isMobileDevice();
+    
     // Load the initial letter
     this.loadInitialLetter();
     
@@ -62,13 +67,35 @@ export class LetterReaderComponent implements OnInit, OnDestroy, AfterViewInit {
         this.handleSwipe(swipeEvent);
       }
     });
+    
+    // Listen for window resize to update mobile state
+    this.resizeSubscription = fromEvent(window, 'resize').subscribe(() => {
+      this.isMobile = this.isMobileDevice();
+    });
   }
 
   ngAfterViewInit(): void {
-    // Add swipe listener to letter content
-    if (this.letterContent?.nativeElement) {
+    // Add swipe listener to letter content only on mobile devices
+    if (this.letterContent?.nativeElement && this.isMobile) {
       this.swipeService.addSwipeListener(this.letterContent.nativeElement);
     }
+  }
+
+  isMobileDevice(): boolean {
+    // More robust mobile detection
+    const isMobileWidth = window.innerWidth <= 768;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    console.log('Mobile detection:', {
+      width: window.innerWidth,
+      isMobileWidth,
+      isTouchDevice,
+      isMobileUserAgent,
+      result: isMobileWidth && (isTouchDevice || isMobileUserAgent)
+    });
+    
+    return isMobileWidth && (isTouchDevice || isMobileUserAgent);
   }
 
   private handleSwipe(swipeEvent: any): void {
@@ -115,6 +142,9 @@ export class LetterReaderComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.swipeSubscription) {
       this.swipeSubscription.unsubscribe();
+    }
+    if (this.resizeSubscription) {
+      this.resizeSubscription.unsubscribe();
     }
     if (this.letterContent?.nativeElement) {
       this.swipeService.removeSwipeListener(this.letterContent.nativeElement);

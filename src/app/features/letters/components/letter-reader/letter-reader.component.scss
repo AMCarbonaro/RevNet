@@ -78,30 +78,40 @@
       }
     }
     
-    .letter-meta {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-left: auto;
-      
-      .book-badge {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: var(--neon-cyan);
-        background: var(--discord-darker);
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        text-transform: capitalize;
-        white-space: nowrap;
-      }
-      
-      .read-time {
-        font-size: 0.85rem;
-        color: var(--text-muted);
-        white-space: nowrap;
-      }
-    }
+           .letter-meta {
+             display: flex;
+             align-items: center;
+             gap: 1rem;
+             flex-wrap: wrap;
+             margin-left: auto;
+             
+             .book-badge {
+               font-size: 0.9rem;
+               font-weight: 600;
+               color: var(--neon-cyan);
+               background: var(--discord-darker);
+               padding: 0.5rem 1rem;
+               border-radius: 6px;
+               text-transform: capitalize;
+               white-space: nowrap;
+             }
+             
+             .letter-count {
+               font-size: 0.9rem;
+               font-weight: 600;
+               color: var(--neon-green);
+               background: var(--discord-darker);
+               padding: 0.5rem 1rem;
+               border-radius: 6px;
+               white-space: nowrap;
+             }
+             
+             .read-time {
+               font-size: 0.85rem;
+               color: var(--text-muted);
+               white-space: nowrap;
+             }
+           }
   }
   
   .loading-state,
@@ -448,11 +458,18 @@
         }
       }
       
-      .letter-meta {
-        justify-content: center;
-        margin-left: 0;
-        flex-wrap: wrap;
-      }
+             .letter-meta {
+               justify-content: center;
+               margin-left: 0;
+               flex-wrap: wrap;
+               
+               .book-badge,
+               .letter-count,
+               .read-time {
+                 font-size: 0.8rem;
+                 padding: 0.4rem 0.8rem;
+               }
+             }
     }
     
     .letter-content {

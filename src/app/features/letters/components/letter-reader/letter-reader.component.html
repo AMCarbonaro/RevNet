@@ -19,6 +19,7 @@
     
     <div class="letter-meta" *ngIf="letter">
       <span class="book-badge">{{ letter.book | titlecase }}</span>
+      <span class="letter-count">{{ letter.id }}/30</span>
       <span class="read-time">{{ letter.estimatedReadTime }} min read</span>
     </div>
   </div>
@@ -33,8 +34,8 @@
 
         <!-- Letter Content -->
         <div *ngIf="!isLoading && letter" class="letter-content" #letterContent>
-          <!-- Swipe Indicator -->
-          <div class="swipe-indicator">
+          <!-- Swipe Indicator - Mobile Only -->
+          <div class="swipe-indicator" *ngIf="isMobile">
             <i class="fas fa-arrow-left"></i>
             <span>Swipe to navigate</span>
             <i class="fas fa-arrow-right"></i>
