@@ -106,9 +106,11 @@ export class AuthService {
     this.userSubject.next(demoUser);
     this.store.dispatch(UserActions.demoLoginSuccess({ user: demoUser }));
     
-    // Redirect based on letter progress
+    // Redirect based on user state
     if (demoUser.letterProgress.canAccessDiscord) {
       this.router.navigate(['/discord']);
+    } else if (!demoUser.hasSeenWelcome) {
+      this.router.navigate(['/welcome']);
     } else {
       this.router.navigate(['/letters']);
     }
@@ -129,6 +131,7 @@ export class AuthService {
         assignments: []
       },
       revoltMemberships: [],
+      hasSeenWelcome: false,
       createdAt: new Date(),
       lastActive: new Date()
     };
@@ -142,9 +145,11 @@ export class AuthService {
     
     this.userSubject.next(response.user);
     
-    // Redirect based on letter progress
+    // Redirect based on user state
     if (response.user.letterProgress.canAccessDiscord) {
       this.router.navigate(['/discord']);
+    } else if (!response.user.hasSeenWelcome) {
+      this.router.navigate(['/welcome']);
     } else {
       this.router.navigate(['/letters']);
     }

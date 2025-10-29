@@ -9,6 +9,7 @@ export interface User {
   customStatus?: string;
   letterProgress: LetterProgress;
   revoltMemberships: string[];
+  hasSeenWelcome?: boolean;
   createdAt: Date;
   lastActive: Date;
 }

@@ -1,0 +1,32 @@
+<div class="terminal-container">
+  <div class="terminal-header">
+    <div class="terminal-controls">
+      <div class="control close"></div>
+      <div class="control minimize"></div>
+      <div class="control maximize"></div>
+    </div>
+    <div class="terminal-title">RevNet Terminal</div>
+  </div>
+  
+  <div class="terminal-body">
+    <div class="terminal-content">
+      <div 
+        *ngFor="let line of displayedLines; let i = index" 
+        class="terminal-line"
+        [style.color]="getLineColor(i)"
+      >
+        {{ line }}
+      </div>
+    </div>
+    
+    <div class="continue-section" [class.show]="showContinueButton">
+      <button 
+        class="continue-btn"
+        (click)="continueToLetters()"
+        [disabled]="isTyping"
+      >
+        Continue to Anthony Letters
+      </button>
+    </div>
+  </div>
+</div>

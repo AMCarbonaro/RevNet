@@ -8,6 +8,7 @@ export const routes: Routes = [
   { path: 'home', loadComponent: () => import('./features/landing/components/landing-page/landing-page.component').then(m => m.LandingPageComponent) },
   { path: 'register', loadComponent: () => import('./features/auth/components/register/register.component').then(m => m.RegisterComponent) },
   { path: 'login', loadComponent: () => import('./features/auth/components/login/login.component').then(m => m.LoginComponent) },
+  { path: 'welcome', loadComponent: () => import('./features/auth/components/terminal-welcome/terminal-welcome.component').then(m => m.TerminalWelcomeComponent) },
   { path: 'auth/callback/:provider', loadComponent: () => import('./features/auth/components/oauth-callback/oauth-callback.component').then(m => m.OAuthCallbackComponent) },
   { 
     path: 'letters', 
