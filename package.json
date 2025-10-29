@@ -6,6 +6,7 @@
     "start": "npx @angular/cli serve",
     "build": "npx @angular/cli build",
     "build:prod": "npx @angular/cli build --configuration production",
+    "build:render": "npm install --production=false && npx @angular/cli build --configuration production",
     "serve:prod": "npx serve -s dist/revnet -l 3000",
     "build:ssr": "npx @angular/cli build --configuration production && npx @angular/cli run revnet:build-ssr:production",
     "serve:ssr": "npx @angular/cli run revnet:serve-ssr",
