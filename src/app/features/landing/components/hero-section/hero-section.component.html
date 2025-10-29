@@ -66,7 +66,7 @@
             <div class="server-avatar">R</div>
             <div class="server-details">
               <h3>Revolution Network</h3>
-              <span class="online-count">{{ totalMembers | number }} members online</span>
+              <span class="online-count">{{ getOnlineMembers() | number }} members online</span>
             </div>
           </div>
         </div>
@@ -78,17 +78,17 @@
               <div class="channel-item active">
                 <span class="channel-icon">#</span>
                 <span class="channel-name">climate-action</span>
-                <span class="member-count">1.2k</span>
+                <span class="member-count">{{ getChannelMembers(0) | number }}</span>
               </div>
               <div class="channel-item">
                 <span class="channel-icon">#</span>
                 <span class="channel-name">social-justice</span>
-                <span class="member-count">856</span>
+                <span class="member-count">{{ getChannelMembers(1) | number }}</span>
               </div>
               <div class="channel-item">
                 <span class="channel-icon">#</span>
                 <span class="channel-name">community-organizing</span>
-                <span class="member-count">2.1k</span>
+                <span class="member-count">{{ getChannelMembers(2) | number }}</span>
               </div>
             </div>
           </div>

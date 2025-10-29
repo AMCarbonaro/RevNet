@@ -16,4 +16,24 @@ export class HeroSectionComponent {
   @Input() totalRevolts = 0;
   @Input() totalMembers = 0;
   @Input() totalRaised = 0;
+  @Input() revolts: any[] = [];
+
+  getOnlineMembers(): number {
+    // Calculate online members (typically 10-20% of total members are online)
+    const onlinePercentage = 0.15; // 15% online
+    const calculated = Math.floor(this.totalMembers * onlinePercentage);
+    // Return at least 1 to show some activity
+    return Math.max(1, calculated);
+  }
+
+  getChannelMembers(channelIndex: number): number {
+    // Get member count for specific channel based on revolt data
+    if (this.revolts && this.revolts.length > channelIndex) {
+      return this.revolts[channelIndex]?.memberCount || 0;
+    }
+    
+    // Fallback values for demo purposes
+    const fallbackCounts = [1200, 856, 2100];
+    return fallbackCounts[channelIndex] || 0;
+  }
 }
