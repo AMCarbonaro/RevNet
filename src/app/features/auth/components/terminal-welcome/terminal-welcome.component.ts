@@ -122,9 +122,7 @@ export class TerminalWelcomeComponent implements OnInit, OnDestroy {
 
   private finishAnimation(): void {
     this.isTyping = false;
-    setTimeout(() => {
-      this.showContinueButton = true;
-    }, 1000);
+    this.showContinueButton = true;
   }
 
   continueToLetters(): void {
