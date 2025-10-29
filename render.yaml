@@ -24,7 +24,7 @@ services:
         value: production
       - key: PORT
         value: 3001
-      - key: MONGODB_URI
+      - key: DATABASE_URL
         fromDatabase:
           name: revnet3-db
           property: connectionString
