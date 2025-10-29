@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "build:prod": "ng build --configuration production",
+    "start": "npx ng serve",
+    "build": "npx ng build",
+    "build:prod": "npx ng build --configuration production",
     "serve:prod": "npx serve -s dist/revnet -l 3000",
-    "build:ssr": "ng build --configuration production && ng run revnet:build-ssr:production",
-    "serve:ssr": "ng run revnet:serve-ssr",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "build:ssr": "npx ng build --configuration production && npx ng run revnet:build-ssr:production",
+    "serve:ssr": "npx ng run revnet:serve-ssr",
+    "watch": "npx ng build --watch --configuration development",
+    "test": "npx ng test"
   },
   "prettier": {
     "printWidth": 100,
