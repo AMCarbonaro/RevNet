@@ -4,6 +4,8 @@ services:
     name: revnet3-frontend
     env: node
     plan: free
+    branch: main
+    autoDeploy: true
     buildCommand: npm ci --only=production && npm run build:prod
     startCommand: npx serve -s dist/revnet -l 3000
     envVars:
@@ -17,6 +19,8 @@ services:
     name: revnet3-backend
     env: node
     plan: free
+    branch: main
+    autoDeploy: true
     buildCommand: cd backend && npm ci && npx nest build
     startCommand: cd backend && npm start
     envVars:
