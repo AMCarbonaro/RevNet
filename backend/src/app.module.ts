@@ -19,22 +19,32 @@ import { RevNetModule } from './modules/revnet/revnet.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // Only configure TypeORM if DATABASE_URL is provided
-    ...(process.env.DATABASE_URL ? [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
-      entities: [TestEntity, User, Server, Channel, Message, Notification],
-      synchronize: process.env.NODE_ENV !== 'production', // Only in development
-      logging: false, // Disable logging for production
-      // Only use SSL for production (Render PostgreSQL)
-      ...(process.env.NODE_ENV === 'production' ? {
-        ssl: {
-          rejectUnauthorized: false,
-        },
-      } : {}),
-    })
-    ] : []),
+    // Configure TypeORM using DATABASE_URL (Render) or common fallbacks
+    ...((() => {
+      const databaseUrl = process.env.DATABASE_URL
+        || process.env.POSTGRES_URL
+        || process.env.POSTGRESQL_URL
+        || process.env.DATABASE_CONNECTION_STRING;
+
+      if (!databaseUrl) {
+        return [] as any[];
+      }
+
+      const sslOption = process.env.NODE_ENV === 'production'
+        ? { ssl: { rejectUnauthorized: false } }
+        : {};
+
+      return [
+        TypeOrmModule.forRoot({
+          type: 'postgres',
+          url: databaseUrl,
+          entities: [TestEntity, User, Server, Channel, Message, Notification],
+          synchronize: process.env.NODE_ENV !== 'production',
+          logging: false,
+          ...sslOption,
+        }),
+      ];
+    })()),
     LettersModule,
     AuthModule,
     RevoltsModule,
