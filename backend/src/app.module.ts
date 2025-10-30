@@ -27,6 +27,9 @@ import { RevNetModule } from './modules/revnet/revnet.module';
         || process.env.DATABASE_CONNECTION_STRING;
 
       if (!databaseUrl) {
+        console.error('[DB] No DATABASE_URL found! The application will fail to start without a database connection.');
+        console.error('[DB] Please set DATABASE_URL in your Render environment variables.');
+        // Return empty array to prevent TypeORM from trying to connect
         return [] as any[];
       }
 
