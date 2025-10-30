@@ -22,7 +22,6 @@ services:
     nodeVersion: 18
     plan: free
     branch: main
-    rootDir: backend
     autoDeploy: true
     buildCommand: npm ci && npm run build
     startCommand: npm start
