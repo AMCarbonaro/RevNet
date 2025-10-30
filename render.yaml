@@ -24,7 +24,7 @@ services:
     branch: main
     autoDeploy: true
     buildCommand: cd backend && npm ci && npm run build
-    startCommand: cd backend && npm run start:prod
+    startCommand: cd backend && chmod +x start.sh && ./start.sh
     envVars:
       - key: NODE_ENV
         value: production
