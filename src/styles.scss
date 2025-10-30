@@ -3,6 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* RevNet3 Styles */
+@import './styles/variables.scss';
+@import './styles/mixins.scss';
+
+/* Discord Theme */
+@import './styles/discord-theme.scss';
+
 /* Global styles for RevNet3 */
 body {
   @apply bg-discord-darkest text-discord-text font-discord;

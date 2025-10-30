@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { of, from } from 'rxjs';
@@ -10,12 +10,10 @@ import { AppState } from '../app.state';
 
 @Injectable()
 export class UserEffects {
-  constructor(
-    private actions$: Actions,
-    private store: Store<AppState>,
-    private authService: AuthService,
-    private lettersService: LettersService
-  ) {}
+  private actions$ = inject(Actions);
+  private store = inject(Store<AppState>);
+  private authService = inject(AuthService);
+  private lettersService = inject(LettersService);
 
   // Login Effect
   login$ = createEffect(() =>
@@ -31,7 +29,13 @@ export class UserEffects {
   register$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.register),
-      switchMap(() => of(UserActions.registerSuccess({ user: this.authService.getCurrentUser()! })))
+      switchMap(() => {
+        const user = this.authService.getCurrentUser();
+        if (!user) {
+          return of(UserActions.registerFailure({ error: 'User not found' }));
+        }
+        return of(UserActions.registerSuccess({ user }));
+      })
     )
   );
 
@@ -39,7 +43,13 @@ export class UserEffects {
   loginWithOAuth$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.loginWithOAuth),
-      switchMap(() => of(UserActions.loginWithOAuthSuccess({ user: this.authService.getCurrentUser()! })))
+      switchMap(() => {
+        const user = this.authService.getCurrentUser();
+        if (!user) {
+          return of(UserActions.loginWithOAuthFailure({ error: 'User not found' }));
+        }
+        return of(UserActions.loginWithOAuthSuccess({ user }));
+      })
     )
   );
 
@@ -47,7 +57,13 @@ export class UserEffects {
   demoLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.demoLogin),
-      switchMap(() => of(UserActions.demoLoginSuccess({ user: this.authService.getCurrentUser()! })))
+      switchMap(() => {
+        const user = this.authService.getCurrentUser();
+        if (!user) {
+          return of(UserActions.demoLoginFailure({ error: 'User not found' }));
+        }
+        return of(UserActions.demoLoginSuccess({ user }));
+      })
     )
   );
 
@@ -55,7 +71,13 @@ export class UserEffects {
   completeLetter$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.completeLetter),
-      switchMap(() => of(UserActions.completeLetterSuccess({ progress: this.authService.getCurrentUser()!.letterProgress })))
+      switchMap(() => {
+        const user = this.authService.getCurrentUser();
+        if (!user) {
+          return of(UserActions.completeLetterFailure({ error: 'User not found' }));
+        }
+        return of(UserActions.completeLetterSuccess({ progress: user.letterProgress }));
+      })
     )
   );
 

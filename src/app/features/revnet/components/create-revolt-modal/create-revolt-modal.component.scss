@@ -1,0 +1,335 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: $revnet-bg-secondary;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-4;
+  border-bottom: 1px solid $revnet-bg-accent;
+
+  h2 {
+    margin: 0;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $revnet-text-normal;
+  }
+
+  .close-btn {
+    @include button-reset;
+    color: $revnet-text-muted;
+    font-size: 24px;
+    line-height: 1;
+    padding: $space-1;
+    border-radius: 4px;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: $revnet-bg-accent;
+      color: $revnet-text-normal;
+    }
+  }
+}
+
+form {
+  padding: $space-4;
+}
+
+.form-group {
+  margin-bottom: $space-4;
+
+  label {
+    display: block;
+    font-weight: 600;
+    color: $revnet-text-normal;
+    margin-bottom: $space-2;
+    font-size: $font-size-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    background: $revnet-bg-tertiary;
+    border: 1px solid $revnet-bg-accent;
+    border-radius: 6px;
+    padding: $space-3;
+    color: $revnet-text-normal;
+    font-size: $font-size-md;
+    transition: all $transition-fast;
+
+    &:focus {
+      outline: none;
+      border-color: $revnet-blurple;
+      box-shadow: 0 0 0 2px rgba(114, 137, 218, 0.2);
+    }
+
+    &::placeholder {
+      color: $revnet-text-muted;
+    }
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+  }
+
+  .error-message {
+    color: $revnet-red;
+    font-size: $font-size-sm;
+    margin-top: $space-1;
+    display: flex;
+    align-items: center;
+    gap: $space-1;
+
+    &::before {
+      content: '⚠';
+      font-size: $font-size-sm;
+    }
+  }
+
+  .char-count {
+    text-align: right;
+    font-size: $font-size-xs;
+    color: $revnet-text-muted;
+    margin-top: $space-1;
+  }
+}
+
+.icon-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4;
+  border: 2px dashed $revnet-bg-accent;
+  border-radius: 8px;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $revnet-blurple;
+    background: rgba(114, 137, 218, 0.05);
+  }
+
+  .icon-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid $revnet-bg-accent;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .icon-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: $revnet-bg-tertiary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $revnet-text-muted;
+    border: 2px solid $revnet-bg-accent;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  .file-label {
+    @include button-reset;
+    background: $revnet-blurple;
+    color: $revnet-text-light;
+    padding: $space-2 $space-4;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: darken($revnet-blurple, 10%);
+    }
+  }
+
+  .file-info {
+    font-size: $font-size-xs;
+    color: $revnet-text-muted;
+    text-align: center;
+  }
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  cursor: pointer;
+  font-weight: 500;
+  color: $revnet-text-normal;
+
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  .checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $revnet-bg-accent;
+    border-radius: 4px;
+    position: relative;
+    transition: all $transition-fast;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 10px;
+      border: solid $revnet-text-light;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      opacity: 0;
+      transition: opacity $transition-fast;
+    }
+  }
+
+  input[type="checkbox"]:checked + .checkmark {
+    background: $revnet-blurple;
+    border-color: $revnet-blurple;
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.checkbox-description {
+  font-size: $font-size-sm;
+  color: $revnet-text-muted;
+  margin-top: $space-1;
+  margin-left: 32px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-3;
+  margin-top: $space-6;
+  padding-top: $space-4;
+  border-top: 1px solid $revnet-bg-accent;
+
+  .btn {
+    @include button-reset;
+    padding: $space-3 $space-4;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all $transition-fast;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    min-width: 120px;
+    justify-content: center;
+
+    &.btn-secondary {
+      background: $revnet-bg-tertiary;
+      color: $revnet-text-normal;
+      border: 1px solid $revnet-bg-accent;
+
+      &:hover {
+        background: $revnet-bg-accent;
+      }
+    }
+
+    &.btn-primary {
+      background: $revnet-blurple;
+      color: $revnet-text-light;
+
+      &:hover:not(:disabled) {
+        background: darken($revnet-blurple, 10%);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: $space-4;
+  }
+
+  .modal-header,
+  form {
+    padding: $space-3;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}

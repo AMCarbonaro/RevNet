@@ -1,0 +1,143 @@
+@import '../../../../../styles/variables';
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: $z-modal;
+}
+
+.modal-content {
+  background: $revnet-bg-floating;
+  border-radius: $border-radius-lg;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: $shadow-xl;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-6;
+  border-bottom: 1px solid $revnet-border-subtle;
+
+  h2 {
+    margin: 0;
+    color: $revnet-text-normal;
+    font-size: $font-size-xl;
+    font-weight: 600;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: $revnet-text-muted;
+    font-size: $font-size-2xl;
+    cursor: pointer;
+    padding: $space-2;
+    border-radius: $border-radius-sm;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $revnet-text-normal;
+      background: $revnet-bg-secondary;
+    }
+  }
+}
+
+.modal-body {
+  padding: $space-6;
+
+  .form-group {
+    margin-bottom: $space-4;
+
+    label {
+      display: block;
+      margin-bottom: $space-2;
+      color: $revnet-text-normal;
+      font-weight: 500;
+      font-size: $font-size-sm;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: $space-3 $space-4;
+      background: $revnet-bg-secondary;
+      border: 1px solid $revnet-border-subtle;
+      border-radius: $border-radius-sm;
+      color: $revnet-text-normal;
+      font-size: $font-size-md;
+      transition: all $transition-fast;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+        border-color: $revnet-accent-primary;
+        box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.2);
+      }
+
+      &::placeholder {
+        color: $revnet-text-muted;
+      }
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-3;
+  padding: $space-6;
+  border-top: 1px solid $revnet-border-subtle;
+
+  .btn {
+    padding: $space-3 $space-6;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-md;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all $transition-fast;
+    border: none;
+
+    &.btn-secondary {
+      background: $revnet-bg-secondary;
+      color: $revnet-text-normal;
+
+      &:hover {
+        background: $revnet-bg-tertiary;
+      }
+    }
+
+    &.btn-primary {
+      background: $revnet-accent-primary;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background: $revnet-accent-primary-hover;
+      }
+
+      &:disabled {
+        background: $revnet-interactive-muted;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+    }
+  }
+}

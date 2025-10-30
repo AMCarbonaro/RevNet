@@ -1,0 +1,152 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.mention-autocomplete {
+  position: absolute;
+  background: $revnet-bg-secondary;
+  border: 1px solid $revnet-bg-accent;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  min-width: 280px;
+  max-width: 320px;
+  overflow: hidden;
+}
+
+.mention-list {
+  max-height: 200px;
+  overflow-y: auto;
+  @include scrollbar-thin;
+}
+
+.mention-item {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2 $space-3;
+  cursor: pointer;
+  transition: all $transition-fast;
+  border-bottom: 1px solid $revnet-bg-accent;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover,
+  &.selected {
+    background: $revnet-bg-accent;
+  }
+
+  &.selected {
+    background: rgba($revnet-blurple, 0.1);
+  }
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background: $revnet-blurple;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.username {
+  font-weight: 500;
+  color: $revnet-text-normal;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.discriminator {
+  color: $revnet-text-muted;
+  font-size: 12px;
+}
+
+.user-status {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $revnet-text-muted;
+  }
+
+  &.online .status-dot {
+    background: $revnet-status-success;
+  }
+
+  &.away .status-dot {
+    background: $revnet-status-warning;
+  }
+
+  &.dnd .status-dot {
+    background: $revnet-status-danger;
+  }
+
+  &.offline .status-dot {
+    background: $revnet-text-muted;
+  }
+}
+
+.mention-hint {
+  padding: $space-2 $space-3;
+  background: $revnet-bg-primary;
+  border-top: 1px solid $revnet-bg-accent;
+  font-size: 11px;
+  color: $revnet-text-muted;
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+
+  kbd {
+    background: $revnet-bg-accent;
+    border: 1px solid $revnet-bg-primary;
+    border-radius: 3px;
+    padding: 1px 3px;
+    font-size: 10px;
+    font-family: monospace;
+    color: $revnet-text-muted;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .mention-autocomplete {
+    min-width: 250px;
+    max-width: 280px;
+  }
+
+  .mention-item {
+    padding: $space-1 $space-2;
+  }
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+
+  .username {
+    font-size: 13px;
+  }
+
+  .discriminator {
+    font-size: 11px;
+  }
+}

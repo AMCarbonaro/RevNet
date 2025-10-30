@@ -1,0 +1,340 @@
+@import '../../../../../styles/variables';
+
+.friends-list {
+  height: 100%;
+  background: $revnet-bg-secondary;
+  border-left: 1px solid $revnet-border-subtle;
+  display: flex;
+  flex-direction: column;
+
+  .friends-header {
+    padding: 1rem;
+    border-bottom: 1px solid $revnet-border-subtle;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $revnet-bg-tertiary;
+
+    h3 {
+      color: $revnet-text-normal;
+      font-size: 1.1rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .add-friend-btn {
+      background: $revnet-accent-primary;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 12px;
+
+      &:hover {
+        background: $revnet-accent-primary-hover;
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+      }
+
+      .icon-plus::before {
+        content: '+';
+      }
+    }
+  }
+
+  .add-friend-form {
+    padding: 1rem;
+    border-bottom: 1px solid $revnet-border-subtle;
+    background: $revnet-bg-tertiary;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+
+    input {
+      flex: 1;
+      background: $revnet-bg-primary;
+      border: 1px solid $revnet-border-subtle;
+      border-radius: 6px;
+      padding: 0.5rem;
+      color: $revnet-text-normal;
+      font-size: 14px;
+
+      &::placeholder {
+        color: $revnet-text-muted;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $revnet-accent-primary;
+        box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.2);
+      }
+    }
+
+    button {
+      background: $revnet-accent-primary;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+
+      &:hover:not(:disabled) {
+        background: $revnet-accent-primary-hover;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .friend-requests, .online-friends, .all-friends {
+    padding: 0.5rem 0;
+
+    h4 {
+      color: $revnet-text-muted;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 1rem 0.5rem;
+      font-weight: 600;
+    }
+  }
+
+  .friend-request-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid $revnet-border-subtle;
+
+    .request-info {
+      display: flex;
+      align-items: center;
+      flex: 1;
+
+      .request-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: $revnet-accent-primary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 12px;
+        margin-right: 0.75rem;
+      }
+
+      .request-details {
+        .request-username {
+          color: $revnet-text-normal;
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        .request-status {
+          color: $revnet-text-muted;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 0.5rem;
+
+      button {
+        border: none;
+        border-radius: 4px;
+        padding: 0.25rem 0.5rem;
+        font-size: 11px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &.accept-btn {
+          background: $revnet-status-success;
+          color: #000;
+
+          &:hover {
+            background: $revnet-accent-positive;
+          }
+        }
+
+        &.decline-btn {
+          background: $revnet-status-danger;
+          color: white;
+
+          &:hover {
+            background: $revnet-accent-danger;
+          }
+        }
+      }
+    }
+  }
+
+  .friend-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+
+    &:hover {
+      background: $revnet-interactive-muted;
+      border-left-color: $revnet-accent-primary;
+    }
+
+    &.online {
+      .friend-avatar .online-indicator {
+        background: $revnet-status-online;
+      }
+    }
+
+    .friend-avatar {
+      position: relative;
+      margin-right: 0.75rem;
+
+      .avatar-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: $revnet-accent-primary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 12px;
+      }
+
+      .online-indicator {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 10px;
+        height: 10px;
+        background: $revnet-status-invisible;
+        border: 2px solid $revnet-bg-secondary;
+        border-radius: 50%;
+      }
+    }
+
+    .friend-info {
+      flex: 1;
+      min-width: 0;
+
+      .friend-username {
+        color: $revnet-text-normal;
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .friend-status {
+        color: $revnet-text-muted;
+        font-size: 12px;
+        text-transform: capitalize;
+      }
+    }
+
+    .friend-actions {
+      display: flex;
+      gap: 0.25rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      button {
+        background: $revnet-interactive-muted;
+        border: none;
+        border-radius: 4px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $revnet-text-muted;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 10px;
+
+        &:hover {
+          background: $revnet-interactive-hover;
+          color: $revnet-text-normal;
+        }
+
+        .icon-message::before {
+          content: '💬';
+        }
+
+        .icon-more::before {
+          content: '⋯';
+        }
+      }
+    }
+
+    &:hover .friend-actions {
+      opacity: 1;
+    }
+  }
+
+  .no-friends {
+    padding: 2rem;
+    text-align: center;
+    color: $revnet-text-muted;
+
+    p {
+      margin-bottom: 1rem;
+      font-size: 14px;
+    }
+
+    .add-friend-btn {
+      background: $revnet-accent-primary;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: $revnet-accent-primary-hover;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+      }
+    }
+  }
+}
+
+// Scrollbar styling
+.friends-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.friends-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.friends-list::-webkit-scrollbar-thumb {
+  background: rgba(88, 101, 242, 0.3);
+  border-radius: 2px;
+}
+
+.friends-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(88, 101, 242, 0.5);
+}

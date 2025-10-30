@@ -1,0 +1,151 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.message-thread {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  background: $revnet-bg-secondary;
+  border-left: 1px solid $revnet-bg-accent;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.thread-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-3;
+  border-bottom: 1px solid $revnet-bg-accent;
+  background: $revnet-bg-primary;
+}
+
+.thread-info {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.thread-icon {
+  color: $revnet-text-muted;
+  flex-shrink: 0;
+}
+
+.thread-title {
+  font-weight: 600;
+  color: $revnet-text-normal;
+  font-size: 14px;
+}
+
+.thread-count {
+  color: $revnet-text-muted;
+  font-size: 12px;
+  background: $revnet-bg-accent;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: $revnet-text-muted;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $revnet-bg-accent;
+    color: $revnet-text-normal;
+  }
+}
+
+.thread-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.original-message {
+  padding: $space-3;
+  border-bottom: 1px solid $revnet-bg-accent;
+  background: rgba($revnet-blurple, 0.05);
+}
+
+.thread-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: $space-2;
+  @include scrollbar-thin;
+}
+
+.thread-input {
+  padding: $space-3;
+  border-top: 1px solid $revnet-bg-accent;
+  background: $revnet-bg-primary;
+}
+
+.input-container {
+  display: flex;
+  gap: $space-2;
+  align-items: center;
+}
+
+.thread-input-field {
+  flex: 1;
+  background: $revnet-bg-accent;
+  border: 1px solid $revnet-bg-accent;
+  border-radius: 6px;
+  padding: $space-2;
+  color: $revnet-text-normal;
+  font-size: 14px;
+  outline: none;
+  transition: all $transition-fast;
+
+  &:focus {
+    border-color: $revnet-blurple;
+    background: $revnet-bg-secondary;
+  }
+
+  &::placeholder {
+    color: $revnet-text-muted;
+  }
+}
+
+.send-btn {
+  background: $revnet-blurple;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: $space-2 $space-3;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover:not(:disabled) {
+    background: darken($revnet-blurple, 10%);
+  }
+
+  &:disabled {
+    background: $revnet-bg-accent;
+    color: $revnet-text-muted;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .message-thread {
+    width: 100vw;
+    left: 0;
+  }
+}

@@ -1,0 +1,380 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.status-dropdown {
+  position: relative;
+  display: inline-block;
+
+  .status-trigger {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    background: $revnet-bg-secondary;
+    border: 1px solid $revnet-bg-accent;
+    border-radius: 6px;
+    padding: $space-2 $space-3;
+    color: $revnet-text-normal;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all $transition-fast;
+    min-width: 120px;
+    user-select: none;
+    outline: none;
+    position: relative;
+    z-index: 1;
+
+    &:focus {
+      outline: 2px solid $revnet-blurple;
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+
+    &:hover {
+      background: $revnet-bg-accent;
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+
+      &.status-online {
+        background: $revnet-green;
+      }
+
+      &.status-away {
+        background: $revnet-yellow;
+      }
+
+      &.status-dnd {
+        background: $revnet-red;
+      }
+
+      &.status-invisible {
+        background: $revnet-text-muted;
+      }
+    }
+
+    .status-text {
+      flex: 1;
+      text-align: left;
+    }
+
+    .dropdown-arrow {
+      transition: transform $transition-fast;
+      flex-shrink: 0;
+    }
+  }
+
+  &.open .status-trigger .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+
+  .status-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background: $revnet-bg-primary;
+    border: 1px solid $revnet-bg-accent;
+    border-radius: 8px;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    margin-bottom: $space-1;
+    overflow: hidden;
+    animation: dropdownSlideUp 0.2s ease-out;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  @keyframes dropdownSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes dropdownSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .status-options {
+    padding: $space-1;
+    border-bottom: 1px solid $revnet-bg-accent;
+
+    .status-option {
+      display: flex;
+      align-items: center;
+      gap: $space-2;
+      width: 100%;
+      background: none;
+      border: none;
+      padding: $space-2;
+      color: $revnet-text-normal;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all $transition-fast;
+
+      &:hover {
+        background: $revnet-bg-accent;
+      }
+
+      &.active {
+        background: $revnet-blurple;
+        color: #ffffff;
+      }
+
+      .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+
+        &.status-online {
+          background: $revnet-green;
+        }
+
+        &.status-away {
+          background: $revnet-yellow;
+        }
+
+        &.status-dnd {
+          background: $revnet-red;
+        }
+
+        &.status-invisible {
+          background: $revnet-text-muted;
+        }
+      }
+    }
+  }
+
+  .custom-status-section,
+  .activity-section {
+    padding: $space-3;
+    border-bottom: 1px solid $revnet-bg-accent;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $space-2;
+      font-size: 12px;
+      font-weight: 600;
+      color: $revnet-text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      .clear-status-btn,
+      .clear-activity-btn {
+        background: none;
+        border: none;
+        color: $revnet-text-link;
+        font-size: 11px;
+        cursor: pointer;
+        padding: 2px 4px;
+        border-radius: 3px;
+        transition: all $transition-fast;
+
+        &:hover {
+          background: $revnet-bg-accent;
+        }
+      }
+    }
+
+    .custom-status-input {
+      display: flex;
+      gap: $space-2;
+      position: relative;
+
+      .status-input {
+        flex: 1;
+        background: $revnet-bg-secondary;
+        border: 1px solid $revnet-bg-accent;
+        border-radius: 6px;
+        padding: $space-2;
+        color: $revnet-text-normal;
+        font-size: 14px;
+
+        &:focus {
+          outline: none;
+          border-color: $revnet-blurple;
+          box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.2);
+        }
+
+        &::placeholder {
+          color: $revnet-text-muted;
+        }
+      }
+
+      .emoji-picker {
+        position: relative;
+
+        .emoji-btn {
+          background: $revnet-bg-secondary;
+          border: 1px solid $revnet-bg-accent;
+          border-radius: 6px;
+          padding: $space-2;
+          color: $revnet-text-normal;
+          cursor: pointer;
+          font-size: 16px;
+          transition: all $transition-fast;
+
+          &:hover {
+            background: $revnet-bg-accent;
+          }
+        }
+
+        .emoji-panel {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          background: $revnet-bg-primary;
+          border: 1px solid $revnet-bg-accent;
+          border-radius: 8px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+          z-index: 1001;
+          margin-top: $space-1;
+          padding: $space-2;
+          max-width: 200px;
+
+          .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+
+            .emoji-option {
+              background: none;
+              border: none;
+              padding: 4px;
+              cursor: pointer;
+              border-radius: 4px;
+              font-size: 16px;
+              transition: all $transition-fast;
+
+              &:hover {
+                background: $revnet-bg-accent;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .activity-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: $space-1;
+      margin-bottom: $space-2;
+
+      .activity-option {
+        display: flex;
+        align-items: center;
+        gap: $space-2;
+        background: $revnet-bg-secondary;
+        border: 1px solid $revnet-bg-accent;
+        border-radius: 6px;
+        padding: $space-2;
+        color: $revnet-text-normal;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all $transition-fast;
+
+        &:hover {
+          background: $revnet-bg-accent;
+        }
+
+        &.active {
+          background: $revnet-blurple;
+          color: #ffffff;
+        }
+
+        .activity-icon {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .activity-details {
+      display: flex;
+      flex-direction: column;
+      gap: $space-2;
+
+      .activity-input {
+        background: $revnet-bg-secondary;
+        border: 1px solid $revnet-bg-accent;
+        border-radius: 6px;
+        padding: $space-2;
+        color: $revnet-text-normal;
+        font-size: 14px;
+
+        &:focus {
+          outline: none;
+          border-color: $revnet-blurple;
+          box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.2);
+        }
+
+        &::placeholder {
+          color: $revnet-text-muted;
+        }
+      }
+
+      .save-activity-btn {
+        background: $revnet-blurple;
+        border: none;
+        border-radius: 6px;
+        padding: $space-2;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all $transition-fast;
+
+        &:hover {
+          background: $revnet-accent-primary-hover;
+        }
+      }
+    }
+  }
+}
+
+// Click outside to close
+.status-dropdown::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity $transition-fast;
+}
+
+.status-dropdown.open::before {
+  opacity: 1;
+  pointer-events: all;
+}

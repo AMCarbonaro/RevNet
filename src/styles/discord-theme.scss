@@ -1,0 +1,755 @@
+// Discord Theme Variables - EXACT from Discord Web App
+:root {
+  // Core Discord Colors (from browser console)
+  --brand-500: #5865f2;
+  --brand-560: #4752c4;
+  --brand-600: #3c45a5;
+  --brand-700: #2f3136;
+  --brand-800: #2b2d31;
+  --brand-900: #23272a;
+  --brand-1000: #1e1f22;
+  --brand-1100: #111214;
+  
+  // Background Colors
+  --background-primary: #313338;
+  --background-secondary: #2b2d31;
+  --background-secondary-alt: #232428;
+  --background-tertiary: #1e1f22;
+  --background-accent: #4752c4;
+  --background-floating: #111214;
+  --background-mobile-primary: #f2f3f5;
+  --background-mobile-secondary: #ffffff;
+  --background-modifier-hover: rgba(79, 84, 92, 0.16);
+  --background-modifier-active: rgba(79, 84, 92, 0.24);
+  --background-modifier-selected: rgba(79, 84, 92, 0.32);
+  --background-modifier-accent: hsla(0, 0%, 100%, 0.06);
+  --channeltextarea-background: #383a40;
+  
+  // Text Colors
+  --text-normal: #dbdee1;
+  --text-muted: #b5bac1;
+  --text-link: #00a8fc;
+  --text-link-low-saturation: #5d80d6;
+  --text-positive: #23a55a;
+  --text-warning: #f0b232;
+  --text-danger: #f23f42;
+  --text-brand: #5865f2;
+  
+  // Interactive Colors
+  --interactive-normal: #b5bac1;
+  --interactive-hover: #dcddde;
+  --interactive-active: #ffffff;
+  --interactive-muted: #4e5058;
+  
+  // Server Colors
+  --server-item-hover: #5865f2;
+  --server-item-active: #5865f2;
+  --server-item-selected: #ffffff;
+  
+  // Channel Colors
+  --channel-text: #949ba4;
+  --channel-text-hover: #dcddde;
+  --channel-text-active: #ffffff;
+  --channel-icon: #6e7278;
+  --channel-icon-hover: #dcddde;
+  
+  // Status Colors
+  --status-online: #23a55a;
+  --status-away: #f0b232;
+  --status-busy: #f23f42;
+  --status-invisible: #80848e;
+  
+  // Accent Colors
+  --accent-primary: #5865f2;
+  --accent-primary-hover: #4752c4;
+  --accent-positive: #23a55a;
+  --accent-warning: #f0b232;
+  --accent-danger: #f23f42;
+  
+  // Border Colors
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --border-subtle-selected: rgba(79, 84, 92, 0.48);
+  
+  // Scrollbar Colors
+  --scrollbar-thin-thumb: rgba(0, 0, 0, 0.2);
+  --scrollbar-thin-track: transparent;
+  --scrollbar-auto-thumb: rgba(0, 0, 0, 0.2);
+  --scrollbar-auto-track: rgba(0, 0, 0, 0.1);
+  
+  // Elevation/Shadow
+  --elevation-low: 0 1px 0 rgba(4, 4, 5, 0.2), 0 1.5px 0 rgba(6, 6, 7, 0.05), 0 2px 0 rgba(4, 4, 5, 0.05);
+  --elevation-medium: 0 4px 4px rgba(0, 0, 0, 0.16);
+  --elevation-high: 0 8px 16px rgba(0, 0, 0, 0.24);
+  --elevation-stroke: 0 0 0 1px rgba(4, 4, 5, 0.15);
+  
+  // Font Sizes
+  --font-size-sm: 11px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 20px;
+  
+  // Spacing
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  // Border Radius
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-full: 50%;
+  
+  // Transitions
+  --transition-fast: 100ms;
+  --transition-normal: 150ms;
+  --transition-slow: 200ms;
+}
+
+// Discord Font Family
+.discord-font {
+  font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+// Global Discord Styles
+.discord-container {
+  font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Discord Main Layout Classes (EXACT from Discord Web App)
+.appMount__51fd7 {
+  // Main Discord app container
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app__160d8 {
+  // Main app wrapper
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.layers__160d8 {
+  // Layer container
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.baseLayer__960e4 {
+  // Base layer
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.container_c48ade {
+  // Main container
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.base_c48ade {
+  // Base container
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+// Server List (Guilds) - EXACT dimensions from extracted data
+.wrapper_ef3116 {
+  // Server list wrapper
+  width: 72px;
+  height: 556px;
+  background-color: var(--background-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.guilds_c48ade {
+  // Server list container
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.tree_ef3116 {
+  // Server tree container
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.itemsContainer_ef3116 {
+  // Server items container
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+// Channel Sidebar - EXACT dimensions from extracted data
+.sidebar_c48ade {
+  // Channel sidebar
+  width: 240px;
+  height: 606px;
+  background-color: var(--background-secondary);
+  display: flex;
+  flex-direction: column;
+}
+
+// Additional Discord Classes from extracted data
+.title_bb0d86 {
+  // Title text
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-normal);
+  line-height: 20px;
+}
+
+.badge_c99c29 {
+  // Badge element
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-normal);
+  line-height: 16px;
+}
+
+.hiddenVisually_b18fe2 {
+  // Visually hidden element
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text__3b95d {
+  // Text element
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  text-transform: uppercase;
+  color: var(--text-normal);
+}
+
+.item__58105 {
+  // Item element
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--text-normal);
+}
+
+// Server item specific classes
+.wrapper_cc5dd2 {
+  // Server icon wrapper
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition: border-radius 0.15s ease;
+  cursor: pointer;
+}
+
+.wrapper_cc5dd2:hover {
+  border-radius: 16px;
+}
+
+.selected__91816 {
+  // Selected server item
+  background-color: var(--brand-500);
+}
+
+.childWrapper__6e9f8 {
+  // Child wrapper
+  position: relative;
+}
+
+.childWrapperNoHoverBg__6e9f8 {
+  // Child wrapper without hover background
+  position: relative;
+}
+
+.lowerBadge_cc5dd2 {
+  // Lower badge position
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.numberBadge__2b1f5 {
+  // Number badge
+  background-color: var(--accent-danger);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.base__2b1f5 {
+  // Badge base
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eyebrow__2b1f5 {
+  // Badge eyebrow
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.baseShapeRound__2b1f5 {
+  // Round badge shape
+  border-radius: 8px;
+}
+
+.pill_ed9a5f {
+  // Pill indicator
+  background-color: var(--text-normal);
+  height: 8px;
+  border-radius: 4px;
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.15s ease;
+}
+
+.blobContainer_e5445c {
+  // Blob container for server icons
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.acronym__6e9f8 {
+  // Server acronym text
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+// Channel list classes
+.wrapper_d144f8 {
+  // Channel wrapper
+  position: relative;
+}
+
+.target_d144f8 {
+  // Channel target
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.centerTarget_d144f8 {
+  // Centered channel target
+  justify-content: center;
+}
+
+// Folder classes
+.folderGroup__48112 {
+  // Folder group
+  margin-bottom: 8px;
+}
+
+.folderHeader__48112 {
+  // Folder header
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.folderButton__48112 {
+  // Folder button
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.folderButtonInner__48112 {
+  // Folder button inner
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.folderButtonContent__48112 {
+  // Folder button content
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.folderIconWrapper__48112 {
+  // Folder icon wrapper
+  margin-right: 8px;
+}
+
+.folderIcon__48112 {
+  // Folder icon
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.folderPreviewWrapper__48112 {
+  // Folder preview wrapper
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.folderPreview__48112 {
+  // Folder preview
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.folderPreviewGuildIcon__48112 {
+  // Folder preview guild icon
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.iconSizeMini_f34534 {
+  // Mini icon size
+  width: 16px;
+  height: 16px;
+}
+
+.iconInactive_f34534 {
+  // Inactive icon
+  opacity: 0.5;
+}
+
+.upperBadge_cc5dd2 {
+  // Upper badge position
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+// Discord Button Styles (EXACT from extracted data)
+.button__201d5 {
+  // Base button class
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: all 0.15s ease;
+}
+
+.lookFilled__201d5 {
+  // Filled button style
+  background-color: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.colorPrimary__201d5 {
+  // Primary color variant
+  background-color: var(--brand-500);
+  color: #ffffff;
+}
+
+.sizeSmall__201d5 {
+  // Small button size
+  height: 32px;
+  padding: 3px 11px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.fullWidth__201d5 {
+  // Full width button
+  width: 100%;
+}
+
+.grow__201d5 {
+  // Grow to fill container
+  flex: 1;
+}
+
+// Interactive Element Styles (EXACT from extracted data)
+.clickable_c99c29 {
+  // Clickable element base
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+  padding: 0px 4px;
+  margin: 0px 2px;
+}
+
+.interactive_bf202d {
+  // Interactive element base
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  padding: 0px;
+  margin: 0px;
+}
+
+.interactive__972a0 {
+  // Interactive element variant
+  color: var(--interactive-normal);
+  background-color: transparent;
+}
+
+.linkButton__972a0 {
+  // Link button style
+  text-decoration: none;
+  color: inherit;
+}
+
+.interactiveSelected__972a0 {
+  // Selected interactive element
+  background-color: rgba(151, 151, 159, 0.2);
+  color: var(--text-normal);
+}
+
+.selected_bf202d {
+  // Selected state
+  background-color: rgba(151, 151, 159, 0.2);
+}
+
+// Typography Classes (EXACT from extracted data)
+.text-sm\/medium_cf4812 {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  font-family: var(--font-family);
+}
+
+.defaultColor__4bd52 {
+  color: var(--text-normal);
+}
+
+.lineClamp1__4bd52 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Icon Classes (EXACT from extracted data)
+.icon__9293f {
+  // Icon base class
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.iconWrapper__9293f {
+  // Icon wrapper
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.clickable__9293f {
+  // Clickable icon wrapper
+  cursor: pointer;
+  user-select: none;
+}
+
+.svg__2338f {
+  // SVG base class
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.svg_cc5dd2 {
+  // Server icon SVG
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition: border-radius 0.15s ease;
+}
+
+.shiftSVG_cc5dd2 {
+  // Shifted SVG for hover effect
+  transition: border-radius 0.15s ease;
+}
+
+// Hover and Transition Classes (EXACT from extracted data)
+.hoverRoll__0263c {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hovered__0263c {
+  cursor: pointer;
+  transition: 0.22s ease;
+}
+
+// Discord Theme Classes
+.theme-dark {
+  // Dark theme base
+  color-scheme: dark;
+}
+
+.theme-darker {
+  // Darker theme variant
+  --background-primary: #2b2d31;
+  --background-secondary: #23272a;
+  --background-secondary-alt: #1e1f22;
+}
+
+.images-dark {
+  // Dark image theme
+  filter: brightness(0.8) contrast(1.2);
+}
+
+// Server Item Styles
+.listItem__650eb {
+  // Server list item
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-radius 0.15s ease;
+}
+
+.listItem__650eb:hover {
+  border-radius: 16px;
+}
+
+.listItem__650eb.selected__91816 {
+  border-radius: 16px;
+  background-color: var(--accent-primary);
+}
+
+// Pill indicator
+.pill__1f388 {
+  // Server pill indicator
+  position: absolute;
+  left: -8px;
+  width: 4px;
+  height: 0;
+  background-color: var(--text-normal);
+  border-radius: 0 2px 2px 0;
+  transition: height 0.15s ease;
+}
+
+.pill__1f388.active__3b95d {
+  height: 20px;
+}
+
+// Server icon wrapper
+.wrapper__58105 {
+  // Server icon wrapper
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-tertiary);
+  transition: border-radius 0.15s ease;
+}
+
+.wrapper__58105:hover {
+  border-radius: 16px;
+}
+
+// Badge styles
+.numberBadge__2b1f5 {
+  // Notification badge
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  background-color: var(--accent-danger);
+  color: white;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+// Folder styles
+.folderGroup__48112 {
+  // Server folder group
+  position: relative;
+}
+
+.folderButton__48112 {
+  // Folder button
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--background-tertiary);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-radius 0.15s ease;
+}
+
+.folderButton__48112:hover {
+  border-radius: 16px;
+}
+

@@ -1,0 +1,205 @@
+@import '../../../../../styles/variables';
+
+.direct-messages {
+  height: 100%;
+  background: $revnet-bg-secondary;
+  border-right: 1px solid $revnet-border-subtle;
+  display: flex;
+  flex-direction: column;
+
+  .dm-header {
+    padding: 1rem;
+    border-bottom: 1px solid $revnet-border-subtle;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $revnet-bg-tertiary;
+
+    h2 {
+      color: $revnet-text-normal;
+      font-size: 1.2rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .dm-actions {
+      display: flex;
+      gap: 0.5rem;
+
+      button {
+        background: $revnet-accent-primary;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+
+        &:hover {
+          background: $revnet-accent-primary-hover;
+          transform: scale(1.1);
+          box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+        }
+
+        .icon-plus::before {
+          content: '+';
+        }
+
+        .icon-group::before {
+          content: '👥';
+        }
+      }
+    }
+  }
+
+  .dm-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 0;
+
+    .dm-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+
+      &:hover {
+        background: $revnet-interactive-muted;
+        border-left-color: $revnet-accent-primary;
+      }
+
+      &.active {
+        background: rgba(88, 101, 242, 0.2);
+        border-left-color: $revnet-accent-primary;
+      }
+
+      .dm-avatar {
+        position: relative;
+        margin-right: 0.75rem;
+
+        .avatar-circle {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 600;
+          font-size: 14px;
+          background: $revnet-accent-primary;
+        }
+
+        .online-indicator {
+          position: absolute;
+          bottom: 2px;
+          right: 2px;
+          width: 12px;
+          height: 12px;
+          background: $revnet-status-online;
+          border: 2px solid $revnet-bg-secondary;
+          border-radius: 50%;
+        }
+      }
+
+      .dm-info {
+        flex: 1;
+        min-width: 0;
+
+        .dm-name {
+          color: $revnet-text-normal;
+          font-weight: 500;
+          font-size: 14px;
+          margin-bottom: 2px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .dm-preview {
+          color: $revnet-text-muted;
+          font-size: 12px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .dm-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+
+        .dm-time {
+          color: $revnet-text-muted;
+          font-size: 11px;
+        }
+
+        .unread-badge {
+          background: $revnet-accent-primary;
+          color: white;
+          border-radius: 10px;
+          padding: 2px 6px;
+          font-size: 10px;
+          font-weight: 600;
+          min-width: 16px;
+          text-align: center;
+        }
+      }
+    }
+
+    .no-dms {
+      padding: 2rem;
+      text-align: center;
+      color: $revnet-text-muted;
+
+      p {
+        margin-bottom: 1rem;
+        font-size: 14px;
+      }
+
+      .start-dm-btn {
+        background: $revnet-accent-primary;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: $revnet-accent-primary-hover;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+        }
+      }
+    }
+  }
+}
+
+// Scrollbar styling
+.dm-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dm-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dm-list::-webkit-scrollbar-thumb {
+  background: rgba(88, 101, 242, 0.3);
+  border-radius: 2px;
+}
+
+.dm-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(88, 101, 242, 0.5);
+}

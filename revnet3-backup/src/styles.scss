@@ -1,0 +1,41 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+// Global styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Whitney', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  background: #1E2124; // discord-darkest
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+// CSS Variables for Discord colors
+:root {
+  --discord-dark: #2C2F33;
+  --discord-darker: #23272A;
+  --discord-darkest: #1E2124;
+  --discord-light: #36393F;
+  --discord-lighter: #40444B;
+  --discord-lightest: #B9BBBE;
+  --discord-brand: #5865F2;
+  --discord-green: #3BA55C;
+  --discord-yellow: #FEE75C;
+  --discord-red: #ED4245;
+  
+  --neon-green: #39FF14;
+  --neon-cyan: #00DDEB;
+  --neon-purple: #8B5CF6;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #B9BBBE;
+  --text-muted: #72767D;
+  --border-primary: #40444B;
+  --border-secondary: #2C2F33;
+}

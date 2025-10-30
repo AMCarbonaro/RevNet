@@ -1,0 +1,327 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.file-upload {
+  width: 100%;
+}
+
+.upload-area {
+  border: 2px dashed $revnet-bg-accent;
+  border-radius: 8px;
+  padding: $space-6;
+  text-align: center;
+  cursor: pointer;
+  transition: all $transition-fast;
+  background: $revnet-bg-secondary;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    border-color: $revnet-blurple;
+    background: rgba($revnet-blurple, 0.05);
+  }
+
+  &.drag-over {
+    border-color: $revnet-blurple;
+    background: rgba($revnet-blurple, 0.1);
+    transform: scale(1.02);
+  }
+
+  &.uploading {
+    border-color: $revnet-status-success;
+    background: rgba($revnet-status-success, 0.05);
+  }
+}
+
+.upload-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+}
+
+.upload-icon {
+  color: $revnet-text-muted;
+  opacity: 0.7;
+}
+
+.upload-text {
+  h3 {
+    margin: 0 0 $space-1 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: $revnet-text-normal;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: $revnet-text-muted;
+  }
+}
+
+.upload-progress {
+  width: 100%;
+}
+
+.progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-3;
+}
+
+.progress-title {
+  font-weight: 600;
+  color: $revnet-text-normal;
+  font-size: 14px;
+}
+
+.cancel-btn {
+  background: $revnet-status-danger;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: $space-1 $space-2;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: darken($revnet-status-danger, 10%);
+  }
+}
+
+.progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.progress-item {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2;
+  background: $revnet-bg-accent;
+  border-radius: 6px;
+  transition: all $transition-fast;
+
+  &.error {
+    background: rgba($revnet-status-danger, 0.1);
+    border: 1px solid $revnet-status-danger;
+  }
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex: 1;
+  min-width: 0;
+}
+
+.file-icon {
+  color: $revnet-text-muted;
+  flex-shrink: 0;
+}
+
+.file-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-weight: 500;
+  color: $revnet-text-normal;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-size {
+  color: $revnet-text-muted;
+  font-size: 11px;
+}
+
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.progress-bar {
+  width: 100px;
+  height: 4px;
+  background: $revnet-bg-primary;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: $revnet-status-success;
+  transition: width $transition-fast;
+}
+
+.file-status {
+  color: $revnet-status-success;
+  flex-shrink: 0;
+
+  &.error {
+    color: $revnet-status-danger;
+  }
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: $revnet-text-muted;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 3px;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $revnet-bg-primary;
+    color: $revnet-status-danger;
+  }
+}
+
+.uploaded-files {
+  margin-top: $space-4;
+}
+
+.files-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-3;
+
+  h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: $revnet-text-normal;
+  }
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: $revnet-text-muted;
+  cursor: pointer;
+  font-size: 12px;
+  padding: $space-1 $space-2;
+  border-radius: 4px;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $revnet-bg-accent;
+    color: $revnet-text-normal;
+  }
+}
+
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: $space-2;
+}
+
+.file-preview {
+  position: relative;
+  background: $revnet-bg-accent;
+  border-radius: 6px;
+  padding: $space-2;
+  text-align: center;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $revnet-bg-primary;
+  }
+
+  &.image {
+    padding: 0;
+    overflow: hidden;
+  }
+}
+
+.file-thumbnail {
+  width: 100%;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 4px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.file-icon-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  color: $revnet-text-muted;
+}
+
+.file-info {
+  padding: $space-1;
+  text-align: center;
+}
+
+.remove-file-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: all $transition-fast;
+
+  .file-preview:hover & {
+    opacity: 1;
+  }
+
+  &:hover {
+    background: $revnet-status-danger;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .upload-area {
+    padding: $space-4;
+    min-height: 100px;
+  }
+
+  .upload-text h3 {
+    font-size: 14px;
+  }
+
+  .upload-text p {
+    font-size: 12px;
+  }
+
+  .files-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .file-thumbnail,
+  .file-icon-large {
+    height: 60px;
+  }
+}

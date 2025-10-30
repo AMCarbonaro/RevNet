@@ -1,0 +1,702 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: $revnet-bg-secondary;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+
+  @keyframes modalSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-4;
+  border-bottom: 1px solid $revnet-bg-accent;
+  flex-shrink: 0;
+
+  h2 {
+    margin: 0;
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $revnet-text-normal;
+  }
+
+  .close-btn {
+    @include button-reset;
+    color: $revnet-text-muted;
+    font-size: 24px;
+    line-height: 1;
+    padding: $space-1;
+    border-radius: 4px;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: $revnet-bg-accent;
+      color: $revnet-text-normal;
+    }
+  }
+}
+
+.settings-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: $space-4;
+  min-height: 400px;
+}
+
+.tab-content {
+  animation: fadeIn 0.3s ease-in-out;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+.form-group {
+  margin-bottom: $space-4;
+
+  label {
+    display: block;
+    font-weight: 600;
+    color: $revnet-text-normal;
+    margin-bottom: $space-2;
+    font-size: $font-size-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    background: $revnet-bg-tertiary;
+    border: 1px solid $revnet-bg-accent;
+    border-radius: 6px;
+    padding: $space-3;
+    color: $revnet-text-normal;
+    font-size: $font-size-md;
+    transition: all $transition-fast;
+
+    &:focus {
+      outline: none;
+      border-color: $revnet-blurple;
+      box-shadow: 0 0 0 2px rgba(114, 137, 218, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &::placeholder {
+      color: $revnet-text-muted;
+    }
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+  }
+}
+
+.icon-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-4;
+  border: 2px dashed $revnet-bg-accent;
+  border-radius: 8px;
+  transition: all $transition-fast;
+
+  &:hover {
+    border-color: $revnet-blurple;
+    background: rgba(114, 137, 218, 0.05);
+  }
+
+  .icon-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid $revnet-bg-accent;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .icon-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: $revnet-bg-tertiary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $revnet-text-muted;
+    border: 2px solid $revnet-bg-accent;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  .file-label {
+    @include button-reset;
+    background: $revnet-blurple;
+    color: $revnet-text-light;
+    padding: $space-2 $space-4;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover:not(.disabled) {
+      background: darken($revnet-blurple, 10%);
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  cursor: pointer;
+  font-weight: 500;
+  color: $revnet-text-normal;
+
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  .checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $revnet-bg-accent;
+    border-radius: 4px;
+    position: relative;
+    transition: all $transition-fast;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 10px;
+      border: solid $revnet-text-light;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      opacity: 0;
+      transition: opacity $transition-fast;
+    }
+  }
+
+  input[type="checkbox"]:checked + .checkmark {
+    background: $revnet-blurple;
+    border-color: $revnet-blurple;
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.checkbox-description {
+  font-size: $font-size-sm;
+  color: $revnet-text-muted;
+  margin-top: $space-1;
+  margin-left: 32px;
+}
+
+// Members Tab Styles
+.members-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-4;
+
+  h3 {
+    margin: 0;
+    color: $revnet-text-normal;
+  }
+
+  .search-box {
+    .search-input {
+      background: $revnet-bg-tertiary;
+      border: 1px solid $revnet-bg-accent;
+      border-radius: 6px;
+      padding: $space-2 $space-3;
+      color: $revnet-text-normal;
+      width: 200px;
+
+      &:focus {
+        outline: none;
+        border-color: $revnet-blurple;
+      }
+    }
+  }
+}
+
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3;
+  background: $revnet-bg-tertiary;
+  border-radius: 8px;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $revnet-bg-accent;
+  }
+
+  &.owner {
+    border-left: 4px solid $revnet-blurple;
+  }
+
+  &.admin {
+    border-left: 4px solid $revnet-red;
+  }
+
+  .member-avatar {
+    @include avatar-medium;
+    background: $revnet-brand-primary;
+    color: $revnet-text-light;
+    flex-shrink: 0;
+  }
+
+  .member-info {
+    flex-grow: 1;
+
+    .member-name {
+      font-weight: 600;
+      color: $revnet-text-normal;
+      display: flex;
+      align-items: center;
+      gap: $space-2;
+
+      .member-badge {
+        background: $revnet-bg-accent;
+        color: $revnet-text-muted;
+        padding: 2px $space-2;
+        border-radius: 12px;
+        font-size: $font-size-xs;
+        font-weight: 600;
+
+        &.admin {
+          background: $revnet-red;
+          color: $revnet-text-light;
+        }
+      }
+    }
+
+    .member-status {
+      font-size: $font-size-sm;
+      color: $revnet-text-muted;
+    }
+  }
+
+  .member-actions {
+    display: flex;
+    gap: $space-2;
+
+    .action-btn {
+      @include button-reset;
+      padding: $space-1 $space-2;
+      border-radius: 4px;
+      font-size: $font-size-sm;
+      font-weight: 600;
+      transition: all $transition-fast;
+
+      &.kick {
+        background: $revnet-yellow;
+        color: $revnet-text-dark;
+
+        &:hover {
+          background: darken($revnet-yellow, 10%);
+        }
+      }
+
+      &.ban {
+        background: $revnet-red;
+        color: $revnet-text-light;
+
+        &:hover {
+          background: darken($revnet-red, 10%);
+        }
+      }
+    }
+  }
+}
+
+// Roles Tab Styles
+.roles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-4;
+
+  h3 {
+    margin: 0;
+    color: $revnet-text-normal;
+  }
+}
+
+.roles-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.role-item {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3;
+  background: $revnet-bg-tertiary;
+  border-radius: 8px;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $revnet-bg-accent;
+  }
+
+  .role-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .role-info {
+    flex-grow: 1;
+
+    .role-name {
+      font-weight: 600;
+      color: $revnet-text-normal;
+    }
+
+    .role-members {
+      font-size: $font-size-sm;
+      color: $revnet-text-muted;
+    }
+  }
+
+  .role-actions {
+    display: flex;
+    gap: $space-2;
+
+    .action-btn {
+      @include button-reset;
+      padding: $space-1 $space-2;
+      border-radius: 4px;
+      font-size: $font-size-sm;
+      font-weight: 600;
+      transition: all $transition-fast;
+      background: $revnet-bg-accent;
+      color: $revnet-text-normal;
+
+      &:hover {
+        background: $revnet-bg-secondary;
+      }
+
+      &.delete {
+        background: $revnet-red;
+        color: $revnet-text-light;
+
+        &:hover {
+          background: darken($revnet-red, 10%);
+        }
+      }
+    }
+  }
+}
+
+// Invites Tab Styles
+.invites-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-4;
+
+  h3 {
+    margin: 0;
+    color: $revnet-text-normal;
+  }
+}
+
+.invites-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.invite-item {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3;
+  background: $revnet-bg-tertiary;
+  border-radius: 8px;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $revnet-bg-accent;
+  }
+
+  .invite-info {
+    flex-grow: 1;
+
+    .invite-code {
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-weight: 600;
+      color: $revnet-text-normal;
+      background: $revnet-bg-secondary;
+      padding: $space-1 $space-2;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .invite-details {
+      font-size: $font-size-sm;
+      color: $revnet-text-muted;
+      margin-top: $space-1;
+    }
+  }
+
+  .invite-actions {
+    display: flex;
+    gap: $space-2;
+
+    .action-btn {
+      @include button-reset;
+      padding: $space-1 $space-2;
+      border-radius: 4px;
+      font-size: $font-size-sm;
+      font-weight: 600;
+      transition: all $transition-fast;
+      background: $revnet-bg-accent;
+      color: $revnet-text-normal;
+
+      &:hover {
+        background: $revnet-bg-secondary;
+      }
+
+      &.delete {
+        background: $revnet-red;
+        color: $revnet-text-light;
+
+        &:hover {
+          background: darken($revnet-red, 10%);
+        }
+      }
+    }
+  }
+}
+
+// Danger Zone Styles
+.danger-zone {
+  h3 {
+    color: $revnet-red;
+    margin-bottom: $space-2;
+  }
+
+  p {
+    color: $revnet-text-muted;
+    margin-bottom: $space-4;
+  }
+}
+
+.danger-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $space-4;
+  background: rgba(240, 71, 71, 0.1);
+  border: 1px solid rgba(240, 71, 71, 0.3);
+  border-radius: 8px;
+
+  .danger-info {
+    h4 {
+      color: $revnet-red;
+      margin: 0 0 $space-1 0;
+    }
+
+    p {
+      color: $revnet-text-muted;
+      margin: 0;
+    }
+  }
+}
+
+// Tab Navigation
+.tab-navigation {
+  display: flex;
+  border-top: 1px solid $revnet-bg-accent;
+  background: $revnet-bg-primary;
+  flex-shrink: 0;
+
+  .tab-btn {
+    @include button-reset;
+    padding: $space-3 $space-4;
+    color: $revnet-text-muted;
+    font-weight: 600;
+    transition: all $transition-fast;
+    border-bottom: 2px solid transparent;
+
+    &:hover:not(:disabled) {
+      color: $revnet-text-normal;
+      background: $revnet-bg-accent;
+    }
+
+    &.active {
+      color: $revnet-text-normal;
+      border-bottom-color: $revnet-blurple;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Modal Actions
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-3;
+  padding: $space-4;
+  border-top: 1px solid $revnet-bg-accent;
+  background: $revnet-bg-primary;
+  flex-shrink: 0;
+
+  .btn {
+    @include button-reset;
+    padding: $space-3 $space-4;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all $transition-fast;
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    min-width: 120px;
+    justify-content: center;
+
+    &.btn-secondary {
+      background: $revnet-bg-tertiary;
+      color: $revnet-text-normal;
+      border: 1px solid $revnet-bg-accent;
+
+      &:hover {
+        background: $revnet-bg-accent;
+      }
+    }
+
+    &.btn-primary {
+      background: $revnet-blurple;
+      color: $revnet-text-light;
+
+      &:hover:not(:disabled) {
+        background: darken($revnet-blurple, 10%);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    &.btn-danger {
+      background: $revnet-red;
+      color: $revnet-text-light;
+
+      &:hover {
+        background: darken($revnet-red, 10%);
+      }
+    }
+  }
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: $space-4;
+  }
+
+  .tab-navigation {
+    flex-wrap: wrap;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}

@@ -26,12 +26,12 @@ export const routes: Routes = [
       { path: ':id', loadComponent: () => import('./features/letters/components/letter-reader/letter-reader.component').then(m => m.LetterReaderComponent) }
     ]
   },
-        // Discord routes (V2 - new implementation)
-        {
-          path: 'discord',
-          // canActivate: [AuthGuard, LettersCompletedGuard], // Temporarily disabled for testing
-          loadChildren: () => import('./features/discord-v2/discord-v2.routes').then(m => m.DISCORD_V2_ROUTES)
-        },
+            // RevNet routes (new implementation)
+            {
+              path: 'revnet',
+              // canActivate: [AuthGuard, LettersCompletedGuard], // Temporarily disabled for testing
+              loadChildren: () => import('./features/revnet/revnet.routes').then(m => m.REVNET_ROUTES)
+            },
   { path: 'revolts', component: RevoltsPageComponent },
   { path: '**', redirectTo: '' }
 ];

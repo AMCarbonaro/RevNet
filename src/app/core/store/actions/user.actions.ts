@@ -22,6 +22,7 @@ export const loginWithOAuthFailure = createAction('[User] Login With OAuth Failu
 // Demo Actions
 export const demoLogin = createAction('[User] Demo Login', props<{ demoType: 'quick' | 'full' }>());
 export const demoLoginSuccess = createAction('[User] Demo Login Success', props<{ user: User }>());
+export const demoLoginFailure = createAction('[User] Demo Login Failure', props<{ error: string }>());
 
 // Letter Progress Actions
 export const updateLetterProgress = createAction('[User] Update Letter Progress', props<{ progress: LetterProgress }>());

@@ -1,0 +1,241 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.member-list {
+  width: 240px;
+  background: $revnet-bg-secondary;
+  border-left: 1px solid $revnet-bg-accent;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.member-list-header {
+  padding: $space-3;
+  border-bottom: 1px solid $revnet-bg-accent;
+  flex-shrink: 0;
+
+  h3 {
+    margin: 0 0 $space-2 0;
+    color: $revnet-text-normal;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .search-box {
+    .search-input {
+      width: 100%;
+      background: $revnet-bg-primary;
+      border: 1px solid $revnet-bg-accent;
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: $revnet-text-normal;
+      font-size: 12px;
+      transition: all $transition-fast;
+
+      &:focus {
+        outline: none;
+        border-color: $revnet-blurple;
+        box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.2);
+      }
+
+      &::placeholder {
+        color: $revnet-text-muted;
+      }
+    }
+  }
+}
+
+.member-sections {
+  flex: 1;
+  overflow-y: auto;
+  @include scrollbar-thin;
+}
+
+.member-section {
+  margin-bottom: $space-2;
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: $space-2 $space-3;
+    color: $revnet-text-muted;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+
+      &.online {
+        background: $revnet-green;
+      }
+
+      &.away {
+        background: $revnet-yellow;
+      }
+
+      &.dnd {
+        background: $revnet-red;
+      }
+
+      &.offline {
+        background: $revnet-text-muted;
+      }
+    }
+
+    .section-title {
+      flex: 1;
+    }
+  }
+
+  .member-items {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-2 $space-3;
+  cursor: pointer;
+  transition: all $transition-fast;
+  position: relative;
+
+  &:hover {
+    background: $revnet-bg-accent;
+  }
+
+  &.owner {
+    border-left: 3px solid $revnet-blurple;
+  }
+
+  &.admin {
+    border-left: 3px solid $revnet-red;
+  }
+
+  .member-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $revnet-blurple;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 12px;
+    flex-shrink: 0;
+    position: relative;
+
+    .status-dot {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid $revnet-bg-secondary;
+
+      &.online {
+        background: $revnet-green;
+      }
+
+      &.away {
+        background: $revnet-yellow;
+      }
+
+      &.dnd {
+        background: $revnet-red;
+      }
+
+      &.offline {
+        background: $revnet-text-muted;
+      }
+    }
+  }
+
+  .member-info {
+    flex: 1;
+    min-width: 0;
+
+    .member-name {
+      font-weight: 500;
+      color: $revnet-text-normal;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: $space-1;
+      margin-bottom: 2px;
+
+      .member-badge {
+        background: $revnet-bg-accent;
+        color: $revnet-text-muted;
+        padding: 2px 6px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        &.admin {
+          background: $revnet-red;
+          color: #ffffff;
+        }
+      }
+    }
+
+    .member-roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+
+      .role-tag {
+        background: $revnet-bg-primary;
+        color: $revnet-text-muted;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .member-list {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .member-list {
+    width: 100%;
+    position: relative;
+    box-shadow: none;
+    
+    &__header {
+      padding: 12px 16px;
+      
+      h3 {
+        font-size: 18px;
+      }
+    }
+    
+    .member-item {
+      padding: 12px 16px;
+      font-size: 16px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+    }
+  }
+}

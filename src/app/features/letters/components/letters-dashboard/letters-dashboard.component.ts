@@ -86,7 +86,7 @@ export class LettersDashboardComponent implements OnInit {
         this.progress = (user.letterProgress.completedLetters.length / 30) * 100;
         this.applyFilter();
       } else {
-        // Demo mode - create a mock user for testing
+        // Demo mode - create a mock user for testing (completed all letters)
         this.user = {
           id: 'demo-user',
           email: 'demo@revnet.local',
@@ -94,17 +94,17 @@ export class LettersDashboardComponent implements OnInit {
           discriminator: '0001',
           status: 'online',
           letterProgress: {
-            completedLetters: [],
-            currentLetter: 1,
+            completedLetters: Array.from({length: 30}, (_, i) => i + 1), // All 30 letters completed
+            currentLetter: 31, // Past the last letter
             totalLetters: 30,
-            canAccessDiscord: false,
+            canAccessDiscord: true, // Can access Discord after completing all letters
             assignments: []
           },
           revoltMemberships: [],
           createdAt: new Date(),
           lastActive: new Date()
         };
-        this.progress = 0;
+        this.progress = 100; // 100% complete for demo user
         this.applyFilter();
       }
     });
@@ -208,7 +208,7 @@ export class LettersDashboardComponent implements OnInit {
   }
 
   enterRevolution(): void {
-    // Navigate to the revolution dashboard (placeholder for now)
-    this.router.navigate(['/revolution']);
+    // Navigate to the Discord dashboard after completing all letters
+    this.router.navigate(['/discord']);
   }
 }

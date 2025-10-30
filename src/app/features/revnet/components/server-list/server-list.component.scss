@@ -1,0 +1,264 @@
+@import '../../../../../styles/variables';
+
+.server-list {
+  background: $revnet-bg-tertiary;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    padding: $space-4;
+    border-bottom: 1px solid $revnet-bg-accent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    
+    h2 {
+      margin: 0;
+      color: $revnet-text-normal;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .server-list__header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .menu-btn, .discover-btn {
+      background: none;
+      border: none;
+      color: $revnet-text-muted;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: all $transition-fast;
+
+      &:hover {
+        color: $revnet-text-normal;
+        background: $revnet-bg-secondary;
+      }
+
+      .icon-search::before {
+        content: '🔍';
+        font-size: 16px;
+      }
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: $space-2;
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+  }
+
+  &__footer {
+    padding: $space-2 $space-2 $space-3;
+    border-top: 1px solid $revnet-bg-accent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    .menu-btn, .discover-btn {
+      background: none;
+      border: none;
+      color: $revnet-text-muted;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 10px;
+      transition: all $transition-fast;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: $revnet-text-normal;
+        background: $revnet-bg-secondary;
+      }
+    }
+
+    .icon-search::before {
+      content: '🔍';
+      font-size: 18px;
+      line-height: 1;
+    }
+  }
+}
+
+.dm-home-btn {
+  width: 48px;
+  height: 48px;
+  background: $revnet-bg-secondary;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $revnet-text-normal;
+  cursor: pointer;
+  transition: all $transition-fast;
+  position: relative;
+  margin-bottom: $space-2;
+
+  .dm-home-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 18px;
+
+    .icon-message::before {
+      content: '💬';
+    }
+  }
+
+  &:hover {
+    border-radius: 16px;
+    background: $revnet-blurple;
+  }
+
+  &.active {
+    background: $revnet-blurple;
+    border-radius: 16px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 20px;
+      background: $revnet-text-normal;
+      border-radius: 0 2px 2px 0;
+    }
+  }
+}
+
+.server-item {
+  width: 48px;
+  height: 48px;
+  background: $revnet-bg-secondary;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $revnet-text-normal;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-fast;
+  position: relative;
+
+  .server-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    border-radius: 16px;
+    background: $revnet-blurple;
+  }
+
+  &.active {
+    background: $revnet-blurple;
+    border-radius: 16px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 20px;
+      background: $revnet-text-normal;
+      border-radius: 0 2px 2px 0;
+    }
+  }
+}
+
+.create-revolt-btn {
+  width: 48px;
+  height: 48px;
+  background: $revnet-green;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-fast;
+  border: 2px solid transparent;
+
+  &:hover {
+    background: darken($revnet-green, 10%);
+    border-radius: 16px;
+    transform: scale(1.05);
+  }
+
+  .create-revolt-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+}
+
+// Mobile styles
+@media (max-width: 768px) {
+  .server-list {
+    width: 100%;
+    padding: 16px;
+    
+    &__header {
+      padding: 0 0 16px 0;
+      
+      h2 {
+        font-size: 18px;
+      }
+      
+      .discover-btn {
+        min-width: 44px;
+        height: 44px;
+        padding: 8px;
+      }
+    }
+    
+    &__content {
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: auto;
+      gap: 8px;
+      padding: 0 8px;
+      
+      .server-item, .dm-home-btn, .create-revolt-btn {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto;
+        flex-shrink: 0;
+        min-width: 64px;
+      }
+    }
+
+    &__footer {
+      padding: 12px 8px 16px;
+
+      .menu-btn, .discover-btn {
+        min-width: 56px;
+        height: 56px;
+        padding: 10px;
+      }
+    }
+  }
+}

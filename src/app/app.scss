@@ -197,6 +197,15 @@ body {
   background: var(--discord-darkest);
   color: var(--text-primary);
   line-height: 1.6;
+  overflow: hidden; /* Prevent body scroll */
+}
+
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
 
 .container {

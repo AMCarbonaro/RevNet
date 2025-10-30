@@ -1,96 +1,140 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Revolt } from '@core/models/revolt.model';
+import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
+import { ServerDiscoveryService, ServerDiscoveryQuery, Server } from '../../../revnet/services/server-discovery.service';
 
 @Component({
   selector: 'app-revolts-browse',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, DecimalPipe],
   templateUrl: './revolts-browse.component.html',
   styleUrls: ['./revolts-browse.component.scss']
 })
 export class RevoltsBrowseComponent implements OnInit, OnChanges {
-  @Input() revolts: Revolt[] = [];
+  @Input() revolts: Server[] = [];
   @Input() isLoading = false;
-  @Output() revoltClick = new EventEmitter<Revolt>();
-  @Output() joinRevolt = new EventEmitter<Revolt>();
-  @Output() donateToRevolt = new EventEmitter<Revolt>();
+  @Output() revoltClick = new EventEmitter<Server>();
+  @Output() joinRevolt = new EventEmitter<Server>();
+  @Output() donateToRevolt = new EventEmitter<Server>();
 
   searchQuery = '';
   selectedCategory = '';
-  sortBy = 'popular';
-  filteredRevolts: Revolt[] = [];
+  sortBy: 'popular' | 'recent' | 'active' = 'popular';
+  filteredRevolts: Server[] = [];
   hasMore = true;
   page = 1;
+  totalResults = 0;
+  categories: string[] = [];
+  
+  private destroy$ = new Subject<void>();
+  private searchSubject = new Subject<void>();
+
+  constructor(
+    private serverDiscoveryService: ServerDiscoveryService,
+    private cdr: ChangeDetectorRef
+  ) {
+    // Debounce search input
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.loadRevolts();
+    });
+  }
 
   ngOnInit(): void {
-    this.filterRevolts();
+    this.loadCategories();
+    this.loadRevolts();
   }
 
   ngOnChanges(): void {
-    this.filterRevolts();
+    // If revolts are passed as input, use them directly
+    if (this.revolts && this.revolts.length > 0) {
+      this.filteredRevolts = [...this.revolts];
+      this.cdr.markForCheck();
+    } else {
+      this.loadRevolts();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onSearch(): void {
-    this.filterRevolts();
+    this.searchSubject.next();
   }
 
   onFilterChange(): void {
-    this.filterRevolts();
+    this.page = 1;
+    this.filteredRevolts = [];
+    this.loadRevolts();
   }
 
-  filterRevolts(): void {
-    let filtered = [...this.revolts];
+  private loadRevolts(): void {
+    this.isLoading = true;
+    this.cdr.markForCheck();
 
-    // Search filter
-    if (this.searchQuery) {
-      filtered = filtered.filter(revolt =>
-        revolt.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        revolt.shortDescription.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    }
+    const query: ServerDiscoveryQuery = {
+      search: this.searchQuery || undefined,
+      category: this.selectedCategory || undefined,
+      sortBy: this.sortBy,
+      page: this.page,
+      limit: 12
+    };
 
-    // Category filter
-    if (this.selectedCategory) {
-      filtered = filtered.filter(revolt => revolt.category === this.selectedCategory);
-    }
-
-    // Sort
-    switch (this.sortBy) {
-      case 'popular':
-        filtered.sort((a, b) => b.memberCount - a.memberCount);
-        break;
-      case 'recent':
-        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        break;
-      case 'active':
-        filtered.sort((a, b) => b.messageCount - a.messageCount);
-        break;
-      case 'funding':
-        filtered.sort((a, b) => b.currentFunding - a.currentFunding);
-        break;
-    }
-
-    this.filteredRevolts = filtered;
+    this.serverDiscoveryService.discoverServers(query).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (response) => {
+        if (this.page === 1) {
+          this.filteredRevolts = response.servers;
+        } else {
+          this.filteredRevolts = [...this.filteredRevolts, ...response.servers];
+        }
+        
+        this.totalResults = response.total;
+        this.hasMore = response.page < response.totalPages;
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Failed to load revolts:', error);
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
   }
 
-  onRevoltClick(revolt: Revolt): void {
+  private loadCategories(): void {
+    this.serverDiscoveryService.getCategories().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(categories => {
+      this.categories = categories;
+      this.cdr.markForCheck();
+    });
+  }
+
+  onRevoltClick(revolt: Server): void {
     this.revoltClick.emit(revolt);
   }
 
-  onJoinRevolt(revolt: Revolt, event: Event): void {
+  onJoinRevolt(revolt: Server, event: Event): void {
     event.stopPropagation();
     this.joinRevolt.emit(revolt);
   }
 
-  onDonate(revolt: Revolt, event: Event): void {
+  onDonate(revolt: Server, event: Event): void {
     event.stopPropagation();
     this.donateToRevolt.emit(revolt);
   }
 
-  canJoinRevolt(revolt: Revolt): boolean {
-    return !revolt.isFull && revolt.isPublic;
+  canJoinRevolt(revolt: Server): boolean {
+    return revolt.isDiscoverable;
   }
 
   getRevoltInitials(name: string): string {
@@ -102,17 +146,21 @@ export class RevoltsBrowseComponent implements OnInit, OnChanges {
       .slice(0, 2);
   }
 
-  getFundingProgress(revolt: Revolt): number {
-    if (!revolt.fundingGoal) return 0;
-    return (revolt.currentFunding / revolt.fundingGoal) * 100;
+  getServerColor(server: Server): string {
+    const colors = ['#7289da', '#43b581', '#faa61a', '#f04747', '#747f8d', '#5865f2', '#57f287', '#fbbbad'];
+    const hash = server.id.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    return colors[Math.abs(hash) % colors.length];
   }
 
   loadMore(): void {
     this.page++;
-    // Load more revolts
+    this.loadRevolts();
   }
 
-  trackByRevoltId(index: number, revolt: Revolt): string {
-    return revolt._id;
+  trackByRevoltId(index: number, revolt: Server): string {
+    return revolt.id;
   }
 }

@@ -1,0 +1,71 @@
+<div class="revnet-layout" [class.mobile]="isMobile">
+  <!-- Mobile Layout: Servers + Channels Side by Side -->
+  <div class="mobile-layout" *ngIf="isMobile">
+
+    <!-- Mobile Content: Servers + Channels -->
+    <div class="mobile-content">
+      <!-- Servers Sidebar (hide when a channel is open) -->
+      <div class="mobile-servers" *ngIf="(selectedChannel$ | async) === null">
+        <app-server-list></app-server-list>
+      </div>
+      
+      <!-- Channels/Chat Area -->
+      <div class="mobile-main">
+        <!-- Channel list visible only when no channel selected -->
+        <app-channel-sidebar 
+          class="mobile-channel-sidebar"
+          *ngIf="(selectedServerId$ | async) !== null && (selectedChannel$ | async) === null">
+        </app-channel-sidebar>
+        
+        <!-- DM list visible when no server selected -->
+        <app-direct-messages 
+          *ngIf="(selectedServerId$ | async) === null && (selectedChannel$ | async) === null">
+        </app-direct-messages>
+        
+        <!-- Chat takes the whole screen when a channel is selected -->
+        <app-chat-area 
+          *ngIf="(selectedChannel$ | async) !== null">
+        </app-chat-area>
+        
+        <app-member-list 
+          *ngIf="activePanel === 'members' && (selectedServerId$ | async) !== null && (selectedChannel$ | async) === null">
+        </app-member-list>
+        
+        <app-friends-list 
+          *ngIf="activePanel === 'members' && (selectedServerId$ | async) === null && (selectedChannel$ | async) === null">
+        </app-friends-list>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Grid (existing) -->
+  <div class="desktop-layout" *ngIf="!isMobile">
+    <app-server-list class="revnet-layout__servers"></app-server-list>
+    
+    <!-- Sidebar (DM or Channel) -->
+    <div class="revnet-layout__sidebar-container">
+      <app-direct-messages class="revnet-layout__dm-sidebar" *ngIf="(selectedServerId$ | async) === null"></app-direct-messages>
+      <app-channel-sidebar class="revnet-layout__channel-sidebar" *ngIf="(selectedServerId$ | async) !== null"></app-channel-sidebar>
+    </div>
+    
+    <!-- Chat Area -->
+    <app-chat-area class="revnet-layout__chat"></app-chat-area>
+    
+    <!-- Right Sidebar (Friends or Members) -->
+    <div class="revnet-layout__right-sidebar">
+      <app-friends-list class="revnet-layout__friends" [isVisible]="showMemberList" *ngIf="(selectedServerId$ | async) === null"></app-friends-list>
+      <app-member-list class="revnet-layout__members" [isVisible]="showMemberList" *ngIf="(selectedServerId$ | async) !== null"></app-member-list>
+    </div>
+  </div>
+  
+  
+  
+  <!-- Offline Indicator -->
+  <app-offline-indicator></app-offline-indicator>
+  
+  <!-- Mobile Menu -->
+  <app-mobile-menu 
+    [isOpen]="showMobileMenu"
+    (closed)="showMobileMenu = false">
+  </app-mobile-menu>
+</div>

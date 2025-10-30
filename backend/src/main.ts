@@ -12,7 +12,8 @@ async function bootstrap() {
       process.env.FRONTEND_URL || 'http://localhost:4200',
       'http://localhost:55711', // Angular dev server port
       'http://localhost:4200',   // Fallback port
-      'http://localhost:4201'   // Alternative Angular dev server port
+      'http://localhost:4201',   // Alternative Angular dev server port
+      'http://localhost:4202'    // Current Angular dev server port
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

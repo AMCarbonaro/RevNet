@@ -1,0 +1,169 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.message-item {
+  position: relative;
+  padding: $space-2 $space-3;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba($revnet-text-normal, 0.02);
+  }
+
+  &.editing {
+    background: rgba($revnet-blurple, 0.05);
+  }
+}
+
+.message-content {
+  display: flex;
+  gap: $space-2;
+  align-items: flex-start;
+}
+
+.message-avatar {
+  width: 40px;
+  height: 40px;
+  background: $revnet-blurple;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.message-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  margin-bottom: $space-1;
+}
+
+.username {
+  font-weight: 600;
+  color: $revnet-text-normal;
+  font-size: 14px;
+}
+
+.discriminator {
+  color: $revnet-text-muted;
+  font-size: 12px;
+}
+
+.timestamp {
+  color: $revnet-text-muted;
+  font-size: 12px;
+  margin-left: $space-1;
+}
+
+.edited {
+  color: $revnet-text-muted;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.message-text {
+  color: $revnet-text-normal;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+
+  :global {
+    strong {
+      font-weight: 600;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    code {
+      background: $revnet-bg-accent;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 13px;
+    }
+  }
+}
+
+.message-actions {
+  position: absolute;
+  top: $space-2;
+  right: $space-3;
+  display: flex;
+  gap: $space-1;
+  background: $revnet-bg-secondary;
+  border: 1px solid $revnet-bg-accent;
+  border-radius: 6px;
+  padding: $space-1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: all $transition-fast;
+
+  .message-item:hover & {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: $revnet-text-muted;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: $revnet-bg-accent;
+    color: $revnet-text-normal;
+  }
+
+  &.danger:hover {
+    background: $revnet-red;
+    color: white;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .message-item {
+    padding: $space-2;
+  }
+
+  .message-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .message-actions {
+    position: static;
+    opacity: 1;
+    transform: none;
+    margin-top: $space-2;
+    justify-content: center;
+  }
+}

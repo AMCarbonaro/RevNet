@@ -19,18 +19,15 @@
       <div class="filters">
         <select [(ngModel)]="selectedCategory" (change)="onFilterChange()">
           <option value="">All Categories</option>
-          <option value="activism">Activism</option>
-          <option value="environment">Environment</option>
-          <option value="social-justice">Social Justice</option>
-          <option value="education">Education</option>
-          <option value="community">Community</option>
+          <option *ngFor="let category of categories" [value]="category">
+            {{ category | titlecase }}
+          </option>
         </select>
 
         <select [(ngModel)]="sortBy" (change)="onFilterChange()">
           <option value="popular">Most Popular</option>
           <option value="recent">Recently Created</option>
           <option value="active">Most Active</option>
-          <option value="funding">Most Funded</option>
         </select>
       </div>
     </div>
@@ -44,16 +41,16 @@
         
         <!-- Revolt Header -->
         <div class="revolt-header">
-          <div class="revolt-avatar">
+          <div class="revolt-avatar" [style.background-color]="getServerColor(revolt)">
             <img [src]="revolt.icon" [alt]="revolt.name" *ngIf="revolt.icon">
-            <span class="avatar-fallback" *ngIf="!revolt.icon">{{ revolt.name.charAt(0) }}</span>
+            <span class="avatar-fallback" *ngIf="!revolt.icon">{{ getRevoltInitials(revolt.name) }}</span>
           </div>
           <div class="revolt-info">
             <h3 class="revolt-title">{{ revolt.name }}</h3>
-            <p class="revolt-description">{{ revolt.description }}</p>
+            <p class="revolt-description">{{ revolt.shortDescription || revolt.description || 'No description available' }}</p>
             <div class="revolt-meta">
-              <span class="category-tag" [class]="'category-' + revolt.category">
-                {{ revolt.category | titlecase }}
+              <span class="category-tag" [class]="'category-' + (revolt.category || 'general')">
+                {{ (revolt.category || 'General') | titlecase }}
               </span>
               <span class="member-count">
                 <i class="icon-users"></i>
@@ -66,37 +63,31 @@
         <!-- Revolt Stats -->
         <div class="revolt-stats">
           <div class="stat">
-            <span class="stat-value">${{ (revolt.currentFunding / 100) | number:'1.0-0' }}</span>
-            <span class="stat-label">Raised</span>
+            <span class="stat-value">{{ revolt.memberCount | number }}</span>
+            <span class="stat-label">Members</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">{{ revolt.onlineCount | number }}</span>
+            <span class="stat-label">Online</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">{{ revolt.messageCount | number }}</span>
+            <span class="stat-label">Messages</span>
           </div>
         </div>
 
-        <!-- Funding Progress -->
-        <div class="funding-progress" *ngIf="revolt.acceptDonations">
-          <div class="progress-bar">
-            <div 
-              class="progress-fill"
-              [style.width.%]="getFundingProgress(revolt)">
-            </div>
-          </div>
-          <div class="progress-text">
-            {{ getFundingProgress(revolt) | number:'1.0-0' }}% of ${{ (revolt.fundingGoal! / 100) | number:'1.0-0' }} goal
-          </div>
+        <!-- Tags -->
+        <div class="revolt-tags" *ngIf="revolt.tags && revolt.tags.length > 0">
+          <span class="tag" *ngFor="let tag of revolt.tags.slice(0, 3)">{{ tag }}</span>
         </div>
 
         <!-- Revolt Actions -->
         <div class="revolt-actions-bottom">
           <button 
             class="btn-primary btn-small"
-            (click)="onJoinRevolt(revolt, $event)">
-            Join Revolt
-          </button>
-          <button 
-            *ngIf="revolt.acceptDonations"
-            class="btn-secondary btn-small"
-            (click)="onDonate(revolt, $event)">
-            <i class="icon-heart"></i>
-            Donate
+            (click)="onJoinRevolt(revolt, $event)"
+            [disabled]="!canJoinRevolt(revolt)">
+            Join Server
           </button>
         </div>
       </div>

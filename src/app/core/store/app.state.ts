@@ -1,14 +1,14 @@
 import { User } from '../models/user.model';
 import { LetterProgress } from '../models/letter.model';
 import { Revolt } from '../models/revolt.model';
-import { DiscordState as DiscordV2State } from '../../features/discord-v2/store/models/discord.models';
+import { RevNetState } from '../../features/revnet/store/models/revnet.models';
 
 export interface AppState {
   // User state
   user: UserState;
   
-  // Discord state (V2 implementation)
-  discord: DiscordV2State;
+  // RevNet state (main implementation)
+  revnet: RevNetState;
   
   // Revolts state
   revolts: RevoltsState;

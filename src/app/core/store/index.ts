@@ -2,11 +2,11 @@ import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../../environments/environment';
 import { AppState } from './app.state';
 import { userReducer } from './reducers/user.reducer';
-import { discordReducer as discordV2Reducer } from '../../features/discord-v2/store/reducers/discord.reducer';
+import { revnetReducer } from '../../features/revnet/store/reducers/revnet.reducer';
 
 export const reducers: ActionReducerMap<AppState> = {
   user: userReducer,
-  discord: discordV2Reducer, // Now using Discord V2 as the main Discord implementation
+  revnet: revnetReducer, // Now using RevNet as the main implementation
   revolts: (state = { joinedRevolts: [], availableRevolts: [], currentRevolt: null, isLoading: false, error: null }, action) => state,
   channels: (state = { channels: [], currentChannel: null, messages: [], isLoading: false, error: null }, action) => state,
   messages: (state = { messages: [], isLoading: false, error: null }, action) => state,
