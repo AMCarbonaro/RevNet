@@ -23,8 +23,9 @@ services:
     plan: free
     branch: main
     autoDeploy: true
-    buildCommand: cd backend && npm ci && npx @nestjs/cli build
-    startCommand: cd backend && npm start
+    rootDir: backend
+    buildCommand: npm ci && npx @nestjs/cli build
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
