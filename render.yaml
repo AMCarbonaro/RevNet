@@ -23,8 +23,8 @@ services:
     plan: free
     branch: main
     autoDeploy: true
-    buildCommand: cd backend && npm ci && npm run build
-    startCommand: cd backend && node --max-old-space-size=256 dist/src/main.js
+    buildCommand: cd backend && npm ci && npx @nestjs/cli build
+    startCommand: cd backend && npx @nestjs/cli start prod
     envVars:
       - key: NODE_ENV
         value: production
