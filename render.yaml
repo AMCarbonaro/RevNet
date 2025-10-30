@@ -32,9 +32,7 @@ services:
       - key: PORT
         value: 3001
       - key: DATABASE_URL
-        fromDatabase:
-          name: revnet3-db
-          property: connectionString
+        value: postgresql://revnet3_user:nAEt3DIGAMXf4XTPrOe8DQUxjcZwQS61@dpg-d41f6gje5dus73d9b1dg-a/revnet3_4vqo
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_PUBLISHABLE_KEY
