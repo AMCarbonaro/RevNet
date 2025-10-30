@@ -34,6 +34,18 @@ import { RevNetModule } from './modules/revnet/revnet.module';
         ? { ssl: { rejectUnauthorized: false } }
         : {};
 
+      // Safe introspection of the DB host for diagnostics without leaking credentials
+      try {
+        const { host } = new URL(databaseUrl);
+        const sslEnabled = !!(process.env.NODE_ENV === 'production');
+        console.log(`[DB] Connecting to host: ${host} (ssl=${sslEnabled ? 'on' : 'off'})`);
+        if (process.env.NODE_ENV === 'production' && (host === 'localhost' || host === '127.0.0.1' || host === '::1')) {
+          console.error('[DB] Refusing to connect to localhost in production. Ensure DATABASE_URL is set to your Render Postgres connection string.');
+        }
+      } catch (_) {
+        // ignore URL parse errors
+      }
+
       return [
         TypeOrmModule.forRoot({
           type: 'postgres',
