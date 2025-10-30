@@ -54,7 +54,7 @@ import { RevNetModule } from './modules/revnet/revnet.module';
           type: 'postgres',
           url: databaseUrl,
           entities: [TestEntity, User, Server, Channel, Message, Notification],
-          synchronize: process.env.NODE_ENV !== 'production',
+          synchronize: true, // TODO: Set back to false and use migrations after first deployment
           logging: false,
           ...sslOption,
         }),

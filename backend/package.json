@@ -7,10 +7,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "npm install --legacy-peer-deps && npx @nestjs/cli build",
-    "postbuild": "npm run migrate",
+    "start": "node --max-old-space-size=256 dist/src/main",
     "migrate": "ts-node src/run-migrations.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "node --max-old-space-size=256 dist/src/main",
     "start:dev": "npx @nestjs/cli start --watch",
     "start:debug": "npx @nestjs/cli start --debug --watch",
     "start:prod": "node dist/src/main",

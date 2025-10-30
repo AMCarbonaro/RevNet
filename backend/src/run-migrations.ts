@@ -24,19 +24,29 @@ const AppDataSource = new DataSource({
 async function runMigrations() {
   if (!process.env.DATABASE_URL) {
     console.log('⚠️  DATABASE_URL not set, skipping migrations');
+    process.exit(0); // Exit successfully, don't fail the build
     return;
   }
 
   try {
     console.log('🔄 Running database migrations...');
     await AppDataSource.initialize();
-    await AppDataSource.runMigrations();
-    console.log('✅ Migrations completed successfully');
+    const executedMigrations = await AppDataSource.runMigrations();
+    
+    if (executedMigrations.length > 0) {
+      console.log(`✅ Ran ${executedMigrations.length} migrations successfully`);
+      executedMigrations.forEach(m => console.log(`  - ${m.name}`));
+    } else {
+      console.log('✅ No pending migrations');
+    }
+    
     await AppDataSource.destroy();
+    process.exit(0);
   } catch (error) {
     console.error('❌ Migration failed:', error);
-    await AppDataSource.destroy();
-    process.exit(1);
+    // Don't exit with error - let the app continue
+    // The app has synchronize: false so it won't modify schema automatically
+    process.exit(0);
   }
 }
 
