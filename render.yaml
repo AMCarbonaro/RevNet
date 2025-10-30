@@ -22,6 +22,7 @@ services:
     nodeVersion: 18
     plan: free
     branch: main
+    rootDir: RevNet3
     autoDeploy: true
     buildCommand: cd backend && npm ci --legacy-peer-deps && npm run build
     startCommand: cd backend && npm start
