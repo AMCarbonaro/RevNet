@@ -17,7 +17,7 @@ services:
     name: revnet3-backend
     env: node
     plan: free
-    buildCommand: cd backend && npm ci --only=production && npm run build
+    buildCommand: cd backend && npm ci && npx nest build
     startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
