@@ -22,9 +22,10 @@ services:
     nodeVersion: 18
     plan: free
     branch: main
+    rootDir: backend
     autoDeploy: true
-    buildCommand: cd backend && npm ci && npm run build
-    startCommand: cd backend && chmod +x start.sh && ./start.sh
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
