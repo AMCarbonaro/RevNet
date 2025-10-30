@@ -3,9 +3,18 @@ import { config } from 'dotenv';
 
 config();
 
+const databaseUrl = process.env.DATABASE_URL
+  || process.env.POSTGRES_URL
+  || process.env.POSTGRESQL_URL
+  || process.env.DATABASE_CONNECTION_STRING;
+
+if (!databaseUrl) {
+  console.warn('[ORM Config] No DATABASE_URL found - migrations will fail if attempted');
+}
+
 export default new DataSource({
   type: 'postgres',
-  url: process.env.DATABASE_URL,
+  url: databaseUrl || 'postgresql://localhost:5432/revnet', // fallback for local dev
   entities: [
     'src/modules/revnet/entities/server.entity.ts',
     'src/modules/revnet/entities/channel.entity.ts',

@@ -21,6 +21,12 @@ import { RevNetModule } from './modules/revnet/revnet.module';
     }),
     // Configure TypeORM using DATABASE_URL (Render) or common fallbacks
     ...((() => {
+      console.log('[DB] Checking for DATABASE_URL...');
+      console.log('[DB] DATABASE_URL exists:', !!process.env.DATABASE_URL);
+      console.log('[DB] POSTGRES_URL exists:', !!process.env.POSTGRES_URL);
+      console.log('[DB] POSTGRESQL_URL exists:', !!process.env.POSTGRESQL_URL);
+      console.log('[DB] DATABASE_CONNECTION_STRING exists:', !!process.env.DATABASE_CONNECTION_STRING);
+      
       const databaseUrl = process.env.DATABASE_URL
         || process.env.POSTGRES_URL
         || process.env.POSTGRESQL_URL
@@ -29,6 +35,7 @@ import { RevNetModule } from './modules/revnet/revnet.module';
       if (!databaseUrl) {
         console.error('[DB] No DATABASE_URL found! The application will fail to start without a database connection.');
         console.error('[DB] Please set DATABASE_URL in your Render environment variables.');
+        console.error('[DB] Skipping TypeORM initialization.');
         // Return empty array to prevent TypeORM from trying to connect
         return [] as any[];
       }
