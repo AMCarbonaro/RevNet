@@ -3,11 +3,12 @@ services:
   - type: web
     name: revnet3-frontend
     env: node
+    nodeVersion: 18
     plan: free
     branch: main
     autoDeploy: true
-    buildCommand: npm ci --only=production && npm run build:prod
-    startCommand: npx serve -s dist/revnet -l 3000
+    buildCommand: npm ci && npm run build:prod
+    startCommand: npx serve -s dist/revnet -l $PORT
     envVars:
       - key: NODE_ENV
         value: production
@@ -18,10 +19,11 @@ services:
   - type: web
     name: revnet3-backend
     env: node
+    nodeVersion: 18
     plan: free
     branch: main
     autoDeploy: true
-    buildCommand: cd backend && npm ci && npx nest build
+    buildCommand: cd backend && npm ci && npx @nestjs/cli build
     startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV

@@ -21,7 +21,7 @@ This guide will help you deploy your RevNet3 application to Render using their f
 3. **Region**: `Oregon (US West)`
 4. **Branch**: `main`
 5. **Root Directory**: Leave empty (root)
-6. **Build Command**: `npm run build:prod`
+6. **Build Command**: `npm ci && npm run build:prod`
 7. **Start Command**: `npm run serve:prod`
 8. **Instance Type**: `Free`
 
@@ -31,7 +31,7 @@ This guide will help you deploy your RevNet3 application to Render using their f
 3. **Region**: `Oregon (US West)`
 4. **Branch**: `main`
 5. **Root Directory**: `backend`
-6. **Build Command**: `npm run build`
+6. **Build Command**: `npm ci && npx @nestjs/cli build`
 7. **Start Command**: `npm start`
 8. **Instance Type**: `Free`
 
@@ -44,11 +44,11 @@ This guide will help you deploy your RevNet3 application to Render using their f
 
 ### **Step 6: Set Environment Variables**
 
-#### **For Backend Service:**
+#### **For Backend Service (PostgreSQL):**
 ```
 NODE_ENV=production
 PORT=3001
-MONGODB_URI=your_mongodb_connection_string
+DATABASE_URL=postgres://<user>:<password>@<host>:<port>/<db>
 STRIPE_SECRET_KEY=your_stripe_secret_key
 STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
@@ -94,7 +94,7 @@ PORT=3000
 |----------|-------------|---------|
 | `NODE_ENV` | Environment | `production` |
 | `PORT` | Backend port | `3001` |
-| `MONGODB_URI` | Database connection | `mongodb://...` |
+| `DATABASE_URL` | Postgres connection | `postgres://user:pass@host:5432/db` |
 | `STRIPE_SECRET_KEY` | Stripe secret key | `sk_live_...` |
 | `STRIPE_PUBLISHABLE_KEY` | Stripe publishable key | `pk_live_...` |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook secret | `whsec_...` |
