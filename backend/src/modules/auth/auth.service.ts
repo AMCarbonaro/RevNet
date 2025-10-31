@@ -108,9 +108,11 @@ export class AuthService {
         verificationToken,
         savedUser.username,
       );
+      console.log(`Verification email sent to ${savedUser.email}`);
     } catch (error) {
       console.error('Error sending verification email:', error);
       // Don't fail registration if email fails, but log it
+      // In development mode, the link is logged to console
     }
 
     return {

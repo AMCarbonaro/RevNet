@@ -5,13 +5,17 @@ import * as sgMail from '@sendgrid/mail';
 @Injectable()
 export class EmailService {
   private fromEmail: string;
+  private apiKey: string | null;
+  private isConfigured: boolean;
 
   constructor(private configService: ConfigService) {
-    const apiKey = this.configService.get<string>('SENDGRID_API_KEY');
+    this.apiKey = this.configService.get<string>('SENDGRID_API_KEY') || null;
     const fromEmail = this.configService.get<string>('SENDGRID_FROM_EMAIL');
 
-    if (!apiKey) {
-      console.warn('SENDGRID_API_KEY not set - email service will not work');
+    if (!this.apiKey) {
+      console.warn('⚠️  SENDGRID_API_KEY not set - email service will log links to console in development mode');
+      this.isConfigured = false;
+      this.fromEmail = 'noreply@revnet.app';
       return;
     }
 
@@ -22,12 +26,31 @@ export class EmailService {
       this.fromEmail = fromEmail;
     }
 
-    sgMail.setApiKey(apiKey);
+    try {
+      sgMail.setApiKey(this.apiKey);
+      this.isConfigured = true;
+      console.log('✅ SendGrid email service configured');
+    } catch (error) {
+      console.error('❌ Failed to configure SendGrid:', error);
+      this.isConfigured = false;
+    }
   }
 
   async sendVerificationEmail(email: string, token: string, username: string): Promise<void> {
     const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
     const verificationLink = `${frontendUrl}/verify-email?token=${token}`;
+
+    // If SendGrid is not configured, log the link to console (development mode)
+    if (!this.isConfigured) {
+      console.log('\n========================================');
+      console.log('📧 EMAIL VERIFICATION (DEVELOPMENT MODE)');
+      console.log('========================================');
+      console.log(`To: ${email}`);
+      console.log(`Username: ${username}`);
+      console.log(`Verification Link: ${verificationLink}`);
+      console.log('========================================\n');
+      return; // Don't throw error, just log it
+    }
 
     const msg = {
       to: email,
@@ -73,9 +96,12 @@ export class EmailService {
 
     try {
       await sgMail.send(msg);
-      console.log(`Verification email sent to ${email}`);
-    } catch (error) {
-      console.error('Error sending verification email:', error);
+      console.log(`✅ Verification email sent to ${email}`);
+    } catch (error: any) {
+      console.error('❌ Error sending verification email:', error);
+      if (error.response) {
+        console.error('SendGrid error details:', error.response.body);
+      }
       throw error;
     }
   }
@@ -83,6 +109,18 @@ export class EmailService {
   async sendPasswordResetEmail(email: string, token: string, username: string): Promise<void> {
     const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
     const resetLink = `${frontendUrl}/password-reset?token=${token}`;
+
+    // If SendGrid is not configured, log the link to console (development mode)
+    if (!this.isConfigured) {
+      console.log('\n========================================');
+      console.log('📧 PASSWORD RESET (DEVELOPMENT MODE)');
+      console.log('========================================');
+      console.log(`To: ${email}`);
+      console.log(`Username: ${username}`);
+      console.log(`Reset Link: ${resetLink}`);
+      console.log('========================================\n');
+      return; // Don't throw error, just log it
+    }
 
     const msg = {
       to: email,
@@ -132,9 +170,12 @@ export class EmailService {
 
     try {
       await sgMail.send(msg);
-      console.log(`Password reset email sent to ${email}`);
-    } catch (error) {
-      console.error('Error sending password reset email:', error);
+      console.log(`✅ Password reset email sent to ${email}`);
+    } catch (error: any) {
+      console.error('❌ Error sending password reset email:', error);
+      if (error.response) {
+        console.error('SendGrid error details:', error.response.body);
+      }
       throw error;
     }
   }
