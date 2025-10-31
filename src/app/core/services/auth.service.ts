@@ -60,7 +60,8 @@ export class AuthService {
     try {
       const response = await this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, credentials).toPromise();
       if (response) {
-        this.handleAuthSuccess(response);
+        // Don't auto-login after registration - redirect to verification page
+        this.router.navigate(['/verify-email'], { queryParams: { email: credentials.email } });
         return response;
       }
       throw new Error('No response received');
@@ -70,18 +71,87 @@ export class AuthService {
     }
   }
 
+  async verifyEmail(token: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const response = await this.http.post<{ success: boolean; message: string }>(
+        `${environment.apiUrl}/auth/verify-email`,
+        { token }
+      ).toPromise();
+      
+      if (response?.success) {
+        // Redirect to login after successful verification
+        this.router.navigate(['/login'], { queryParams: { verified: 'true' } });
+      }
+      
+      return response || { success: false, message: 'Verification failed' };
+    } catch (error: any) {
+      throw new Error(error.error?.message || 'Email verification failed');
+    }
+  }
+
+  async resendVerificationEmail(email: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const response = await this.http.post<{ success: boolean; message: string }>(
+        `${environment.apiUrl}/auth/resend-verification`,
+        { email }
+      ).toPromise();
+      
+      return response || { success: false, message: 'Failed to resend verification email' };
+    } catch (error: any) {
+      throw new Error(error.error?.message || 'Failed to resend verification email');
+    }
+  }
+
+  async requestPasswordReset(email: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const response = await this.http.post<{ success: boolean; message: string }>(
+        `${environment.apiUrl}/auth/request-password-reset`,
+        { email }
+      ).toPromise();
+      
+      return response || { success: false, message: 'Failed to send password reset email' };
+    } catch (error: any) {
+      throw new Error(error.error?.message || 'Failed to send password reset email');
+    }
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const response = await this.http.post<{ success: boolean; message: string }>(
+        `${environment.apiUrl}/auth/reset-password`,
+        { token, newPassword }
+      ).toPromise();
+      
+      if (response?.success) {
+        // Redirect to login after successful password reset
+        this.router.navigate(['/login'], { queryParams: { passwordReset: 'true' } });
+      }
+      
+      return response || { success: false, message: 'Password reset failed' };
+    } catch (error: any) {
+      throw new Error(error.error?.message || 'Password reset failed');
+    }
+  }
+
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    this.store.dispatch(UserActions.login({ user: this.createDemoUser('full') })); // For now, use demo user
     try {
       const response = await this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials).toPromise();
       if (response) {
+        this.store.dispatch(UserActions.login({ user: response.user }));
         this.handleAuthSuccess(response);
         return response;
       }
       throw new Error('No response received');
     } catch (error: any) {
-      this.store.dispatch(UserActions.loginFailure({ error: error.error?.message || 'Login failed' }));
-      throw new Error(error.error?.message || 'Login failed');
+      const errorMessage = error.error?.message || 'Login failed';
+      this.store.dispatch(UserActions.loginFailure({ error: errorMessage }));
+      
+      // Check if error is about email verification
+      if (errorMessage.includes('not verified') || errorMessage.includes('verify')) {
+        throw new Error('EMAIL_NOT_VERIFIED');
+      }
+      
+      throw new Error(errorMessage);
     }
   }
 

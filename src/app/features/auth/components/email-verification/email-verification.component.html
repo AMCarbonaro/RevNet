@@ -1,0 +1,65 @@
+<div class="verification-page">
+  <div class="cyberpunk-bg">
+    <div class="matrix-rain"></div>
+    <div class="neon-grid"></div>
+    <div class="scanlines"></div>
+  </div>
+
+  <div class="verification-container">
+    <div class="verification-card">
+      <div class="verification-header">
+        <h1 class="verification-title">
+          <span class="text-gradient">Email Verification</span>
+        </h1>
+        <p class="verification-subtitle" *ngIf="!isVerified">Please verify your email address to continue</p>
+      </div>
+
+      <div *ngIf="isLoading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Verifying your email...</p>
+      </div>
+
+      <div *ngIf="isVerified && successMessage" class="success-message">
+        <div class="success-icon">✓</div>
+        <p>{{ successMessage }}</p>
+        <button class="btn-primary" (click)="goToLogin()">Go to Login</button>
+      </div>
+
+      <div *ngIf="!isVerified && !isLoading">
+        <div *ngIf="errorMessage" class="error-message">
+          <i class="icon-x"></i>
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="resendSuccess" class="success-message">
+          <p>{{ successMessage }}</p>
+        </div>
+
+        <div *ngIf="!token" class="no-token-message">
+          <p>No verification token found. Please check your email and click the verification link.</p>
+          <p *ngIf="email">Resend verification email to <strong>{{ email }}</strong>:</p>
+          <button 
+            class="btn-secondary" 
+            (click)="resendVerificationEmail()"
+            [disabled]="resendLoading || !email">
+            <span *ngIf="resendLoading">Sending...</span>
+            <span *ngIf="!resendLoading">Resend Verification Email</span>
+          </button>
+        </div>
+
+        <div *ngIf="token && !isLoading" class="token-message">
+          <p>Click the button below to verify your email:</p>
+          <button class="btn-primary" (click)="verifyEmail()" [disabled]="isLoading">
+            Verify Email
+          </button>
+        </div>
+
+        <div class="verification-footer">
+          <p>Didn't receive the email? Check your spam folder.</p>
+          <button class="btn-link" (click)="goToLogin()">Back to Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

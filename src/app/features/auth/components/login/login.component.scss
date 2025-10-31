@@ -116,6 +116,51 @@
   color: #ff6b6b;
   font-size: 0.9rem;
   margin-top: 0.5rem;
+  background: rgba(255, 107, 107, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  border: 1px solid #ff6b6b;
+}
+
+.success-message {
+  color: #43b581;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  background: rgba(67, 181, 129, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  border: 1px solid #43b581;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.verification-link-section {
+  margin-top: 10px;
+}
+
+.forgot-password-link {
+  margin-top: 8px;
+  text-align: right;
+}
+
+.btn-link-small {
+  background: transparent;
+  border: none;
+  color: #00f5ff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+  margin: 0;
+}
+
+.btn-link-small:hover {
+  color: #00d4e6;
 }
 
 .alert-danger {

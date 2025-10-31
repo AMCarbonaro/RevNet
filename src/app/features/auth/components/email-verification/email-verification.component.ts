@@ -1,0 +1,97 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../../core/services/auth.service';
+
+@Component({
+  selector: 'app-email-verification',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './email-verification.component.html',
+  styleUrls: ['./email-verification.component.scss']
+})
+export class EmailVerificationComponent implements OnInit {
+  token: string | null = null;
+  email: string | null = null;
+  isLoading = false;
+  isVerified = false;
+  errorMessage = '';
+  successMessage = '';
+  resendLoading = false;
+  resendSuccess = false;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    // Get token from query params
+    this.route.queryParams.subscribe(params => {
+      this.token = params['token'] || null;
+      this.email = params['email'] || null;
+
+      // If token is present, verify immediately
+      if (this.token) {
+        this.verifyEmail();
+      }
+    });
+  }
+
+  async verifyEmail(): Promise<void> {
+    if (!this.token) {
+      this.errorMessage = 'No verification token provided';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    try {
+      const response = await this.authService.verifyEmail(this.token);
+      if (response.success) {
+        this.isVerified = true;
+        this.successMessage = 'Email verified successfully! You can now log in.';
+        // Redirect happens in auth service
+      } else {
+        this.errorMessage = response.message || 'Verification failed';
+      }
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Email verification failed';
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async resendVerificationEmail(): Promise<void> {
+    if (!this.email) {
+      this.errorMessage = 'Email address is required to resend verification';
+      return;
+    }
+
+    this.resendLoading = true;
+    this.resendSuccess = false;
+    this.errorMessage = '';
+
+    try {
+      const response = await this.authService.resendVerificationEmail(this.email);
+      if (response.success) {
+        this.resendSuccess = true;
+        this.successMessage = 'Verification email sent! Please check your inbox.';
+      } else {
+        this.errorMessage = response.message || 'Failed to resend verification email';
+      }
+    } catch (error: any) {
+      this.errorMessage = error.message || 'Failed to resend verification email';
+    } finally {
+      this.resendLoading = false;
+    }
+  }
+
+  goToLogin(): void {
+    this.router.navigate(['/login']);
+  }
+}
+

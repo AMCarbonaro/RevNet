@@ -9,6 +9,9 @@ export class User {
   @Column({ unique: true })
   username: string;
 
+  @Column({ default: '0000' })
+  discriminator: string;
+
   @Column({ unique: true })
   email: string;
 
@@ -23,6 +26,18 @@ export class User {
 
   @Column({ default: false })
   verified: boolean;
+
+  @Column({ nullable: true })
+  emailVerificationToken: string;
+
+  @Column({ nullable: true })
+  emailVerificationExpires: Date;
+
+  @Column({ nullable: true })
+  passwordResetToken: string;
+
+  @Column({ nullable: true })
+  passwordResetExpires: Date;
 
   @Column({ default: false })
   mfaEnabled: boolean;
@@ -53,6 +68,21 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ type: 'jsonb', nullable: true })
+  letterProgress: {
+    completedLetters: number[];
+    currentLetter: number;
+    totalLetters: number;
+    canAccessDiscord: boolean;
+    assignments: any[];
+  };
+
+  @Column({ type: 'jsonb', nullable: true, default: '[]' })
+  revoltMemberships: string[];
+
+  @Column({ nullable: true })
+  lastActive: Date;
 
   // Relations
   // @ManyToMany(() => Server, server => server.members)
