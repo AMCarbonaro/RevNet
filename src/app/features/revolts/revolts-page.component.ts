@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { RevoltService } from '../../core/services/revolt.service';
+import { ServerDiscoveryService } from '../revnet/services/server-discovery.service';
 
 interface Revolt {
   id: string;
@@ -39,7 +39,7 @@ export class RevoltsPageComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private revoltService: RevoltService
+    private serverDiscoveryService: ServerDiscoveryService
   ) {}
 
   ngOnInit() {
@@ -48,10 +48,19 @@ export class RevoltsPageComponent implements OnInit {
 
   loadRevolts() {
     this.isLoading = true;
-    // Use the same service - data will now be consistent
-    this.revoltService.getPublicRevolts({ limit: 100 }).subscribe({
+    
+    // Use the same discovery service as RevNet dashboard to get matching servers
+    const query = {
+      category: this.selectedCategory !== 'all' ? this.selectedCategory : undefined,
+      sortBy: 'popular' as const,
+      page: 1,
+      limit: 100
+    };
+
+    this.serverDiscoveryService.discoverServers(query).subscribe({
       next: (response) => {
-        this.revolts = this.mapBackendRevolts(response.data);
+        // Map Server objects from discovery service to Revolt interface
+        this.revolts = response.servers.map(server => this.mapServerToRevolt(server));
         this.isLoading = false;
       },
       error: (error) => {
@@ -61,33 +70,29 @@ export class RevoltsPageComponent implements OnInit {
     });
   }
 
-  // Map backend Revolt model to component's interface
-  private mapBackendRevolts(backendRevolts: any[]): Revolt[] {
-    return backendRevolts.map(r => ({
-      id: r._id,
-      name: r.name,
-      description: r.description,
-      memberCount: r.memberCount,
-      fundingGoal: r.fundingGoal,
-      currentFunding: r.currentFunding,
-      category: r.category,
-      status: this.determineStatus(r),
-      image: r.icon || '/assets/revolts/default.jpg',
-      tags: r.tags
-    }));
+  // Map Server from discovery service to Revolt interface
+  private mapServerToRevolt(server: any): Revolt {
+    return {
+      id: server.id,
+      name: server.name,
+      description: server.shortDescription || server.description || '',
+      memberCount: server.memberCount || 0,
+      fundingGoal: 100000, // Default funding goal (not in Server model)
+      currentFunding: 0, // Default funding (not in Server model)
+      category: server.category || 'community',
+      status: 'active' as const,
+      image: server.icon || '/assets/revolts/default.jpg',
+      tags: server.tags || []
+    };
   }
 
-  private determineStatus(revolt: any): 'active' | 'funding' | 'completed' {
-    if (revolt.currentFunding >= revolt.fundingGoal) return 'completed';
-    if (revolt.acceptDonations) return 'funding';
-    return 'active';
+  onCategoryChange() {
+    this.loadRevolts();
   }
 
   get filteredRevolts() {
-    if (this.selectedCategory === 'all') {
-      return this.revolts;
-    }
-    return this.revolts.filter(revolt => revolt.category === this.selectedCategory);
+    // Since we're filtering on the backend, just return all revolts
+    return this.revolts;
   }
 
   getFundingProgress(revolt: Revolt): number {
@@ -96,12 +101,14 @@ export class RevoltsPageComponent implements OnInit {
 
   onRevoltClick(revolt: Revolt) {
     console.log('Revolt clicked:', revolt);
-    // Navigate to revolt details page
+    // Navigate to RevNet dashboard (same as RevNet)
+    this.router.navigate(['/revnet']);
   }
 
   onJoinRevolt(revolt: Revolt) {
     console.log('Join revolt:', revolt);
-    // Handle join revolt logic
+    // Navigate to RevNet dashboard to join the server
+    this.router.navigate(['/revnet']);
   }
 
   onDonateToRevolt(revolt: Revolt) {

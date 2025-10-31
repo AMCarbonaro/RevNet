@@ -23,7 +23,7 @@
           *ngFor="let category of categories"
           class="filter-tab"
           [class.active]="selectedCategory === category.id"
-          (click)="selectedCategory = category.id">
+          (click)="selectedCategory = category.id; onCategoryChange()">
           <span class="category-icon">{{ category.icon }}</span>
           <span class="category-name">{{ category.name }}</span>
         </button>
