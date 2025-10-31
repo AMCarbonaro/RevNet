@@ -6,6 +6,7 @@ import { AnonymousDonationModalComponent } from '../anonymous-donation-modal/ano
 import { Revolt } from '@core/models/revolt.model';
 import { RevoltService } from '@core/services/revolt.service';
 import { AuthService } from '@core/services/auth.service';
+import { ServerDiscoveryService, Server } from '../../../revnet/services/server-discovery.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -23,7 +24,8 @@ export class LandingPageComponent implements OnInit {
   constructor(
     private router: Router,
     private revoltService: RevoltService,
-    private authService: AuthService
+    private authService: AuthService,
+    private serverDiscoveryService: ServerDiscoveryService
   ) {}
 
   ngOnInit(): void {
@@ -32,81 +34,71 @@ export class LandingPageComponent implements OnInit {
 
   loadRevolts(): void {
     this.isLoading = true;
-    // Use mock data for now to ensure the page loads
-    this.revolts = [
-      {
-        _id: '1',
-        name: 'Climate Action Now',
-        description: 'Fighting for environmental justice',
-        shortDescription: 'Environmental justice movement',
-        category: 'Environment',
-        tags: ['climate', 'environment', 'justice'],
-        isPublic: true,
-        isFull: false,
-        memberCount: 150,
-        channelCount: 5,
-        messageCount: 1200,
-        acceptDonations: true,
-        currentFunding: 50000,
-        fundingGoal: 100000,
-        isFeatured: true,
-        settings: {
-          allowInvites: true,
-          requireApproval: false,
-          maxMembers: 500
-        },
-        channelIds: ['ch1', 'ch2'],
-        memberIds: ['u1', 'u2'],
-        ownerId: 'owner1',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        _id: '2',
-        name: 'Digital Rights',
-        description: 'Protecting online privacy and freedom',
-        shortDescription: 'Digital privacy advocacy',
-        category: 'Technology',
-        tags: ['privacy', 'technology', 'rights'],
-        isPublic: true,
-        isFull: false,
-        memberCount: 200,
-        channelCount: 8,
-        messageCount: 2100,
-        acceptDonations: true,
-        currentFunding: 75000,
-        fundingGoal: 150000,
-        isFeatured: true,
-        settings: {
-          allowInvites: true,
-          requireApproval: false,
-          maxMembers: 1000
-        },
-        channelIds: ['ch3', 'ch4'],
-        memberIds: ['u3', 'u4'],
-        ownerId: 'owner2',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ];
-    this.isLoading = false;
     
-    // Try to load from backend in background
-    this.revoltService.getPublicRevolts({ limit: 100 }).subscribe({
+    // Use the same discovery service as revolts page to get matching servers
+    const query = {
+      sortBy: 'popular' as const,
+      page: 1,
+      limit: 100
+    };
+
+    console.log('[LandingPage] Loading revolts from discovery service...');
+    
+    this.serverDiscoveryService.discoverServers(query).subscribe({
       next: (response) => {
-        // Handle backend response structure: { data: { items: Revolt[], total: number } }
-        if (response.data && 'items' in response.data) {
-          this.revolts = (response.data as any).items;
-        } else {
-          // Fallback to direct array if structure is different
-          this.revolts = Array.isArray(response.data) ? response.data : this.revolts;
+        console.log('[LandingPage] ✅ Response received:', response);
+        console.log('[LandingPage] Servers in response:', response.servers?.length || 0);
+        
+        if (!response || !response.servers) {
+          console.warn('[LandingPage] ⚠️ Invalid response structure:', response);
+          this.revolts = [];
+          this.isLoading = false;
+          return;
         }
+
+        // Map Server objects from discovery service to Revolt interface
+        this.revolts = response.servers.map(server => this.mapServerToRevolt(server));
+        console.log('[LandingPage] ✅ Mapped revolts:', this.revolts.length);
+        this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading revolts:', error);
-        // Keep mock data if backend fails
+        console.error('[LandingPage] ❌ Error loading revolts:', error);
+        this.revolts = [];
+        this.isLoading = false;
       }
     });
+  }
+
+  // Map Server from discovery service to Revolt interface
+  private mapServerToRevolt(server: Server): Revolt {
+    return {
+      _id: server.id,
+      id: server.id,
+      name: server.name,
+      description: server.description || '',
+      shortDescription: server.shortDescription || server.description || '',
+      category: server.category || 'community',
+      tags: server.tags || [],
+      isPublic: server.isDiscoverable || false,
+      isFull: false,
+      memberCount: server.memberCount || 0,
+      channelCount: server.channels?.length || 0,
+      messageCount: server.messageCount || 0,
+      acceptDonations: false, // Not in Server model
+      currentFunding: 0, // Not in Server model
+      fundingGoal: undefined,
+      isFeatured: server.verified || false,
+      settings: {
+        allowInvites: true,
+        requireApproval: false,
+        maxMembers: undefined
+      },
+      channelIds: server.channels?.map(ch => ch.id) || [],
+      memberIds: [],
+      ownerId: '',
+      createdAt: new Date(server.createdAt),
+      updatedAt: new Date(server.updatedAt)
+    };
   }
 
   onGetStarted(): void {
