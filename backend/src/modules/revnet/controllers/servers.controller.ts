@@ -22,6 +22,14 @@ export class ServersController {
     return this.serversService.findAll(userId);
   }
 
+  // IMPORTANT: Specific routes like 'discover' must come BEFORE parameterized routes like ':id'
+  // Otherwise NestJS will match '/discover' as ':id' = 'discover'
+  // This route should never be hit since ServerDiscoveryController handles it, but adding for safety
+  @Get('discover')
+  discoverConflict() {
+    throw new Error('Route conflict: use /api/revnet/servers/discover endpoint instead');
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req) {
     const userId = req.user?.id || 'user1'; // Fallback to mock user for now

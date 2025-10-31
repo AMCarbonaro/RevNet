@@ -30,8 +30,10 @@ import { RevNetGateway } from './gateways/revnet.gateway';
     TypeOrmModule.forFeature([Server, Channel, Message, Notification, Friend, DMChannel, User]),
   ],
   controllers: [
-    ServersController,
+    // Register ServerDiscoveryController FIRST to ensure specific routes like /discover
+    // are matched before parameterized routes like /:id in ServersController
     ServerDiscoveryController,
+    ServersController,
     ChannelsController,
     MessagesController,
     NotificationsController,
