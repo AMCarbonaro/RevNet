@@ -1,0 +1,61 @@
+<section class="chat-showcase">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Real-Time Communication</h2>
+      <p class="section-subtitle">Experience instant messaging, reactions, and live collaboration</p>
+    </div>
+
+    <div class="showcase-content">
+      <div class="feature-info">
+        <div class="feature-item">
+          <div class="feature-icon">💬</div>
+          <h3>Instant Messaging</h3>
+          <p>Send messages instantly to your Revolt channels. See messages appear in real-time as they're sent.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <h3>Typing Indicators</h3>
+          <p>Know when someone is typing, so you can coordinate conversations effectively.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">👍</div>
+          <h3>Reactions & Engagement</h3>
+          <p>React to messages with emojis to show support and engagement without cluttering the chat.</p>
+        </div>
+      </div>
+
+      <div class="chat-preview">
+        <div class="chat-window">
+          <div class="chat-header">
+            <h4># general</h4>
+            <span class="online-count">45 members online</span>
+          </div>
+          
+          <div class="messages-container">
+            <div class="messages-list">
+              <app-message-item
+                *ngFor="let message of messages"
+                [message]="message"
+                (reactionToggled)="onReactionToggled($event)">
+              </app-message-item>
+              
+              <div class="typing-indicator" *ngIf="isTyping">
+                <span *ngFor="let user of typingUsers">{{ user }}</span> is typing...
+              </div>
+            </div>
+          </div>
+
+          <div class="message-input-demo">
+            <input 
+              type="text" 
+              placeholder="Type a message..."
+              readonly
+              class="demo-input">
+            <button class="send-button" disabled>Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

@@ -1,0 +1,144 @@
+<section class="about-revnet">
+  <div class="container">
+    <!-- Main Heading -->
+    <div class="section-header">
+      <h2 class="section-title">
+        What is <span class="text-gradient">Revolution Network</span>?
+      </h2>
+      <p class="section-subtitle">
+        A revolutionary platform combining education, real-time collaboration, and funding for activists and organizers
+      </p>
+    </div>
+
+    <!-- What is RevNet -->
+    <div class="what-is-section">
+      <div class="content-grid">
+        <div class="content-item">
+          <div class="icon-wrapper">🌍</div>
+          <h3>Revolutionary Platform</h3>
+          <p>
+            Revolution Network combines education, real-time collaboration, and funding into one powerful platform. 
+            Built specifically for activists and organizers who need secure, effective tools for social change.
+          </p>
+        </div>
+        <div class="content-item">
+          <div class="icon-wrapper">🔐</div>
+          <h3>Secure Communication</h3>
+          <p>
+            Private, encrypted channels for organizing social movements without fear of surveillance or censorship. 
+            Your communications are protected.
+          </p>
+        </div>
+        <div class="content-item">
+          <div class="icon-wrapper">📚</div>
+          <h3>Educational Foundation</h3>
+          <p>
+            Our progressive educational system ensures informed, strategic activism. Complete The Anthony Letters 
+            to unlock platform features and join the revolution.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Purpose -->
+    <div class="purpose-section">
+      <h3 class="subsection-title">Our Purpose</h3>
+      <div class="purpose-grid">
+        <div class="purpose-item">
+          <h4>Enable Effective Organizing</h4>
+          <p>Provide the tools revolutionary communities need to organize effectively and build power</p>
+        </div>
+        <div class="purpose-item">
+          <h4>Educational Foundation</h4>
+          <p>Ensure users understand revolutionary principles before accessing full platform features</p>
+        </div>
+        <div class="purpose-item">
+          <h4>Real-Time Collaboration</h4>
+          <p>Facilitate instant communication and coordination for activists worldwide</p>
+        </div>
+        <div class="purpose-item">
+          <h4>Transparent Funding</h4>
+          <p>Support movements through transparent funding mechanisms with FEC compliance</p>
+        </div>
+        <div class="purpose-item">
+          <h4>Build Networks</h4>
+          <p>Connect informed, strategic revolutionaries ready for collective action</p>
+        </div>
+        <div class="purpose-item">
+          <h4>Safe Space</h4>
+          <p>Create a secure environment free from corporate surveillance and censorship</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Benefits -->
+    <div class="benefits-section">
+      <h3 class="subsection-title">Why Choose Revolution Network?</h3>
+      <div class="benefits-grid">
+        <div class="benefit-card" *ngFor="let benefit of benefits">
+          <div class="benefit-icon">{{ benefit.icon }}</div>
+          <h4 class="benefit-title">{{ benefit.title }}</h4>
+          <p class="benefit-description">{{ benefit.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why RevNet -->
+    <div class="why-section">
+      <h3 class="subsection-title">Why Revolution Network?</h3>
+      <div class="comparison-grid">
+        <div class="comparison-item revnet">
+          <h4>Revolution Network</h4>
+          <ul>
+            <li>✅ Built by activists, for activists</li>
+            <li>✅ Secure, encrypted communications</li>
+            <li>✅ Educational foundation prevents disinformation</li>
+            <li>✅ Transparent funding without corporate fees</li>
+            <li>✅ Progressive access ensures informed communities</li>
+            <li>✅ No censorship or surveillance</li>
+          </ul>
+        </div>
+        <div class="comparison-item traditional">
+          <h4>Traditional Platforms</h4>
+          <ul>
+            <li>❌ Censor or surveil activist content</li>
+            <li>❌ Shut down organizing groups</li>
+            <li>❌ Harvest and sell user data</li>
+            <li>❌ Corporate interference and fees</li>
+            <li>❌ No educational foundation</li>
+            <li>❌ Vulnerable to infiltration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Use Cases -->
+    <div class="use-cases-section">
+      <h3 class="subsection-title">Who Uses Revolution Network?</h3>
+      <div class="use-cases-grid">
+        <div class="use-case-card" *ngFor="let useCase of useCases">
+          <div class="use-case-icon">{{ useCase.icon }}</div>
+          <h4 class="use-case-title">{{ useCase.title }}</h4>
+          <p class="use-case-description">{{ useCase.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="cta-section">
+      <h3>Ready to Join the Revolution?</h3>
+      <p>Start your journey and become part of a network of informed activists working for change</p>
+      <div class="cta-buttons">
+        <button class="btn-primary btn-large" (click)="onGetStarted()">
+          <i class="icon-rocket"></i>
+          Get Started
+        </button>
+        <button class="btn-secondary btn-large" (click)="onTryDemo()">
+          <i class="icon-play"></i>
+          Try Demo
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+

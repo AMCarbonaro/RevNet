@@ -1,0 +1,168 @@
+<section class="user-journey-showcase">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Your Journey to Revolution</h2>
+      <p class="section-subtitle">A progressive path from education to action</p>
+    </div>
+
+    <!-- Stage Navigation -->
+    <div class="stage-tabs">
+      <button
+        *ngFor="let stage of stages"
+        class="stage-tab"
+        [class.active]="currentStage === stage"
+        (click)="selectStage(stage)">
+        <span class="stage-number">{{ stage === 'terminal' ? '1' : stage === 'letters' ? '2' : '3' }}</span>
+        <span class="stage-name">{{ stageNames[stage] }}</span>
+      </button>
+    </div>
+
+    <!-- Stage Content -->
+    <div class="stage-content">
+      <!-- Terminal Stage -->
+      <div class="stage-panel" *ngIf="currentStage === 'terminal'" [class.active]="currentStage === 'terminal'">
+        <div class="stage-info">
+          <h3>{{ stageNames['terminal'] }}</h3>
+          <p>{{ stageDescriptions['terminal'] }}</p>
+        </div>
+        <div class="stage-preview terminal-preview">
+          <div class="terminal-window">
+            <div class="terminal-header">
+              <div class="terminal-buttons">
+                <span class="btn red"></span>
+                <span class="btn yellow"></span>
+                <span class="btn green"></span>
+              </div>
+              <span class="terminal-title">RevNet Terminal</span>
+            </div>
+            <div class="terminal-body">
+              <div class="terminal-line">
+                <span class="prompt">&gt;</span>
+                <span class="command">Initializing RevNet Protocol...</span>
+              </div>
+              <div class="terminal-line success">
+                <span class="prompt">&gt;</span>
+                <span class="command">Connection established.</span>
+              </div>
+              <div class="terminal-line">
+                <span class="prompt">&gt;</span>
+                <span class="command">Welcome to Revolution Network</span>
+              </div>
+              <div class="terminal-line highlight">
+                <span class="prompt">&gt;</span>
+                <span class="command">Your journey begins now...</span>
+              </div>
+              <div class="terminal-line">
+                <span class="prompt">&gt;</span>
+                <span class="cursor">▊</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Letters Stage -->
+      <div class="stage-panel" *ngIf="currentStage === 'letters'" [class.active]="currentStage === 'letters'">
+        <div class="stage-info">
+          <h3>{{ stageNames['letters'] }}</h3>
+          <p>{{ stageDescriptions['letters'] }}</p>
+        </div>
+        <div class="stage-preview letters-preview">
+          <div class="letters-dashboard">
+            <div class="letters-header">
+              <h4>The Anthony Letters</h4>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 45%"></div>
+                <span class="progress-text">13 of 30 Complete</span>
+              </div>
+            </div>
+            <div class="books-grid">
+              <div class="book-card completed">
+                <div class="book-icon">🌅</div>
+                <h5>The Awakening</h5>
+                <p>7/7 Complete</p>
+              </div>
+              <div class="book-card in-progress">
+                <div class="book-icon">🏗️</div>
+                <h5>The Foundation</h5>
+                <p>6/8 Complete</p>
+              </div>
+              <div class="book-card locked">
+                <div class="book-icon">⚔️</div>
+                <h5>The Arsenal</h5>
+                <p>0/13 Complete</p>
+              </div>
+              <div class="book-card locked">
+                <div class="book-icon">🔥</div>
+                <h5>The Revolution</h5>
+                <p>0/2 Complete</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RevNet Stage -->
+      <div class="stage-panel" *ngIf="currentStage === 'revnet'" [class.active]="currentStage === 'revnet'">
+        <div class="stage-info">
+          <h3>{{ stageNames['revnet'] }}</h3>
+          <p>{{ stageDescriptions['revnet'] }}</p>
+        </div>
+        <div class="stage-preview revnet-preview">
+          <div class="revnet-layout-preview">
+            <div class="server-sidebar">
+              <div class="server-icon active">R</div>
+              <div class="server-icon">C</div>
+              <div class="server-icon">H</div>
+            </div>
+            <div class="channel-sidebar">
+              <div class="server-header">Climate Action</div>
+              <div class="channel active"># general</div>
+              <div class="channel"># announcements</div>
+              <div class="channel"># organizing</div>
+              <div class="channel voice">🔊 Voice Chat</div>
+            </div>
+            <div class="chat-area">
+              <div class="chat-header"># general</div>
+              <div class="messages">
+                <div class="message">
+                  <div class="avatar">O</div>
+                  <div class="content">
+                    <span class="author">Organizer</span>
+                    <span class="text">Welcome to Revolution Network!</span>
+                  </div>
+                </div>
+                <div class="message">
+                  <div class="avatar">A</div>
+                  <div class="content">
+                    <span class="author">Activist</span>
+                    <span class="text">Ready to make change happen! 🚀</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="stage-controls">
+      <button class="btn-nav" (click)="previousStage()" [disabled]="currentStage === 'terminal'">
+        ← Previous
+      </button>
+      <div class="stage-indicators">
+        <span
+          *ngFor="let stage of stages; let i = index"
+          class="indicator"
+          [class.active]="currentStage === stage"
+          (click)="selectStage(stage)">
+        </span>
+      </div>
+      <button class="btn-nav" (click)="nextStage()" [disabled]="currentStage === 'revnet'">
+        Next →
+      </button>
+    </div>
+  </div>
+</section>
+

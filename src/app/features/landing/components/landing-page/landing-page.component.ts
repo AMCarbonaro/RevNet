@@ -3,6 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HeroSectionComponent } from '../hero-section/hero-section.component';
 import { AnonymousDonationModalComponent } from '../anonymous-donation-modal/anonymous-donation-modal.component';
+import { AboutRevNetComponent } from '../about-revnet/about-revnet.component';
+import { UserJourneyShowcaseComponent } from '../user-journey-showcase/user-journey-showcase.component';
+import { ChatShowcaseComponent } from '../chat-showcase/chat-showcase.component';
+import { VoiceChatShowcaseComponent } from '../voice-chat-showcase/voice-chat-showcase.component';
+import { ChannelsRevoltsShowcaseComponent } from '../channels-revolts-showcase/channels-revolts-showcase.component';
+import { FullInterfaceShowcaseComponent } from '../full-interface-showcase/full-interface-showcase.component';
 import { Revolt } from '@core/models/revolt.model';
 import { RevoltService } from '@core/services/revolt.service';
 import { AuthService } from '@core/services/auth.service';
@@ -11,7 +17,17 @@ import { ServerDiscoveryService, Server } from '../../../revnet/services/server-
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, HeroSectionComponent, AnonymousDonationModalComponent],
+  imports: [
+    CommonModule,
+    HeroSectionComponent,
+    AnonymousDonationModalComponent,
+    AboutRevNetComponent,
+    UserJourneyShowcaseComponent,
+    ChatShowcaseComponent,
+    VoiceChatShowcaseComponent,
+    ChannelsRevoltsShowcaseComponent,
+    FullInterfaceShowcaseComponent
+  ],
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
 })

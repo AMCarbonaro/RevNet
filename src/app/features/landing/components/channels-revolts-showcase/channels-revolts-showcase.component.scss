@@ -1,0 +1,206 @@
+.channels-revolts-showcase {
+  padding: 80px 20px;
+  background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #fff;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #00ff88, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      font-size: 1.2rem;
+      color: #b9bbbe;
+    }
+  }
+
+  .showcase-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 60px;
+    align-items: start;
+
+    @media (max-width: 968px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .feature-info {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .feature-item {
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #fff;
+      }
+
+      p {
+        color: #b9bbbe;
+        line-height: 1.6;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .interface-preview {
+    .revnet-layout-preview {
+      display: flex;
+      background: #36393f;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      height: 500px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+      .server-sidebar {
+        width: 70px;
+        background: #202225;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px 0;
+        gap: 10px;
+
+        .server-icon {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: #5865f2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            border-radius: 15px;
+            background: #5865f2;
+          }
+
+          &.active {
+            border-radius: 15px;
+            background: #5865f2;
+          }
+        }
+      }
+
+      .channel-sidebar {
+        width: 240px;
+        background: #2f3136;
+        color: #fff;
+
+        .server-header {
+          padding: 15px;
+          font-weight: 600;
+          font-size: 1rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          margin-bottom: 15px;
+        }
+
+        .channels-list {
+          padding: 0 15px;
+
+          .channel-item {
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            color: #8e9297;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.05);
+              color: #dcddde;
+            }
+
+            &.active {
+              background: rgba(255, 255, 255, 0.1);
+              color: #fff;
+            }
+
+            &.voice {
+              .channel-icon {
+                font-size: 0.9rem;
+              }
+            }
+
+            .channel-hash {
+              font-weight: 600;
+            }
+          }
+        }
+      }
+
+      .channel-info {
+        flex: 1;
+        background: #36393f;
+        padding: 20px;
+
+        .info-header {
+          margin-bottom: 20px;
+
+          h4 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin: 0;
+          }
+        }
+
+        .info-content {
+          color: #b9bbbe;
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    padding: 60px 15px;
+
+    .revnet-layout-preview {
+      flex-direction: column;
+      height: auto;
+
+      .server-sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        padding: 10px;
+      }
+
+      .channel-sidebar {
+        width: 100%;
+      }
+    }
+  }
+}
+

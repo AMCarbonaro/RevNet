@@ -1,0 +1,90 @@
+<section class="voice-chat-showcase">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Voice & Video Communication</h2>
+      <p class="section-subtitle">Connect with your Revolt through crystal-clear voice and video channels</p>
+    </div>
+
+    <div class="showcase-content">
+      <div class="voice-preview">
+        <div class="voice-channel-window">
+          <div class="voice-header">
+            <div class="voice-info">
+              <svg class="voice-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>
+              </svg>
+              <span class="channel-name">Voice Chat</span>
+            </div>
+            <div class="participant-count">{{ participants.length }} connected</div>
+          </div>
+
+          <div class="voice-participants">
+            <div 
+              *ngFor="let participant of participants" 
+              class="participant-card"
+              [class.speaking]="participant.isSpeaking"
+              [class.muted]="participant.isMuted">
+              <div class="participant-avatar">
+                {{ participant.username.charAt(0).toUpperCase() }}
+                <div class="speaking-indicator" *ngIf="participant.isSpeaking">
+                  <div class="audio-wave">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="muted-indicator" *ngIf="participant.isMuted">🔇</div>
+              </div>
+              <div class="participant-info">
+                <div class="participant-name">{{ participant.username }}</div>
+                <div class="participant-status">
+                  <span *ngIf="participant.isMuted" class="status-muted">Muted</span>
+                  <span *ngIf="participant.isDeafened" class="status-deafened">Deafened</span>
+                  <span *ngIf="!participant.isMuted && !participant.isDeafened" class="status-normal">Connected</span>
+                </div>
+              </div>
+              <div class="audio-level" *ngIf="!participant.isMuted">
+                <div class="audio-bar" [style.height.%]="getAudioLevel(participant) * 100"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="voice-controls">
+            <button class="control-btn mute" [class.active]="false">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2"/>
+              </svg>
+              <span>Mute</span>
+            </button>
+            <button class="control-btn deafen" [class.active]="false">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>
+              </svg>
+              <span>Deafen</span>
+            </button>
+            <button class="control-btn leave">
+              <span>Leave Channel</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-info">
+        <div class="feature-item">
+          <div class="feature-icon">🎙️</div>
+          <h3>Voice Channels</h3>
+          <p>Join voice channels to communicate in real-time with your Revolt members. Crystal-clear audio quality powered by WebRTC.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📹</div>
+          <h3>Video & Screen Share</h3>
+          <p>Share your screen, turn on video, or both. Perfect for organizing meetings, presentations, and collaborative work.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔊</div>
+          <h3>Audio Controls</h3>
+          <p>Mute, deafen, and adjust audio levels easily. See who's speaking with visual indicators and audio level meters.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

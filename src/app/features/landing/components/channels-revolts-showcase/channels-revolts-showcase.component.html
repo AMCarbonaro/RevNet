@@ -1,0 +1,74 @@
+<section class="channels-revolts-showcase">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Organize with Revolts & Channels</h2>
+      <p class="section-subtitle">Create revolutionary communities and organize communication channels</p>
+    </div>
+
+    <div class="showcase-content">
+      <div class="feature-info">
+        <div class="feature-item">
+          <div class="feature-icon">🏛️</div>
+          <h3>Revolts (Communities)</h3>
+          <p>Create or join Revolts - revolutionary communities organized around causes, campaigns, and movements.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📁</div>
+          <h3>Channel Organization</h3>
+          <p>Organize conversations with text channels, voice channels, and categories. Keep discussions focused and accessible.</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">👥</div>
+          <h3>Member Management</h3>
+          <p>Invite members, assign roles, and manage permissions. Build the organizational structure your movement needs.</p>
+        </div>
+      </div>
+
+      <div class="interface-preview">
+        <div class="revnet-layout-preview">
+          <div class="server-sidebar">
+            <div 
+              *ngFor="let server of servers" 
+              class="server-icon"
+              [class.active]="selectedServer?.id === server.id"
+              (click)="selectServer(server)"
+              [title]="server.name">
+              {{ server.name.charAt(0).toUpperCase() }}
+            </div>
+          </div>
+
+          <div class="channel-sidebar">
+            <div class="server-header" *ngIf="selectedServer">
+              {{ selectedServer.name }}
+            </div>
+            <div class="channels-list">
+              <div 
+                *ngFor="let channel of channels" 
+                class="channel-item"
+                [class.active]="selectedChannel?.id === channel.id"
+                [class.voice]="channel.type === 2"
+                (click)="selectChannel(channel)">
+                <span class="channel-icon" *ngIf="channel.type === 2">🔊</span>
+                <span class="channel-hash" *ngIf="channel.type !== 2">#</span>
+                <span class="channel-name">{{ channel.name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="channel-info">
+            <div class="info-header">
+              <h4 *ngIf="selectedChannel"># {{ selectedChannel.name }}</h4>
+            </div>
+            <div class="info-content">
+              <p *ngIf="selectedServer && selectedChannel">
+                This is the {{ selectedChannel.name }} channel in {{ selectedServer.name }}. 
+                Here you can organize discussions, coordinate actions, and build your movement.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

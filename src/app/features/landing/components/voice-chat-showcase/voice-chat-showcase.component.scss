@@ -1,0 +1,289 @@
+.voice-chat-showcase {
+  padding: 80px 20px;
+  background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+  color: #fff;
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #00ff88, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      font-size: 1.2rem;
+      color: #b9bbbe;
+    }
+  }
+
+  .showcase-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 60px;
+    align-items: start;
+
+    @media (max-width: 968px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .voice-preview {
+    .voice-channel-window {
+      background: #36393f;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+      .voice-header {
+        padding: 15px 20px;
+        background: #2f3136;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .voice-info {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .voice-icon {
+            color: #b9bbbe;
+          }
+
+          .channel-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+          }
+        }
+
+        .participant-count {
+          color: #b9bbbe;
+          font-size: 0.85rem;
+        }
+      }
+
+      .voice-participants {
+        padding: 20px;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .participant-card {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          padding: 15px;
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 8px;
+          border: 2px solid transparent;
+          transition: all 0.3s;
+
+          &.speaking {
+            border-color: rgba(0, 255, 136, 0.5);
+            background: rgba(0, 255, 136, 0.1);
+          }
+
+          &.muted {
+            opacity: 0.6;
+          }
+
+          .participant-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #5865f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.2rem;
+            position: relative;
+            flex-shrink: 0;
+
+            .speaking-indicator {
+              position: absolute;
+              inset: -3px;
+              border-radius: 50%;
+              border: 3px solid #00ff88;
+              animation: pulse 1.5s infinite;
+            }
+
+            .audio-wave {
+              position: absolute;
+              inset: -3px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 2px;
+
+              span {
+                width: 3px;
+                height: 15px;
+                background: #00ff88;
+                border-radius: 2px;
+                animation: wave 1s infinite;
+
+                &:nth-child(2) { animation-delay: 0.2s; }
+                &:nth-child(3) { animation-delay: 0.4s; }
+              }
+            }
+
+            .muted-indicator {
+              position: absolute;
+              bottom: -5px;
+              right: -5px;
+              background: #f04747;
+              border-radius: 50%;
+              width: 20px;
+              height: 20px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 10px;
+            }
+          }
+
+          .participant-info {
+            flex: 1;
+
+            .participant-name {
+              color: #fff;
+              font-weight: 600;
+              margin-bottom: 5px;
+            }
+
+            .participant-status {
+              font-size: 0.85rem;
+
+              .status-muted {
+                color: #f04747;
+              }
+
+              .status-deafened {
+                color: #f04747;
+              }
+
+              .status-normal {
+                color: #43b581;
+              }
+            }
+          }
+
+          .audio-level {
+            width: 30px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            display: flex;
+            align-items: flex-end;
+            padding: 5px;
+
+            .audio-bar {
+              width: 100%;
+              background: linear-gradient(180deg, #00ff88, #00d4ff);
+              border-radius: 2px;
+              transition: height 0.2s;
+            }
+          }
+        }
+      }
+
+      .voice-controls {
+        padding: 15px 20px;
+        background: #2f3136;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+
+        .control-btn {
+          padding: 10px 20px;
+          border-radius: 8px;
+          border: none;
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: all 0.2s;
+          font-weight: 600;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.2);
+          }
+
+          &.active {
+            background: #f04747;
+          }
+
+          &.leave {
+            background: #f04747;
+            
+            &:hover {
+              background: #d84040;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .feature-info {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .feature-item {
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #fff;
+      }
+
+      p {
+        color: #b9bbbe;
+        line-height: 1.6;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.1); }
+  }
+
+  @keyframes wave {
+    0%, 100% { height: 10px; }
+    50% { height: 20px; }
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    padding: 60px 15px;
+  }
+}
+
