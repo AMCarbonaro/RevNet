@@ -43,6 +43,7 @@ export class RevoltsPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log('[RevoltsPage] Component initialized');
     this.loadRevolts();
   }
 
@@ -57,14 +58,37 @@ export class RevoltsPageComponent implements OnInit {
       limit: 100
     };
 
+    console.log('[RevoltsPage] Loading revolts...');
+    console.log('[RevoltsPage] Query:', query);
+    console.log('[RevoltsPage] Selected category:', this.selectedCategory);
+
     this.serverDiscoveryService.discoverServers(query).subscribe({
       next: (response) => {
+        console.log('[RevoltsPage] ✅ Response received:', response);
+        console.log('[RevoltsPage] Servers in response:', response.servers?.length || 0);
+        console.log('[RevoltsPage] Server names:', response.servers?.map(s => s.name) || []);
+        
+        if (!response || !response.servers) {
+          console.warn('[RevoltsPage] ⚠️ Invalid response structure:', response);
+          this.revolts = [];
+          this.isLoading = false;
+          return;
+        }
+
         // Map Server objects from discovery service to Revolt interface
-        this.revolts = response.servers.map(server => this.mapServerToRevolt(server));
+        this.revolts = response.servers
+          .map(server => this.mapServerToRevolt(server))
+          .filter((revolt): revolt is Revolt => revolt !== null);
+        console.log('[RevoltsPage] ✅ Mapped revolts:', this.revolts.length);
+        console.log('[RevoltsPage] Revolt names:', this.revolts.map(r => r.name));
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading revolts:', error);
+        console.error('[RevoltsPage] ❌ Error loading revolts:', error);
+        console.error('[RevoltsPage] Error status:', error?.status);
+        console.error('[RevoltsPage] Error message:', error?.message);
+        console.error('[RevoltsPage] Error details:', JSON.stringify(error, null, 2));
+        this.revolts = [];
         this.isLoading = false;
       }
     });
@@ -72,7 +96,12 @@ export class RevoltsPageComponent implements OnInit {
 
   // Map Server from discovery service to Revolt interface
   private mapServerToRevolt(server: any): Revolt {
-    return {
+    if (!server) {
+      console.warn('[RevoltsPage] ⚠️ Attempted to map null/undefined server');
+      return null as any;
+    }
+
+    const mapped = {
       id: server.id,
       name: server.name,
       description: server.shortDescription || server.description || '',
@@ -84,6 +113,9 @@ export class RevoltsPageComponent implements OnInit {
       image: server.icon || '/assets/revolts/default.jpg',
       tags: server.tags || []
     };
+
+    console.log('[RevoltsPage] Mapped server:', server.name, '→', mapped.name);
+    return mapped;
   }
 
   onCategoryChange() {
