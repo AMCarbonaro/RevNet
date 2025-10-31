@@ -5,6 +5,10 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": "18.x",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "build": "npx @nestjs/cli build",
     "start": "node --max-old-space-size=256 dist/src/main.js",
