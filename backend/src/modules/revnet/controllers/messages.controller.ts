@@ -19,16 +19,16 @@ export class MessagesController {
   @Post()
   async create(@Param('channelId') channelId: string, @Body() createMessageDto: CreateMessageDto, @Request() req) {
     const userId = req.user?.id || 'user1'; // Fallback to mock user for now
-    const message = await this.messagesService.create(channelId, createMessageDto, userId);
+    const message: any = await this.messagesService.create(channelId, createMessageDto, userId);
     
-    // Transform message for WebSocket (add mock author object)
+    // Transform message for WebSocket (use author data from service)
     const wsMessage = {
       id: message.id,
       content: message.content,
-      author: {
+      author: message.author || {
         id: message.authorId,
-        username: 'CurrentUser',
-        discriminator: '0001',
+        username: 'Unknown User',
+        discriminator: '0000',
         avatar: null,
       },
       channelId: message.channelId,

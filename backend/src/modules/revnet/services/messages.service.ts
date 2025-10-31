@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThan, LessThan, IsNull, Not } from 'typeorm';
+import { Repository, MoreThan, LessThan, IsNull, Not, In } from 'typeorm';
 import { Message } from '../entities/message.entity';
 import { Channel } from '../entities/channel.entity';
+import { User } from '../../auth/entities/user.entity';
 import { CreateMessageDto } from '../dto/create-message.dto';
 import { UpdateMessageDto } from '../dto/update-message.dto';
 import { SearchMessagesQueryDto } from '../dto/search-messages-query.dto';
@@ -14,6 +15,8 @@ export class MessagesService {
     private messagesRepository: Repository<Message>,
     @InjectRepository(Channel)
     private channelsRepository: Repository<Channel>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async create(channelId: string, createMessageDto: CreateMessageDto, userId: string): Promise<Message> {
@@ -39,10 +42,25 @@ export class MessagesService {
 
     const savedMessage = await this.messagesRepository.save(message);
     
-    return savedMessage;
+    // Fetch author data for the saved message
+    const author = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    // Return message with author data
+    return {
+      ...savedMessage,
+      author: author ? {
+        id: author.id,
+        username: author.username,
+        discriminator: author.discriminator || '0000',
+        avatar: author.avatar || null,
+        status: author.status || 'offline',
+      } : null,
+    } as any;
   }
 
-  async findAll(channelId: string, userId: string, page: number = 1, limit: number = 50): Promise<{ messages: Message[], total: number, page: number, totalPages: number }> {
+  async findAll(channelId: string, userId: string, page: number = 1, limit: number = 50): Promise<{ messages: any[], total: number, page: number, totalPages: number }> {
     // Check if channel exists
     const channel = await this.channelsRepository.findOne({
       where: { id: channelId, isActive: true },
@@ -65,15 +83,38 @@ export class MessagesService {
 
     const totalPages = Math.ceil(total / limit);
 
+    // Get unique author IDs
+    const authorIds = [...new Set(messages.map(m => m.authorId))];
+    
+    // Fetch all authors at once
+    const authors = await this.userRepository.find({
+      where: { id: In(authorIds) },
+    });
+
+    // Create a map for quick lookup
+    const authorMap = new Map(authors.map(a => [a.id, a]));
+
+    // Transform messages to include author data
+    const messagesWithAuthor = messages.reverse().map(message => ({
+      ...message,
+      author: message.authorId ? {
+        id: message.authorId,
+        username: authorMap.get(message.authorId)?.username || 'Unknown User',
+        discriminator: authorMap.get(message.authorId)?.discriminator || '0000',
+        avatar: authorMap.get(message.authorId)?.avatar || null,
+        status: authorMap.get(message.authorId)?.status || 'offline',
+      } : null,
+    }));
+
     return {
-      messages: messages.reverse(), // Return in chronological order
+      messages: messagesWithAuthor,
       total,
       page,
       totalPages,
     };
   }
 
-  async findOne(id: string, userId: string): Promise<Message> {
+  async findOne(id: string, userId: string): Promise<any> {
     const message = await this.messagesRepository.findOne({
       where: { id, isActive: true },
       relations: ['channel', 'channel.server'],
@@ -91,7 +132,21 @@ export class MessagesService {
       throw new ForbiddenException('You must be the owner of this server to view this message');
     }
 
-    return message;
+    // Fetch author data
+    const author = await this.userRepository.findOne({
+      where: { id: message.authorId },
+    });
+
+    return {
+      ...message,
+      author: author ? {
+        id: author.id,
+        username: author.username,
+        discriminator: author.discriminator || '0000',
+        avatar: author.avatar || null,
+        status: author.status || 'offline',
+      } : null,
+    };
   }
 
   async update(id: string, updateMessageDto: UpdateMessageDto, userId: string): Promise<Message> {
@@ -116,7 +171,21 @@ export class MessagesService {
     
     const updatedMessage = await this.messagesRepository.save(message);
     
-    return updatedMessage;
+    // Fetch author data
+    const author = await this.userRepository.findOne({
+      where: { id: updatedMessage.authorId },
+    });
+
+    return {
+      ...updatedMessage,
+      author: author ? {
+        id: author.id,
+        username: author.username,
+        discriminator: author.discriminator || '0000',
+        avatar: author.avatar || null,
+        status: author.status || 'offline',
+      } : null,
+    } as any;
   }
 
   async remove(id: string, userId: string): Promise<void> {
@@ -246,8 +315,31 @@ export class MessagesService {
 
     const [messages, total] = await queryBuilder.getManyAndCount();
 
+    // Get unique author IDs
+    const authorIds = [...new Set(messages.map(m => m.authorId))];
+    
+    // Fetch all authors at once
+    const authors = await this.userRepository.find({
+      where: { id: In(authorIds) },
+    });
+
+    // Create a map for quick lookup
+    const authorMap = new Map(authors.map(a => [a.id, a]));
+
+    // Transform messages to include author data
+    const messagesWithAuthor = messages.map(message => ({
+      ...message,
+      author: message.authorId ? {
+        id: message.authorId,
+        username: authorMap.get(message.authorId)?.username || 'Unknown User',
+        discriminator: authorMap.get(message.authorId)?.discriminator || '0000',
+        avatar: authorMap.get(message.authorId)?.avatar || null,
+        status: authorMap.get(message.authorId)?.status || 'offline',
+      } : null,
+    }));
+
     return {
-      messages,
+      messages: messagesWithAuthor,
       total
     };
   }
