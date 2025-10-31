@@ -20,7 +20,9 @@ export class RevNetSeeder {
     // Check if data already exists
     const existingServers = await this.serverRepository.count();
     if (existingServers > 0) {
-      console.log('Sample data already exists, updating channels to active...');
+      console.log('Sample data already exists, updating to revolt-themed data...');
+      // Update existing servers to revolt-themed names and metadata
+      await this.updateExistingServers();
       // Update existing channels to be active
       await this.channelRepository.update({ isActive: false }, { isActive: true });
       console.log('Channels updated to active');
@@ -258,6 +260,77 @@ export class RevNetSeeder {
     console.log(`Created ${await this.serverRepository.count()} servers`);
     console.log(`Created ${await this.channelRepository.count()} channels`);
     console.log(`Created ${await this.messageRepository.count()} messages`);
+  }
+
+  private async updateExistingServers(): Promise<void> {
+    // Define the revolt-themed server updates
+    const revoltUpdates = [
+      {
+        oldNames: ['HackerSpace'],
+        update: {
+          name: 'Climate Action Now',
+          description: 'Mobilizing communities to combat climate change through direct action, policy advocacy, and sustainable living. Join the movement demanding real environmental justice.',
+          shortDescription: 'Fighting climate change through direct action and policy change',
+          category: 'climate',
+          tags: ['environment', 'activism', 'sustainability', 'climate-justice'],
+          isDiscoverable: true,
+          type: ServerType.PUBLIC,
+        },
+      },
+      {
+        oldNames: ['GameStation'],
+        update: {
+          name: 'Digital Privacy Rights',
+          description: 'Protecting digital freedoms and fighting surveillance capitalism. We organize against data harvesting, advocate for encryption rights, and build tools for true online privacy.',
+          shortDescription: 'Fighting for digital privacy and freedom from surveillance',
+          category: 'tech',
+          tags: ['privacy', 'technology', 'encryption', 'digital-rights'],
+          isDiscoverable: true,
+          type: ServerType.PUBLIC,
+        },
+      },
+      {
+        oldNames: ['DevTeam'],
+        update: {
+          name: 'Housing Justice Collective',
+          description: 'Organizing tenants against predatory landlords and fighting for affordable housing as a human right. We coordinate rent strikes, lobby for tenant protections, and build community power.',
+          shortDescription: 'Fighting for affordable housing and tenant rights',
+          category: 'social',
+          tags: ['housing', 'tenants-rights', 'affordable-housing', 'community'],
+          isDiscoverable: true,
+          type: ServerType.PUBLIC,
+        },
+      },
+      {
+        oldNames: ['ArtClub'],
+        update: {
+          name: 'Worker Power Union',
+          description: 'Empowering workers to organize, unionize, and demand fair wages and working conditions. We share organizing strategies, support labor actions, and build solidarity across industries.',
+          shortDescription: 'Organizing workers and fighting for labor rights',
+          category: 'social',
+          tags: ['labor', 'union', 'workers-rights', 'organizing'],
+          isDiscoverable: true,
+          type: ServerType.PUBLIC,
+        },
+      },
+    ];
+
+    // Update each server that matches old names
+    for (const { oldNames, update } of revoltUpdates) {
+      for (const oldName of oldNames) {
+        const existingServer = await this.serverRepository.findOne({ where: { name: oldName } });
+        if (existingServer) {
+          await this.serverRepository.update({ id: existingServer.id }, update);
+          console.log(`Updated server "${oldName}" to "${update.name}"`);
+        }
+      }
+    }
+
+    // Also ensure all public servers are discoverable
+    await this.serverRepository.update(
+      { type: ServerType.PUBLIC, isDiscoverable: false },
+      { isDiscoverable: true }
+    );
   }
 
   private async ensureAllServersHaveChannels(): Promise<void> {
