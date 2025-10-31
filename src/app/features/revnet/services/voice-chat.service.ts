@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { take as takeOperator } from 'rxjs/operators';
 import { RevNetWebSocketService, WebRTCSignal } from './revnet-websocket.service';
 import { Store } from '@ngrx/store';
 import { selectSelectedServerId } from '../store/selectors/revnet.selectors';
@@ -116,7 +115,7 @@ export class VoiceChatService {
 
       // Subscribe to voice channel users to create peer connections
       this.webSocketService.voiceChannelUsers$
-        .pipe(takeOperator(1))
+        .pipe(take(1))
         .subscribe(users => {
           // For each user already in the channel, create peer connection
           users.forEach(user => {
