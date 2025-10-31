@@ -73,7 +73,6 @@ export class LandingPageComponent implements OnInit {
   private mapServerToRevolt(server: Server): Revolt {
     return {
       _id: server.id,
-      id: server.id,
       name: server.name,
       description: server.description || '',
       shortDescription: server.shortDescription || server.description || '',
