@@ -15,14 +15,6 @@ export class JwtAuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      // For development, allow requests without token (fallback behavior)
-      // In production, you'd want to throw UnauthorizedException
-      const devMode = this.configService.get<string>('NODE_ENV') !== 'production';
-      if (devMode) {
-        // Set a default user for development
-        request.user = { userId: 'user1', id: 'user1' };
-        return true;
-      }
       throw new UnauthorizedException('No token provided');
     }
 
@@ -31,6 +23,17 @@ export class JwtAuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtSecret,
       });
+      
+      // Validate that payload.sub exists and is a valid UUID format
+      if (!payload.sub) {
+        throw new UnauthorizedException('Invalid token: missing user ID');
+      }
+
+      // Validate UUID format (basic check)
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(payload.sub)) {
+        throw new UnauthorizedException('Invalid token: user ID is not a valid UUID');
+      }
       
       // Attach user info to request object
       request.user = {
@@ -42,14 +45,12 @@ export class JwtAuthGuard implements CanActivate {
       
       return true;
     } catch (error) {
-      // Token is invalid - in development, allow with fallback user
-      const devMode = this.configService.get<string>('NODE_ENV') !== 'production';
-      if (devMode) {
-        console.warn('Invalid JWT token, using fallback user for development:', error.message);
-        request.user = { userId: 'user1', id: 'user1' };
-        return true;
+      if (error instanceof UnauthorizedException) {
+        throw error;
       }
-      throw new UnauthorizedException('Invalid token');
+      // Token verification failed (expired, invalid signature, etc.)
+      console.error('JWT verification error:', error.message);
+      throw new UnauthorizedException('Invalid or expired token');
     }
   }
 

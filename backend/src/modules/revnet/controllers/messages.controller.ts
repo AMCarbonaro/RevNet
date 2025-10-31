@@ -18,7 +18,10 @@ export class MessagesController {
 
   @Post()
   async create(@Param('channelId') channelId: string, @Body() createMessageDto: CreateMessageDto, @Request() req) {
-    const userId = req.user?.id || 'user1'; // Fallback to mock user for now
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     const message: any = await this.messagesService.create(channelId, createMessageDto, userId);
     
     // Transform message for WebSocket (use author data from service)
@@ -60,56 +63,83 @@ export class MessagesController {
     @Query('page') page?: number,
     @Query('limit') limit?: number,
   ) {
-    const userId = req.user?.id || 'user1'; // Fallback to mock user for now
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     return this.messagesService.findAll(channelId, userId, page, limit);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req) {
-    const userId = req.user?.id || 'user1'; // Fallback to mock user for now
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     return this.messagesService.findOne(id, userId);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto, @Request() req) {
-    const userId = req.user?.id || 'user1'; // Fallback to mock user for now
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     return this.messagesService.update(id, updateMessageDto, userId);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @Request() req) {
-    const userId = req.user?.id || 'user1'; // Fallback to mock user for now
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     return this.messagesService.remove(id, userId);
   }
 
   // Add missing message endpoints
   @Post(':id/reactions')
   addReaction(@Param('id') id: string, @Body('emoji') emoji: string, @Request() req) {
-    const userId = req.user?.id || 'user1';
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     return this.messagesService.addReaction(id, emoji, userId);
   }
 
   @Delete(':id/reactions')
   removeReaction(@Param('id') id: string, @Body('emoji') emoji: string, @Request() req) {
-    const userId = req.user?.id || 'user1';
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     return this.messagesService.removeReaction(id, emoji, userId);
   }
 
   @Patch(':id/pin')
   pinMessage(@Param('id') id: string, @Request() req) {
-    const userId = req.user?.id || 'user1';
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     return this.messagesService.pinMessage(id, userId);
   }
 
   @Delete(':id/pin')
   unpinMessage(@Param('id') id: string, @Request() req) {
-    const userId = req.user?.id || 'user1';
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     return this.messagesService.unpinMessage(id, userId);
   }
 
   @Get('search')
   searchMessages(@Query() searchQuery: SearchMessagesQueryDto, @Request() req) {
-    const userId = req.user?.id || 'user1';
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request - authentication required');
+    }
     return this.messagesService.searchMessages(userId, searchQuery);
   }
 
