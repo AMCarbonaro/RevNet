@@ -209,6 +209,6 @@ export class LettersDashboardComponent implements OnInit {
 
   enterRevolution(): void {
     // Navigate to the Discord dashboard after completing all letters
-    this.router.navigate(['/discord']);
+    this.router.navigate(['/revnet']);
   }
 }
