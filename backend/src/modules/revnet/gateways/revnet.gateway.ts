@@ -167,15 +167,35 @@ export class RevNetGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     }
 
     try {
-      // Create message
-      const message = await this.messagesService.create(data.channelId, {
+      // Create message (already includes author data from service)
+      const message: any = await this.messagesService.create(data.channelId, {
         content: data.content,
         type: data.type || 0,
       }, client.userId);
 
+      // Transform for WebSocket broadcast
+      const wsMessage = {
+        id: message.id,
+        content: message.content,
+        author: message.author || {
+          id: message.authorId,
+          username: 'Unknown User',
+          discriminator: '0000',
+          avatar: null,
+        },
+        channelId: message.channelId,
+        timestamp: message.createdAt.toISOString(),
+        editedTimestamp: message.editedTimestamp?.toISOString() || null,
+        type: message.type,
+        tts: message.tts,
+        mentionEveryone: message.mentionEveryone,
+        pinned: message.pinned,
+        flags: message.flags,
+      };
+
       // Broadcast to all users in the channel
       this.server.to(`channel:${data.channelId}`).emit('message_received', {
-        message,
+        message: wsMessage,
         channelId: data.channelId,
       });
 

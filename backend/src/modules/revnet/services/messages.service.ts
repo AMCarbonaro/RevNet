@@ -205,24 +205,31 @@ export class MessagesService {
     await this.messagesRepository.save(message);
   }
 
-  async addReaction(messageId: string, emoji: string, userId: string): Promise<Message> {
+  async addReaction(messageId: string, emoji: string, userId: string): Promise<any> {
     const message = await this.findOne(messageId, userId);
     
-    // For now, just return the message
+    // For now, just return the message (already includes author)
     // In a real implementation, you'd add the reaction to a reactions table
     return message;
   }
 
-  async removeReaction(messageId: string, emoji: string, userId: string): Promise<Message> {
+  async removeReaction(messageId: string, emoji: string, userId: string): Promise<any> {
     const message = await this.findOne(messageId, userId);
     
-    // For now, just return the message
+    // For now, just return the message (already includes author)
     // In a real implementation, you'd remove the reaction from a reactions table
     return message;
   }
 
-  async pinMessage(messageId: string, userId: string): Promise<Message> {
-    const message = await this.findOne(messageId, userId);
+  async pinMessage(messageId: string, userId: string): Promise<any> {
+    const message = await this.messagesRepository.findOne({
+      where: { id: messageId, isActive: true },
+      relations: ['channel', 'channel.server'],
+    });
+
+    if (!message) {
+      throw new NotFoundException('Message not found');
+    }
     
     // Check if user has permission to pin messages
     const server = message.channel.server;
@@ -235,11 +242,32 @@ export class MessagesService {
     message.pinned = true;
     const updatedMessage = await this.messagesRepository.save(message);
     
-    return updatedMessage;
+    // Fetch author data
+    const author = await this.userRepository.findOne({
+      where: { id: updatedMessage.authorId },
+    });
+
+    return {
+      ...updatedMessage,
+      author: author ? {
+        id: author.id,
+        username: author.username,
+        discriminator: author.discriminator || '0000',
+        avatar: author.avatar || null,
+        status: author.status || 'offline',
+      } : null,
+    };
   }
 
-  async unpinMessage(messageId: string, userId: string): Promise<Message> {
-    const message = await this.findOne(messageId, userId);
+  async unpinMessage(messageId: string, userId: string): Promise<any> {
+    const message = await this.messagesRepository.findOne({
+      where: { id: messageId, isActive: true },
+      relations: ['channel', 'channel.server'],
+    });
+
+    if (!message) {
+      throw new NotFoundException('Message not found');
+    }
     
     // Check if user has permission to unpin messages
     const server = message.channel.server;
@@ -252,7 +280,21 @@ export class MessagesService {
     message.pinned = false;
     const updatedMessage = await this.messagesRepository.save(message);
     
-    return updatedMessage;
+    // Fetch author data
+    const author = await this.userRepository.findOne({
+      where: { id: updatedMessage.authorId },
+    });
+
+    return {
+      ...updatedMessage,
+      author: author ? {
+        id: author.id,
+        username: author.username,
+        discriminator: author.discriminator || '0000',
+        avatar: author.avatar || null,
+        status: author.status || 'offline',
+      } : null,
+    };
   }
 
   async searchMessages(userId: string, searchQuery: SearchMessagesQueryDto): Promise<{ messages: Message[], total: number }> {
