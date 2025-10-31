@@ -76,12 +76,20 @@ export class EmailVerificationComponent implements OnInit {
     this.resendLoading = true;
     this.resendSuccess = false;
     this.errorMessage = '';
+    this.successMessage = '';
 
     try {
       const response = await this.authService.resendVerificationEmail(this.email);
       if (response.success) {
         this.resendSuccess = true;
-        this.successMessage = 'Verification email sent! Please check your inbox.';
+        
+        // If verification link is provided, update it in the component
+        if (response.verificationLink) {
+          this.verificationLink = response.verificationLink;
+          this.successMessage = 'Verification link generated! Click the button below to verify.';
+        } else {
+          this.successMessage = 'Verification email sent! Please check your inbox.';
+        }
       } else {
         this.errorMessage = response.message || 'Failed to resend verification email';
       }

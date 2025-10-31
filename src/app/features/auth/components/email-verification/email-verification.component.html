@@ -64,14 +64,18 @@
 
         <div *ngIf="!token && !verificationLink" class="no-token-message">
           <p>No verification token found. Please check your email and click the verification link.</p>
-          <p *ngIf="email">Resend verification email to <strong>{{ email }}</strong>:</p>
+          <p *ngIf="email">Click the button below to get your verification link:</p>
           <button 
-            class="btn-secondary" 
+            class="btn-primary" 
             (click)="resendVerificationEmail()"
-            [disabled]="resendLoading || !email">
-            <span *ngIf="resendLoading">Sending...</span>
-            <span *ngIf="!resendLoading">Resend Verification Email</span>
+            [disabled]="resendLoading || !email"
+            style="margin-top: 15px;">
+            <span *ngIf="resendLoading">Loading...</span>
+            <span *ngIf="!resendLoading">Get Verification Link</span>
           </button>
+          <p style="margin-top: 15px; font-size: 0.9rem; color: #72767d;">
+            If email service is not configured, this will show you the verification link directly.
+          </p>
         </div>
 
         <div *ngIf="token && !isLoading" class="token-message">

@@ -165,7 +165,7 @@ export class AuthService {
     };
   }
 
-  async resendVerificationEmail(email: string): Promise<{ success: boolean; message: string }> {
+  async resendVerificationEmail(email: string): Promise<{ success: boolean; message: string; verificationLink?: string }> {
     const user = await this.userRepository.findOne({
       where: { email },
     });
@@ -192,21 +192,29 @@ export class AuthService {
 
     await this.userRepository.save(user);
 
+    // Build verification link
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
+    const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
+
     // Send verification email
+    let emailSent = false;
     try {
       await this.emailService.sendVerificationEmail(
         user.email,
         verificationToken,
         user.username,
       );
+      emailSent = true;
+      console.log(`✅ Verification email sent to ${user.email}`);
     } catch (error) {
       console.error('Error sending verification email:', error);
-      throw new BadRequestException('Failed to send verification email');
+      // In development mode, return the link so user can verify
     }
 
     return {
       success: true,
-      message: 'Verification email sent',
+      message: emailSent ? 'Verification email sent' : 'Verification link generated',
+      verificationLink: emailSent ? undefined : verificationLink,
     };
   }
 

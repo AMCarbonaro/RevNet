@@ -94,12 +94,22 @@ export class AuthService {
     }
   }
 
-  async resendVerificationEmail(email: string): Promise<{ success: boolean; message: string }> {
+  async resendVerificationEmail(email: string): Promise<{ success: boolean; message: string; verificationLink?: string }> {
     try {
-      const response = await this.http.post<{ success: boolean; message: string }>(
+      const response = await this.http.post<{ success: boolean; message: string; verificationLink?: string }>(
         `${environment.apiUrl}/auth/resend-verification`,
         { email }
       ).toPromise();
+      
+      if (response?.verificationLink) {
+        // Update URL with verification link if provided
+        this.router.navigate(['/verify-email'], { 
+          queryParams: { 
+            email,
+            verificationLink: response.verificationLink 
+          } 
+        });
+      }
       
       return response || { success: false, message: 'Failed to resend verification email' };
     } catch (error: any) {
