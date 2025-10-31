@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../core/services/auth.service';
 
 export interface WebSocketMessage {
   id: string;
@@ -89,18 +90,31 @@ export class RevNetWebSocketService {
   public dmOpened$ = this.dmOpened.asObservable();
   public groupDMOpened$ = this.groupDMOpened.asObservable();
 
-  constructor() {
+  constructor(private authService: AuthService) {
     // Initialize socket immediately for better performance
     this.initializeSocket();
   }
 
   private initializeSocket(): void {
+    const token = this.authService.getToken();
+    
     this.socket = io(`${environment.wsUrl}/revnet`, {
       transports: ['websocket'],
       autoConnect: true,
+      auth: {
+        token: token || undefined
+      }
     });
 
     this.setupEventListeners();
+  }
+
+  // Reconnect with updated token (called after login)
+  reconnect(): void {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+    this.initializeSocket();
   }
 
   private setupEventListeners(): void {

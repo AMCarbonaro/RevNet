@@ -10,7 +10,11 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Injectable, Logger, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../../auth/entities/user.entity';
 import { MessagesService } from '../services/messages.service';
 import { ServersService } from '../services/servers.service';
 import { ChannelsService } from '../services/channels.service';
@@ -48,6 +52,10 @@ export class RevNetGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     private channelsService: ChannelsService,
     private friendsService: FriendsService,
     private dmService: DMService,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   afterInit(server: Server) {
@@ -57,22 +65,73 @@ export class RevNetGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   async handleConnection(client: AuthenticatedSocket) {
     this.logger.log(`Client connected: ${client.id}`);
     
-    // For now, assign a mock user ID
-    // In production, this would come from JWT token validation
-    client.userId = 'user1';
-    client.username = 'CurrentUser';
-    
-    this.connectedUsers.set(client.id, client);
-    
-    // Load user's servers and join them to appropriate rooms
-    await this.joinUserServers(client);
-    
-    // Notify user of connection
-    client.emit('connected', {
-      message: 'Connected to RevNet',
-      userId: client.userId,
-      username: client.username,
-    });
+    try {
+      // Extract token from handshake auth
+      const token = (client.handshake.auth as any)?.token;
+      
+      if (!token) {
+        this.logger.warn(`Client ${client.id} connected without token`);
+        client.emit('error', { message: 'Authentication required' });
+        client.disconnect();
+        return;
+      }
+
+      // Validate JWT token
+      const jwtSecret = this.configService.get<string>('JWT_SECRET') || 'your-secret-key-change-in-production';
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: jwtSecret,
+      });
+
+      if (!payload.sub) {
+        this.logger.warn(`Client ${client.id} token missing user ID`);
+        client.emit('error', { message: 'Invalid token: missing user ID' });
+        client.disconnect();
+        return;
+      }
+
+      // Validate UUID format
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(payload.sub)) {
+        this.logger.warn(`Client ${client.id} token has invalid user ID format`);
+        client.emit('error', { message: 'Invalid token: user ID is not a valid UUID' });
+        client.disconnect();
+        return;
+      }
+
+      // Fetch user from database
+      const user = await this.userRepository.findOne({
+        where: { id: payload.sub },
+      });
+
+      if (!user) {
+        this.logger.warn(`Client ${client.id} user not found: ${payload.sub}`);
+        client.emit('error', { message: 'User not found' });
+        client.disconnect();
+        return;
+      }
+
+      // Set authenticated user info on socket
+      client.userId = user.id;
+      client.username = user.username;
+      
+      this.connectedUsers.set(client.id, client);
+      
+      // Load user's servers and join them to appropriate rooms
+      await this.joinUserServers(client);
+      
+      // Notify user of connection
+      client.emit('connected', {
+        message: 'Connected to RevNet',
+        userId: client.userId,
+        username: client.username,
+      });
+
+      this.logger.log(`User ${client.userId} (${client.username}) connected via WebSocket`);
+    } catch (error) {
+      this.logger.error(`Authentication error for client ${client.id}:`, error.message);
+      client.emit('error', { message: 'Authentication failed: ' + error.message });
+      client.disconnect();
+    }
   }
 
   handleDisconnect(client: AuthenticatedSocket) {

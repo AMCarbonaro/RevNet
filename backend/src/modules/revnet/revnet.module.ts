@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
 import { Server } from './entities/server.entity';
 import { Channel } from './entities/channel.entity';
 import { Message } from './entities/message.entity';
@@ -28,6 +30,8 @@ import { RevNetGateway } from './gateways/revnet.gateway';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Server, Channel, Message, Notification, Friend, DMChannel, User]),
+    JwtModule,
+    ConfigModule,
   ],
   controllers: [
     // Register ServerDiscoveryController FIRST to ensure specific routes like /discover
