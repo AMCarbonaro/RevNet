@@ -34,6 +34,7 @@ export interface AuthResponse {
     accessToken: string;
     refreshToken: string;
   };
+  verificationLink?: string; // Include when email service is not configured
 }
 
 @Injectable()
@@ -101,23 +102,31 @@ export class AuthService {
 
     const savedUser = await this.userRepository.save(user);
 
+    // Build verification link
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
+    const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
+
     // Send verification email
+    let emailSent = false;
     try {
       await this.emailService.sendVerificationEmail(
         savedUser.email,
         verificationToken,
         savedUser.username,
       );
-      console.log(`Verification email sent to ${savedUser.email}`);
+      emailSent = true;
+      console.log(`✅ Verification email sent to ${savedUser.email}`);
     } catch (error) {
       console.error('Error sending verification email:', error);
-      // Don't fail registration if email fails, but log it
       // In development mode, the link is logged to console
+      // We'll also return it in the response so users can access it
     }
 
     return {
       success: true,
       user: this.mapUserToResponse(savedUser),
+      // Include verification link if email wasn't sent (development mode or email service error)
+      verificationLink: emailSent ? undefined : verificationLink,
       // No tokens - user must verify email first
     };
   }

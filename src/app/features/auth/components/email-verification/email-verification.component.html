@@ -35,7 +35,34 @@
           <p>{{ successMessage }}</p>
         </div>
 
-        <div *ngIf="!token" class="no-token-message">
+        <!-- Show verification link if email service is not configured -->
+        <div *ngIf="verificationLink" class="dev-mode-notice">
+          <div class="notice-header">
+            <strong>⚠️ Development Mode</strong>
+          </div>
+          <p>Email service is not configured. Use the link below to verify your account:</p>
+          <div class="verification-link-box">
+            <input 
+              type="text" 
+              [value]="verificationLink" 
+              readonly 
+              class="link-input"
+              #linkInput>
+            <button 
+              class="btn-copy" 
+              (click)="copyLink(linkInput)"
+              title="Copy link">
+              📋 Copy
+            </button>
+          </div>
+          <button 
+            class="btn-primary" 
+            (click)="verifyWithLink()">
+            Verify Email Now
+          </button>
+        </div>
+
+        <div *ngIf="!token && !verificationLink" class="no-token-message">
           <p>No verification token found. Please check your email and click the verification link.</p>
           <p *ngIf="email">Resend verification email to <strong>{{ email }}</strong>:</p>
           <button 

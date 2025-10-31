@@ -61,7 +61,12 @@ export class AuthService {
       const response = await this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, credentials).toPromise();
       if (response) {
         // Don't auto-login after registration - redirect to verification page
-        this.router.navigate(['/verify-email'], { queryParams: { email: credentials.email } });
+        // Include verification link in query params if provided (development mode)
+        const queryParams: any = { email: credentials.email };
+        if (response.verificationLink) {
+          queryParams.verificationLink = response.verificationLink;
+        }
+        this.router.navigate(['/verify-email'], { queryParams });
         return response;
       }
       throw new Error('No response received');

@@ -13,6 +13,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 export class EmailVerificationComponent implements OnInit {
   token: string | null = null;
   email: string | null = null;
+  verificationLink: string | null = null;
   isLoading = false;
   isVerified = false;
   errorMessage = '';
@@ -31,6 +32,7 @@ export class EmailVerificationComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.token = params['token'] || null;
       this.email = params['email'] || null;
+      this.verificationLink = params['verificationLink'] || null;
 
       // If token is present, verify immediately
       if (this.token) {
@@ -88,6 +90,29 @@ export class EmailVerificationComponent implements OnInit {
     } finally {
       this.resendLoading = false;
     }
+  }
+
+  verifyWithLink(): void {
+    if (this.verificationLink) {
+      // Extract token from the full link
+      const url = new URL(this.verificationLink);
+      const token = url.searchParams.get('token');
+      if (token) {
+        this.token = token;
+        this.verifyEmail();
+      }
+    }
+  }
+
+  copyLink(input: HTMLInputElement): void {
+    input.select();
+    document.execCommand('copy');
+    // Show feedback
+    const originalText = input.placeholder || '';
+    input.placeholder = 'Copied!';
+    setTimeout(() => {
+      input.placeholder = originalText;
+    }, 2000);
   }
 
   goToLogin(): void {

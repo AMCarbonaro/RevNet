@@ -49,5 +49,6 @@ export interface AuthResponse {
     accessToken: string;
     refreshToken: string;
   };
+  verificationLink?: string; // Provided when email service is not configured
   message?: string;
 }
