@@ -45,14 +45,16 @@
         {{ error }}
       </div>
 
-      <app-chat-area
-        *ngIf="selectedChannel && selectedChannel.type === 0 && !loading && !error"
-        [messages]="messages"
-        [channelName]="selectedChannel.name || 'general'"
-        [channelType]="0"
-        (toggleChannelSidebar)="toggleChannelSidebar()"
-        (toggleMemberList)="toggleMemberList()">
-      </app-chat-area>
+          <app-chat-area
+            *ngIf="selectedChannel && selectedChannel.type === 0 && !loading && !error"
+            [messages]="messages"
+            [channelName]="selectedChannel.name || 'general'"
+            [channelType]="0"
+            [channelId]="selectedChannelId"
+            (toggleChannelSidebar)="toggleChannelSidebar()"
+            (toggleMemberList)="toggleMemberList()"
+            (messageSent)="onMessageSent($event)">
+          </app-chat-area>
 
       <app-voice-chat
         *ngIf="selectedChannel && selectedChannel.type === 2 && !loading && !error"

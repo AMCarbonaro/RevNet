@@ -184,8 +184,10 @@ export class ChatAreaComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() messages: Message[] | null = null;
   @Input() channelName: string = '';
   @Input() channelType: number = 0;
+  @Input() channelId: string | null = null;
   @Output() toggleChannelSidebar = new EventEmitter<void>();
   @Output() toggleMemberList = new EventEmitter<void>();
+  @Output() messageSent = new EventEmitter<{ channelId: string; content: string }>();
 
   // NgRx observables (used when inputs not provided)
   selectedChannel$: Observable<Channel | null>;
@@ -298,20 +300,33 @@ export class ChatAreaComponent implements OnInit, OnDestroy, AfterViewInit {
   sendMessage(): void {
     if (!this.messageInput.trim()) return;
     
-    // Get current channel value directly instead of subscribing
-    this.selectedChannel$.pipe(takeUntil(this.destroy$)).subscribe(channel => {
-      if (channel) {
-        // Dispatch to store - this will call API via effects and broadcast via WebSocket
-        this.store.dispatch(RevNetActions.sendMessage({
-          channelId: channel.id,
+    if (this.useInputs) {
+      // Input mode: emit event to parent (dashboard-layout)
+      if (this.channelId) {
+        this.messageSent.emit({
+          channelId: this.channelId,
           content: this.messageInput.trim()
-        }));
-        
+        });
         this.messageInput = '';
         this.stopTyping();
         this.cdr.markForCheck();
       }
-    });
+    } else {
+      // NgRx mode: dispatch to store
+      this.selectedChannel$.pipe(takeUntil(this.destroy$)).subscribe(channel => {
+        if (channel) {
+          // Dispatch to store - this will call API via effects and broadcast via WebSocket
+          this.store.dispatch(RevNetActions.sendMessage({
+            channelId: channel.id,
+            content: this.messageInput.trim()
+          }));
+          
+          this.messageInput = '';
+          this.stopTyping();
+          this.cdr.markForCheck();
+        }
+      });
+    }
   }
 
   onInputChange(): void {

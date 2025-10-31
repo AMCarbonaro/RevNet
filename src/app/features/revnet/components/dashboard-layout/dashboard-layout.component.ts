@@ -120,6 +120,23 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
         }
       });
 
+    // Subscribe to voice channel users (participants)
+    this.websocketService.voiceChannelUsers$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(users => {
+        if (this.selectedChannel?.type === ChannelType.VOICE) {
+          // Update voice participants
+          this.voiceParticipants = users.map(user => ({
+            id: user.userId,
+            username: user.username,
+            isMuted: false, // TODO: Get from voice state
+            isDeafened: false, // TODO: Get from voice state
+            isSpeaking: false, // TODO: Get from audio level detection
+            audioLevel: 0.5 // TODO: Get from audio level detection
+          }));
+        }
+      });
+
     // Load initial data
     this.loadInitialData();
   }
@@ -302,7 +319,28 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
     this.channelSidebarOpen = !this.channelSidebarOpen;
   }
 
-  toggleMemberList(): void {
-    this.memberListOpen = !this.memberListOpen;
-  }
-}
+      toggleMemberList(): void {
+        this.memberListOpen = !this.memberListOpen;
+      }
+
+      onMessageSent(event: { channelId: string; content: string }): void {
+        if (!event.channelId || !event.content.trim()) {
+          return;
+        }
+
+        // Send message via API
+        this.revnetApiService.sendMessage(event.channelId, event.content)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (message) => {
+              // Message sent successfully - it will be received via WebSocket
+              // and added to messages array automatically
+              console.log('Message sent:', message);
+            },
+            error: (err) => {
+              console.error('Error sending message:', err);
+              this.error = 'Failed to send message';
+            }
+          });
+      }
+    }
