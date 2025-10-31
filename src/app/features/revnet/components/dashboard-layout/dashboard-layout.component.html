@@ -37,21 +37,32 @@
 
   <div class="main-content">
     <div class="content-wrapper">
-      <div *ngIf="loading" class="loading-indicator">
+      <div *ngIf="loading && selectedChannel" class="loading-indicator">
         Loading...
       </div>
       
-      <div *ngIf="error" class="error-message">
-        {{ error }}
+      <!-- Show error as notification, not blocking main content -->
+      <div *ngIf="error && !selectedChannel" class="error-notification">
+        <div class="error-notification-content">
+          <span class="error-icon">⚠️</span>
+          <span class="error-text">{{ error }}</span>
+          <span class="error-hint">Please log in to access your servers</span>
+        </div>
       </div>
 
       <!-- Empty state when no channel selected -->
-      <div *ngIf="!selectedChannel && !loading && !error" class="empty-state">
+      <div *ngIf="!selectedChannel && !loading" class="empty-state">
         <div class="empty-state-content">
           <div class="empty-state-icon">💬</div>
           <h3 class="empty-state-title">No Channel Selected</h3>
-          <p class="empty-state-message">Select a channel from the sidebar to start chatting</p>
+          <p class="empty-state-message" *ngIf="!error">Select a channel from the sidebar to start chatting</p>
+          <p class="empty-state-message" *ngIf="error">Please log in to access your servers and channels</p>
         </div>
+      </div>
+
+      <!-- Show error in chat area if channel is selected but failed to load -->
+      <div *ngIf="selectedChannel && error && selectedChannel.type === 0" class="error-message">
+        {{ error }}
       </div>
 
       <!-- Text channel chat area -->
@@ -68,7 +79,7 @@
 
       <!-- Voice channel -->
       <app-voice-chat
-        *ngIf="selectedChannel && selectedChannel.type === 2 && !loading && !error"
+        *ngIf="selectedChannel && selectedChannel.type === 2 && !loading"
         [participants]="voiceParticipants"
         [channelName]="selectedChannel.name || 'Voice Channel'"
         [channelId]="selectedChannelId"

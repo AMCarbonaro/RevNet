@@ -99,15 +99,50 @@
   position: relative;
 }
 
-.loading-indicator,
-.error-message {
+.loading-indicator {
   padding: 20px;
   text-align: center;
   color: #b9bbbe;
 }
 
 .error-message {
+  padding: 20px;
+  text-align: center;
   color: #f23f42;
+}
+
+.error-notification {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(242, 63, 66, 0.1);
+  border-bottom: 1px solid rgba(242, 63, 66, 0.3);
+  padding: 12px 20px;
+  z-index: 10;
+  
+  .error-notification-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #f23f42;
+    font-size: 14px;
+    
+    .error-icon {
+      font-size: 18px;
+    }
+    
+    .error-text {
+      font-weight: 500;
+      flex: 1;
+    }
+    
+    .error-hint {
+      color: #b9bbbe;
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
 }
 
 .empty-state {
