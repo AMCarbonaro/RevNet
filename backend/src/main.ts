@@ -16,7 +16,7 @@ async function bootstrap() {
       'http://localhost:4202'    // Current Angular dev server port
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Silent-Request'],
     credentials: true,
   });
 
