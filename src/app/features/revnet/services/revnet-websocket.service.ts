@@ -95,11 +95,7 @@ export class RevNetWebSocketService {
   }
 
   private initializeSocket(): void {
-    const wsUrl = environment.production 
-      ? 'wss://revnet-backend.onrender.com' 
-      : 'http://localhost:3000';
-
-    this.socket = io(`${wsUrl}/revnet`, {
+    this.socket = io(`${environment.wsUrl}/revnet`, {
       transports: ['websocket'],
       autoConnect: true,
     });

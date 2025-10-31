@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Server, Channel, Message } from '../store/models/revnet.models';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RevNetApiService {
-  private readonly apiUrl = 'http://localhost:3000/api/revnet'; // Fixed: Added /revnet
+  private readonly apiUrl = `${environment.apiUrl}/api/revnet`;
 
   constructor(private http: HttpClient) {}
 
