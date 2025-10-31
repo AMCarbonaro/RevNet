@@ -468,7 +468,6 @@ export class VoiceChatService implements OnDestroy {
 
     const dataArray = new Uint8Array(analyser.frequencyBinCount);
     let isSpeaking = false;
-    let animationFrameId: number;
 
     const detectSpeaking = () => {
       if (!this.voiceState.value.isConnected || !this.localStream) {
@@ -490,17 +489,14 @@ export class VoiceChatService implements OnDestroy {
       }
 
       if (this.voiceState.value.isConnected) {
-        animationFrameId = requestAnimationFrame(detectSpeaking);
+        const animationFrameId = requestAnimationFrame(detectSpeaking);
+        // Store animation frame ID for cleanup
+        this.speakingTimeout = animationFrameId;
       }
     };
 
     // Start detection
     detectSpeaking();
-    
-    // Store animation frame ID for cleanup
-    if (animationFrameId) {
-      this.speakingTimeout = animationFrameId as any;
-    }
   }
 
   private stopSpeakingDetection(): void {
