@@ -348,7 +348,7 @@ export class AuthService {
     };
   }
 
-  async getProfile(userId: string): Promise<UserResponse> {
+  async getProfile(userId: string): Promise<AuthResponse> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
     });
