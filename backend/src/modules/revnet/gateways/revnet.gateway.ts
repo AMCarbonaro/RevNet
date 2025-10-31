@@ -25,7 +25,11 @@ interface AuthenticatedSocket extends Socket {
 @Injectable()
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:4200', 'https://revnet.vercel.app'],
+    origin: [
+      'http://localhost:4200',
+      'https://revnet.vercel.app',
+      'https://revnet3-frontend.onrender.com', // Render production frontend
+    ],
     credentials: true,
   },
   namespace: '/revnet',
