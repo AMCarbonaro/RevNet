@@ -85,7 +85,7 @@ export class TerminalWelcomeComponent implements OnInit, OnDestroy {
       
       // Calculate when to start typing this line
       const startDelay = totalDelay;
-      totalDelay += line.text.length * 60 + (line.delay || 0);
+      totalDelay += line.text.length * 20 + (line.delay || 0);
       
       // Start typing this line after the calculated delay
       setTimeout(() => {
@@ -114,7 +114,7 @@ export class TerminalWelcomeComponent implements OnInit, OnDestroy {
           this.intervals.splice(index, 1);
         }
       }
-    }, 60);
+    }, 20);
     
     // Store interval for cleanup
     this.intervals.push(typeInterval);
