@@ -27,19 +27,24 @@ export class LettersService {
 
   async completeLetter(letterId: number): Promise<void> {
     try {
-      await this.http.post(`${environment.apiUrl}/letters/progress`, {
+      const user = this.authService.getCurrentUser();
+      const userId = user?.id;
+      
+      if (!userId) {
+        throw new Error('User must be logged in to complete letters');
+      }
+
+      const response: any = await this.http.post(`${environment.apiUrl}/letters/progress`, {
         letterId,
-        completed: true
+        completed: true,
+        userId // Pass userId from frontend
       }).toPromise();
 
-      // Update user's letter progress
-      const user = this.authService.getCurrentUser();
-      if (user) {
-        user.letterProgress.completedLetters.push(letterId);
-        user.letterProgress.currentLetter = letterId + 1;
-        user.letterProgress.canAccessDiscord = letterId === 30;
-        // Update user in auth service (when NgRx is implemented, this will be handled by store)
-        // this.authService.userSubject.next({ ...user });
+      // Update user's letter progress from backend response
+      if (response?.data?.progress && user) {
+        user.letterProgress = response.data.progress;
+        user.letterProgress.canAccessDiscord = response.data.canAccessDiscord || false;
+        this.authService.updateUser(user);
       }
     } catch (error) {
       console.error('Error completing letter:', error);

@@ -25,6 +25,7 @@ export interface UserResponse {
   revoltMemberships: string[];
   createdAt: Date;
   lastActive: Date;
+  hasSeenWelcome?: boolean;
 }
 
 export interface AuthResponse {
@@ -347,6 +348,21 @@ export class AuthService {
     };
   }
 
+  async getProfile(userId: string): Promise<UserResponse> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return {
+      success: true,
+      user: this.mapUserToResponse(user),
+    };
+  }
+
   async oauthLogin(provider: string, code: string): Promise<AuthResponse> {
     // TODO: Implement OAuth login
     // For now, throw not implemented
@@ -403,6 +419,18 @@ export class AuthService {
   }
 
   private mapUserToResponse(user: User): UserResponse {
+    // Get letterProgress from user entity or use defaults
+    const letterProgress = user.letterProgress || {
+      completedLetters: [],
+      currentLetter: 1,
+      totalLetters: 30,
+      canAccessDiscord: false,
+      assignments: [],
+    };
+
+    // Ensure canAccessDiscord is set based on completed letters
+    letterProgress.canAccessDiscord = letterProgress.completedLetters.length >= 30;
+
     return {
       id: user.id,
       email: user.email,
@@ -410,16 +438,11 @@ export class AuthService {
       discriminator: user.discriminator || '0000',
       status: user.status,
       verified: user.verified,
-      letterProgress: {
-        completedLetters: [],
-        currentLetter: 1,
-        totalLetters: 30,
-        canAccessDiscord: false,
-        assignments: [],
-      },
-      revoltMemberships: [],
+      letterProgress,
+      revoltMemberships: user.revoltMemberships || [],
       createdAt: user.createdAt,
       lastActive: user.lastActive,
+      hasSeenWelcome: false, // TODO: Add hasSeenWelcome field to User entity
     };
   }
 }

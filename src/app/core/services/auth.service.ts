@@ -49,10 +49,32 @@ export class AuthService {
   }
 
   private loadUserProfile(): void {
-    // In a real app, you'd load user profile from API
-    // For now, we'll create a demo user
-    const demoUser = this.createDemoUser('full');
-    this.userSubject.next(demoUser);
+    const token = this.getToken();
+    if (!token) {
+      return;
+    }
+
+    // Load user profile from backend
+    this.http.get<AuthResponse>(`${environment.apiUrl}/auth/me`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }).subscribe({
+      next: (response) => {
+        if (response && response.user) {
+          this.userSubject.next(response.user);
+          this.store.dispatch(UserActions.loginSuccess({ user: response.user }));
+        }
+      },
+      error: (error) => {
+        console.error('Error loading user profile:', error);
+        // If token is invalid, clear it
+        if (error.status === 401) {
+          localStorage.removeItem('token');
+          this.tokenSubject.next(null);
+        }
+      }
+    });
   }
 
   async register(credentials: RegisterRequest): Promise<AuthResponse> {
@@ -226,13 +248,17 @@ export class AuthService {
     }
     
     this.userSubject.next(response.user);
+    this.store.dispatch(UserActions.loginSuccess({ user: response.user }));
     
-    // Redirect based on user state
-    if (response.user.letterProgress.canAccessDiscord) {
-      this.router.navigate(['/discord']);
-    } else if (!response.user.hasSeenWelcome) {
+    // Redirect based on user state - prioritize completed letters
+    if (response.user.letterProgress?.canAccessDiscord) {
+      // User completed all letters - go to dashboard
+      this.router.navigate(['/revnet']); // Updated route to /revnet
+    } else if (response.user.hasSeenWelcome === false) {
+      // User hasn't seen welcome screen - show terminal welcome
       this.router.navigate(['/welcome']);
     } else {
+      // User has seen welcome but hasn't completed letters - go to letters
       this.router.navigate(['/letters']);
     }
   }

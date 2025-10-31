@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, Query, Body, Request } from '@nestjs/common';
 import { LettersService } from './letters.service';
 
 @Controller('letters')
@@ -16,8 +16,13 @@ export class LettersController {
   }
 
   @Post('progress')
-  async updateLetterProgress(@Body() body: { letterId: number; completed: boolean }) {
-    return this.lettersService.updateLetterProgress(body.letterId, body.completed);
+  async updateLetterProgress(@Body() body: { letterId: number; completed: boolean; userId?: string }, @Request() req: any) {
+    // Get userId from request (set by JWT guard) or from body (for backwards compatibility)
+    const userId = req?.user?.userId || req?.user?.sub || body.userId;
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+    return this.lettersService.updateLetterProgress(body.letterId, body.completed, userId);
   }
 
   @Get('progress/:userId')

@@ -1,4 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../auth/entities/user.entity';
 
 export interface Letter {
   id: number;
@@ -14,6 +17,10 @@ export interface Letter {
 
 @Injectable()
 export class LettersService {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
   private letters: Letter[] = [
     {
       id: 1,
@@ -936,16 +943,51 @@ export class LettersService {
     };
   }
 
-  async updateLetterProgress(letterId: number, completed: boolean): Promise<{ data: any }> {
-    // For now, return mock response
-    // In a real app, this would update the database
+  async updateLetterProgress(letterId: number, completed: boolean, userId: string): Promise<{ data: any }> {
+    // Get user from database
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Initialize letterProgress if it doesn't exist
+    if (!user.letterProgress) {
+      user.letterProgress = {
+        completedLetters: [],
+        currentLetter: 1,
+        totalLetters: 30,
+        canAccessDiscord: false,
+        assignments: [],
+      };
+    }
+
+    // Add letter to completed list if not already there
+    if (completed && !user.letterProgress.completedLetters.includes(letterId)) {
+      user.letterProgress.completedLetters.push(letterId);
+      
+      // Update current letter
+      user.letterProgress.currentLetter = Math.max(letterId + 1, user.letterProgress.currentLetter);
+      
+      // Check if all letters completed
+      if (user.letterProgress.completedLetters.length >= 30) {
+        user.letterProgress.canAccessDiscord = true;
+      }
+    }
+
+    // Save updated progress to database
+    await this.userRepository.save(user);
+
     return {
       data: {
         letterId,
         completed,
-        unlockedFeatures: this.getUnlockedFeatures([letterId]),
-        canAccessDiscord: letterId === 30,
-        nextLetter: letterId < 30 ? letterId + 1 : null
+        unlockedFeatures: this.getUnlockedFeatures(user.letterProgress.completedLetters),
+        canAccessDiscord: user.letterProgress.canAccessDiscord,
+        nextLetter: letterId < 30 ? letterId + 1 : null,
+        progress: user.letterProgress
       }
     };
   }
