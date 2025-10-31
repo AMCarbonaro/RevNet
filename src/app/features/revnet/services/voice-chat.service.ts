@@ -41,7 +41,8 @@ export class VoiceChatService {
   private peerConnections = new Map<string, RTCPeerConnection>();
   private audioContext: AudioContext | null = null;
   private audioElements = new Map<string, HTMLAudioElement>();
-  private speakingTimeout: any;
+  private speakingTimeout: number | null = null;
+  private voiceUsersSubscription: any;
 
   // Observable streams
   public voiceState$ = this.voiceState.asObservable();
@@ -113,16 +114,39 @@ export class VoiceChatService {
         });
       }
 
-      // Subscribe to voice channel users to create peer connections
-      this.webSocketService.voiceChannelUsers$
-        .pipe(take(1))
+      // Subscribe to voice channel users to create peer connections and update participants
+      // Store subscription for cleanup
+      this.voiceUsersSubscription = this.webSocketService.voiceChannelUsers$
         .subscribe(users => {
-          // For each user already in the channel, create peer connection
+          console.log('Voice channel users updated:', users);
+          
+          // Update participants list from WebSocket
+          const participants: VoiceChannelParticipant[] = users.map(user => {
+            // Check if we already have a participant with connection info
+            const existing = this.voiceState.value.participants.find(p => p.userId === user.userId);
+            
+            return {
+              userId: user.userId,
+              username: user.username || `User${user.userId.substring(0, 8)}`,
+              isMuted: existing?.isMuted || false,
+              isDeafened: existing?.isDeafened || false,
+              isSpeaking: existing?.isSpeaking || false,
+              connection: existing?.connection,
+              audioElement: existing?.audioElement
+            };
+          });
+
+          // Create peer connections for new users
           users.forEach(user => {
-            if (user.userId !== 'local' && !this.peerConnections.has(user.userId)) {
+            const currentUserId = 'local'; // TODO: Get actual current user ID
+            if (user.userId !== currentUserId && !this.peerConnections.has(user.userId)) {
+              console.log('Creating peer connection for:', user.userId);
               this.createPeerConnectionForUser(user.userId, channelId);
             }
           });
+
+          // Update participants in state
+          this.updateVoiceState({ participants });
         });
 
       console.log('Joined voice channel:', channelId);
@@ -158,6 +182,12 @@ export class VoiceChatService {
       element.srcObject = null;
     });
     this.audioElements.clear();
+
+    // Unsubscribe from voice channel users
+    if (this.voiceUsersSubscription) {
+      this.voiceUsersSubscription.unsubscribe();
+      this.voiceUsersSubscription = null;
+    }
 
     // Stop speaking detection
     this.stopSpeakingDetection();
@@ -411,53 +441,97 @@ export class VoiceChatService {
   }
 
   private startSpeakingDetection(): void {
-    if (!this.localStream || !this.audioContext) return;
+    if (!this.localStream || !this.audioContext) {
+      console.warn('Cannot start speaking detection: missing stream or audio context');
+      return;
+    }
 
     const audioTrack = this.localStream.getAudioTracks()[0];
-    if (!audioTrack) return;
+    if (!audioTrack) {
+      console.warn('No audio track available for speaking detection');
+      return;
+    }
+
+    // Check if track is enabled
+    if (!audioTrack.enabled) {
+      console.warn('Audio track is disabled');
+      return;
+    }
+
+    console.log('Starting speaking detection...');
 
     const source = this.audioContext.createMediaStreamSource(this.localStream);
     const analyser = this.audioContext.createAnalyser();
     analyser.fftSize = 256;
+    analyser.smoothingTimeConstant = 0.8;
     source.connect(analyser);
 
     const dataArray = new Uint8Array(analyser.frequencyBinCount);
     let isSpeaking = false;
+    let animationFrameId: number;
 
     const detectSpeaking = () => {
+      if (!this.voiceState.value.isConnected || !this.localStream) {
+        return;
+      }
+
       analyser.getByteFrequencyData(dataArray);
       
       // Calculate average volume
       const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
-      const threshold = 30; // Adjust as needed
+      const threshold = 20; // Lower threshold for better detection
       
-      const currentlySpeaking = average > threshold;
+      const currentlySpeaking = average > threshold && !this.voiceState.value.isMuted;
       
       if (currentlySpeaking !== isSpeaking) {
         isSpeaking = currentlySpeaking;
+        console.log('Speaking state changed:', isSpeaking, 'average:', average.toFixed(2));
         this.updateSpeakingState(isSpeaking);
       }
 
       if (this.voiceState.value.isConnected) {
-        requestAnimationFrame(detectSpeaking);
+        animationFrameId = requestAnimationFrame(detectSpeaking);
       }
     };
 
+    // Start detection
     detectSpeaking();
+    
+    // Store animation frame ID for cleanup
+    if (animationFrameId) {
+      this.speakingTimeout = animationFrameId as any;
+    }
   }
 
   private stopSpeakingDetection(): void {
     if (this.speakingTimeout) {
-      clearTimeout(this.speakingTimeout);
+      cancelAnimationFrame(this.speakingTimeout as number);
       this.speakingTimeout = null;
     }
   }
 
   private updateSpeakingState(isSpeaking: boolean): void {
     const currentState = this.voiceState.value;
-    const updatedParticipants = currentState.participants.map(p => 
-      p.userId === 'local' ? { ...p, isSpeaking } : p
-    );
+    
+    // Update local user speaking state
+    const updatedParticipants = currentState.participants.map(p => {
+      if (p.userId === 'local' || !p.userId) {
+        return { ...p, isSpeaking };
+      }
+      return p;
+    });
+
+    // If local user not in participants, add them
+    const localUserExists = updatedParticipants.some(p => p.userId === 'local' || !p.userId);
+    if (!localUserExists && currentState.isConnected && currentState.localStream) {
+      updatedParticipants.unshift({
+        userId: 'local',
+        username: 'You',
+        isMuted: currentState.isMuted,
+        isDeafened: currentState.isDeafened,
+        isSpeaking: isSpeaking
+      });
+    }
 
     this.updateVoiceState({
       participants: updatedParticipants

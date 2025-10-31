@@ -178,10 +178,19 @@ export class RevNetWebSocketService {
 
     this.socket.on('user_joined_voice', (data) => {
       console.log('User joined voice:', data);
+      // Update participant list when a user joins
+      // The backend should send updated participants list
+      if (data.participants) {
+        this.voiceChannelUsers.next(data.participants);
+      }
     });
 
     this.socket.on('user_left_voice', (data) => {
       console.log('User left voice:', data);
+      // Update participant list when a user leaves
+      if (data.participants) {
+        this.voiceChannelUsers.next(data.participants);
+      }
     });
 
     // WebRTC events

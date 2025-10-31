@@ -93,22 +93,8 @@ export class VoiceChatComponent implements OnInit, OnDestroy {
           audioLevel: p.isSpeaking ? 0.7 : 0.2
         }));
 
-        // Add local user to participants if connected
-        if (state.isConnected && state.localStream) {
-          const localUser: VoiceChannelParticipant = {
-            id: 'local',
-            username: 'You',
-            isMuted: state.isMuted,
-            isDeafened: state.isDeafened,
-            isSpeaking: false,
-            audioLevel: 0.5
-          };
-          
-          // Only add if not already present
-          if (!this.displayParticipants.find(p => p.id === 'local')) {
-            this.displayParticipants.unshift(localUser);
-          }
-        }
+        // Local user is already included in participants from the service
+        // No need to add separately
       });
   }
 
