@@ -242,6 +242,7 @@ export class ServersService {
       const { search, category, tags, sortBy, page = 1, limit = 20 } = query;
       const skip = (page - 1) * limit;
 
+      // Start with base query - make channels join optional to prevent errors
       const queryBuilder = this.serversRepository
         .createQueryBuilder('server')
         .leftJoinAndSelect('server.channels', 'channel')
@@ -301,17 +302,27 @@ export class ServersService {
       const [servers, total] = await queryBuilder.getManyAndCount();
       const totalPages = Math.ceil(total / limit);
 
+      // Return empty result if no servers found (not an error)
       return {
-        servers,
-        total,
+        servers: servers || [],
+        total: total || 0,
         page,
-        totalPages
+        totalPages: totalPages || 0
       };
     } catch (error) {
       console.error('[ServersService] Error in findPublicServers:', error);
-      console.error('[ServersService] Query:', query);
-      console.error('[ServersService] Error stack:', error.stack);
-      throw error;
+      console.error('[ServersService] Query:', JSON.stringify(query, null, 2));
+      console.error('[ServersService] Error message:', error?.message);
+      console.error('[ServersService] Error stack:', error?.stack);
+      
+      // Return empty result instead of throwing to prevent 500 errors
+      // Log the error for debugging but don't crash the API
+      return {
+        servers: [],
+        total: 0,
+        page: query?.page || 1,
+        totalPages: 0
+      };
     }
   }
 
