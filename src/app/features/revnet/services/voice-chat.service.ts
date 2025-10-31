@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, take, takeUntil } from 'rxjs/operators';
 import { RevNetWebSocketService, WebRTCSignal } from './revnet-websocket.service';
 import { Store } from '@ngrx/store';
 import { selectSelectedServerId } from '../store/selectors/revnet.selectors';
@@ -27,7 +27,7 @@ export interface VoiceChannelState {
 @Injectable({
   providedIn: 'root'
 })
-export class VoiceChatService {
+export class VoiceChatService implements OnDestroy {
   private voiceState = new BehaviorSubject<VoiceChannelState>({
     channelId: null,
     isConnected: false,
@@ -43,6 +43,7 @@ export class VoiceChatService {
   private audioElements = new Map<string, HTMLAudioElement>();
   private speakingTimeout: number | null = null;
   private voiceUsersSubscription: any;
+  private destroy$ = new Subject<void>();
 
   // Observable streams
   public voiceState$ = this.voiceState.asObservable();
@@ -117,6 +118,7 @@ export class VoiceChatService {
       // Subscribe to voice channel users to create peer connections and update participants
       // Store subscription for cleanup
       this.voiceUsersSubscription = this.webSocketService.voiceChannelUsers$
+        .pipe(takeUntil(this.destroy$))
         .subscribe(users => {
           console.log('Voice channel users updated:', users);
           
@@ -183,14 +185,12 @@ export class VoiceChatService {
     });
     this.audioElements.clear();
 
-    // Unsubscribe from voice channel users
-    if (this.voiceUsersSubscription) {
-      this.voiceUsersSubscription.unsubscribe();
-      this.voiceUsersSubscription = null;
-    }
-
     // Stop speaking detection
     this.stopSpeakingDetection();
+    
+    // Complete destroy subject to unsubscribe
+    this.destroy$.next();
+    this.destroy$.complete();
 
     // Update voice state
     this.updateVoiceState({
@@ -565,5 +565,10 @@ export class VoiceChatService {
 
   get participants(): VoiceChannelParticipant[] {
     return this.voiceState.value.participants;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
