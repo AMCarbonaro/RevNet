@@ -30,56 +30,72 @@ export class RevNetSeeder {
       return;
     }
 
-    // Create sample servers
+    // Create sample servers - Revolt themed
     const server1Result = await this.serverRepository.insert({
-      name: 'HackerSpace',
-      description: 'A place for hackers and developers',
+      name: 'Climate Action Now',
+      description: 'Mobilizing communities to combat climate change through direct action, policy advocacy, and sustainable living. Join the movement demanding real environmental justice.',
+      shortDescription: 'Fighting climate change through direct action and policy change',
       icon: undefined,
       ownerId: 'user1',
       type: ServerType.PUBLIC,
       memberCount: 1200,
       onlineCount: 45,
+      category: 'climate',
+      tags: ['environment', 'activism', 'sustainability', 'climate-justice'],
+      isDiscoverable: true,
     });
     const server1 = await this.serverRepository.findOne({ where: { id: server1Result.identifiers[0].id } });
     if (!server1) throw new Error('Failed to create server1');
 
     const server2Result = await this.serverRepository.insert({
-      name: 'GameStation',
-      description: 'Gaming community',
+      name: 'Digital Privacy Rights',
+      description: 'Protecting digital freedoms and fighting surveillance capitalism. We organize against data harvesting, advocate for encryption rights, and build tools for true online privacy.',
+      shortDescription: 'Fighting for digital privacy and freedom from surveillance',
       icon: undefined,
       ownerId: 'user1',
       type: ServerType.PUBLIC,
       memberCount: 856,
       onlineCount: 23,
+      category: 'tech',
+      tags: ['privacy', 'technology', 'encryption', 'digital-rights'],
+      isDiscoverable: true,
     });
     const server2 = await this.serverRepository.findOne({ where: { id: server2Result.identifiers[0].id } });
     if (!server2) throw new Error('Failed to create server2');
 
     const server3Result = await this.serverRepository.insert({
-      name: 'DevTeam',
-      description: 'Development team workspace',
-      icon: undefined,
-      ownerId: 'user1',
-      type: ServerType.PRIVATE,
-      memberCount: 12,
-      onlineCount: 8,
-    });
-    const server3 = await this.serverRepository.findOne({ where: { id: server3Result.identifiers[0].id } });
-    if (!server3) throw new Error('Failed to create server3');
-
-    const server4Result = await this.serverRepository.insert({
-      name: 'ArtClub',
-      description: 'Creative arts community',
+      name: 'Housing Justice Collective',
+      description: 'Organizing tenants against predatory landlords and fighting for affordable housing as a human right. We coordinate rent strikes, lobby for tenant protections, and build community power.',
+      shortDescription: 'Fighting for affordable housing and tenant rights',
       icon: undefined,
       ownerId: 'user1',
       type: ServerType.PUBLIC,
       memberCount: 2100,
       onlineCount: 67,
+      category: 'social',
+      tags: ['housing', 'tenants-rights', 'affordable-housing', 'community'],
+      isDiscoverable: true,
+    });
+    const server3 = await this.serverRepository.findOne({ where: { id: server3Result.identifiers[0].id } });
+    if (!server3) throw new Error('Failed to create server3');
+
+    const server4Result = await this.serverRepository.insert({
+      name: 'Worker Power Union',
+      description: 'Empowering workers to organize, unionize, and demand fair wages and working conditions. We share organizing strategies, support labor actions, and build solidarity across industries.',
+      shortDescription: 'Organizing workers and fighting for labor rights',
+      icon: undefined,
+      ownerId: 'user1',
+      type: ServerType.PUBLIC,
+      memberCount: 1845,
+      onlineCount: 92,
+      category: 'social',
+      tags: ['labor', 'union', 'workers-rights', 'organizing'],
+      isDiscoverable: true,
     });
     const server4 = await this.serverRepository.findOne({ where: { id: server4Result.identifiers[0].id } });
     if (!server4) throw new Error('Failed to create server4');
 
-    // Create sample channels for server1 (HackerSpace)
+    // Create sample channels for server1 (Climate Action Now)
     const generalChannelResult = await this.channelRepository.insert({
       name: 'general',
       type: 0, // Text channel
@@ -120,78 +136,78 @@ export class RevNetSeeder {
     const voiceChannel = await this.channelRepository.findOne({ where: { id: voiceChannelResult.identifiers[0].id } });
     if (!voiceChannel) throw new Error('Failed to create voiceChannel');
 
-    // Create sample channels for server2 (GameStation)
-    const gameGeneralChannelResult = await this.channelRepository.insert({
+    // Create sample channels for server2 (Digital Privacy Rights)
+    const privacyGeneralChannelResult = await this.channelRepository.insert({
       name: 'general',
       type: 0,
       serverId: server2.id,
       position: 0,
       isActive: true,
     });
-    const gameGeneralChannel = await this.channelRepository.findOne({ where: { id: gameGeneralChannelResult.identifiers[0].id } });
-    if (!gameGeneralChannel) throw new Error('Failed to create gameGeneralChannel');
+    const privacyGeneralChannel = await this.channelRepository.findOne({ where: { id: privacyGeneralChannelResult.identifiers[0].id } });
+    if (!privacyGeneralChannel) throw new Error('Failed to create privacyGeneralChannel');
 
-    const gameVoiceChannelResult = await this.channelRepository.insert({
-      name: 'gaming-voice',
+    const privacyVoiceChannelResult = await this.channelRepository.insert({
+      name: 'voice-chat',
       type: 2,
       serverId: server2.id,
       position: 1,
       isActive: true,
     });
-    const gameVoiceChannel = await this.channelRepository.findOne({ where: { id: gameVoiceChannelResult.identifiers[0].id } });
-    if (!gameVoiceChannel) throw new Error('Failed to create gameVoiceChannel');
+    const privacyVoiceChannel = await this.channelRepository.findOne({ where: { id: privacyVoiceChannelResult.identifiers[0].id } });
+    if (!privacyVoiceChannel) throw new Error('Failed to create privacyVoiceChannel');
 
-    // Create sample channels for server3 (DevTeam)
-    const devGeneralChannelResult = await this.channelRepository.insert({
+    // Create sample channels for server3 (Housing Justice Collective)
+    const housingGeneralChannelResult = await this.channelRepository.insert({
       name: 'general',
       type: 0,
       serverId: server3.id,
       position: 0,
       isActive: true,
     });
-    const devGeneralChannel = await this.channelRepository.findOne({ where: { id: devGeneralChannelResult.identifiers[0].id } });
-    if (!devGeneralChannel) throw new Error('Failed to create devGeneralChannel');
+    const housingGeneralChannel = await this.channelRepository.findOne({ where: { id: housingGeneralChannelResult.identifiers[0].id } });
+    if (!housingGeneralChannel) throw new Error('Failed to create housingGeneralChannel');
 
-    const devVoiceChannelResult = await this.channelRepository.insert({
-      name: 'dev-voice',
+    const housingVoiceChannelResult = await this.channelRepository.insert({
+      name: 'voice-chat',
       type: 2,
       serverId: server3.id,
       position: 1,
       isActive: true,
     });
-    const devVoiceChannel = await this.channelRepository.findOne({ where: { id: devVoiceChannelResult.identifiers[0].id } });
-    if (!devVoiceChannel) throw new Error('Failed to create devVoiceChannel');
+    const housingVoiceChannel = await this.channelRepository.findOne({ where: { id: housingVoiceChannelResult.identifiers[0].id } });
+    if (!housingVoiceChannel) throw new Error('Failed to create housingVoiceChannel');
 
-    // Create sample channels for server4 (ArtClub)
-    const artGeneralChannelResult = await this.channelRepository.insert({
+    // Create sample channels for server4 (Worker Power Union)
+    const workerGeneralChannelResult = await this.channelRepository.insert({
       name: 'general',
       type: 0,
       serverId: server4.id,
       position: 0,
       isActive: true,
     });
-    const artGeneralChannel = await this.channelRepository.findOne({ where: { id: artGeneralChannelResult.identifiers[0].id } });
-    if (!artGeneralChannel) throw new Error('Failed to create artGeneralChannel');
+    const workerGeneralChannel = await this.channelRepository.findOne({ where: { id: workerGeneralChannelResult.identifiers[0].id } });
+    if (!workerGeneralChannel) throw new Error('Failed to create workerGeneralChannel');
 
-    const artShowcaseChannelResult = await this.channelRepository.insert({
-      name: 'showcase',
+    const workerAnnouncementsChannelResult = await this.channelRepository.insert({
+      name: 'announcements',
       type: 0,
       serverId: server4.id,
       position: 1,
       isActive: true,
     });
-    const artShowcaseChannel = await this.channelRepository.findOne({ where: { id: artShowcaseChannelResult.identifiers[0].id } });
-    if (!artShowcaseChannel) throw new Error('Failed to create artShowcaseChannel');
+    const workerAnnouncementsChannel = await this.channelRepository.findOne({ where: { id: workerAnnouncementsChannelResult.identifiers[0].id } });
+    if (!workerAnnouncementsChannel) throw new Error('Failed to create workerAnnouncementsChannel');
 
-    const artVoiceChannelResult = await this.channelRepository.insert({
-      name: 'art-voice',
+    const workerVoiceChannelResult = await this.channelRepository.insert({
+      name: 'voice-chat',
       type: 2,
       serverId: server4.id,
       position: 2,
       isActive: true,
     });
-    const artVoiceChannel = await this.channelRepository.findOne({ where: { id: artVoiceChannelResult.identifiers[0].id } });
-    if (!artVoiceChannel) throw new Error('Failed to create artVoiceChannel');
+    const workerVoiceChannel = await this.channelRepository.findOne({ where: { id: workerVoiceChannelResult.identifiers[0].id } });
+    if (!workerVoiceChannel) throw new Error('Failed to create workerVoiceChannel');
 
     // Create sample messages for general channel
     await this.messageRepository.insert({
@@ -217,7 +233,7 @@ export class RevNetSeeder {
 
     // Create sample messages for announcements
     await this.messageRepository.insert({
-      content: '🚀 **Welcome to HackerSpace!**\n\nThis is our main development server. Feel free to introduce yourself!',
+      content: '🌍 **Welcome to Climate Action Now!**\n\nThis is where we organize for real environmental change. Join the movement!',
       channelId: announcementsChannel.id,
       authorId: 'user1',
       type: 0,
@@ -253,53 +269,32 @@ export class RevNetSeeder {
       if (channelCount === 0) {
         console.log(`Adding channels to server: ${server.name}`);
         
-        // Add basic channels based on server name
-        if (server.name === 'DevTeam') {
+        // Add basic channels for all revolt servers
+        await this.channelRepository.insert({
+          name: 'general',
+          type: 0,
+          serverId: server.id,
+          position: 0,
+          isActive: true,
+        });
+        
+        // Add announcements channel for public revolts
+        if (server.type === ServerType.PUBLIC) {
           await this.channelRepository.insert({
-            name: 'general',
-            type: 0,
-            serverId: server.id,
-            position: 0,
-            isActive: true,
-          });
-          await this.channelRepository.insert({
-            name: 'dev-voice',
-            type: 2,
-            serverId: server.id,
-            position: 1,
-            isActive: true,
-          });
-        } else if (server.name === 'ArtClub') {
-          await this.channelRepository.insert({
-            name: 'general',
-            type: 0,
-            serverId: server.id,
-            position: 0,
-            isActive: true,
-          });
-          await this.channelRepository.insert({
-            name: 'showcase',
+            name: 'announcements',
             type: 0,
             serverId: server.id,
             position: 1,
             isActive: true,
           });
           await this.channelRepository.insert({
-            name: 'art-voice',
+            name: 'voice-chat',
             type: 2,
             serverId: server.id,
             position: 2,
             isActive: true,
           });
         } else {
-          // Generic channels for any other servers
-          await this.channelRepository.insert({
-            name: 'general',
-            type: 0,
-            serverId: server.id,
-            position: 0,
-            isActive: true,
-          });
           await this.channelRepository.insert({
             name: 'voice-chat',
             type: 2,
