@@ -120,9 +120,7 @@ export class LandingPageComponent implements OnInit {
 
   onDemoLogin(): void {
     console.log('Demo login clicked');
-    this.authService.demoLogin('full').then(() => {
-      this.router.navigate(['/letters']);
-    }).catch(error => {
+    this.authService.demoLogin('full').catch(error => {
       console.error('Demo login failed:', error);
     });
   }
