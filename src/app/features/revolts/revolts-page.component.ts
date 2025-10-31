@@ -133,8 +133,8 @@ export class RevoltsPageComponent implements OnInit {
 
   onRevoltClick(revolt: Revolt) {
     console.log('Revolt clicked:', revolt);
-    // Navigate to RevNet dashboard (same as RevNet)
-    this.router.navigate(['/revnet']);
+    // Navigate to public landing page
+    this.router.navigate(['/revolts', revolt.id]);
   }
 
   onJoinRevolt(revolt: Revolt) {

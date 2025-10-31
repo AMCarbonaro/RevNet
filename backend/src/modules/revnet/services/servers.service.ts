@@ -352,6 +352,36 @@ export class ServersService {
     return result.map(r => r.category).filter(Boolean);
   }
 
+  async getPublicServerById(id: string): Promise<Server> {
+    const server = await this.serversRepository
+      .createQueryBuilder('server')
+      .leftJoinAndSelect('server.channels', 'channel')
+      .where('server.id = :id', { id })
+      .andWhere('server.isDiscoverable = :discoverable', { discoverable: true })
+      .andWhere('server.isActive = :active', { active: true })
+      .getOne();
+
+    if (!server) {
+      throw new NotFoundException('Server not found or not public');
+    }
+
+    return server;
+  }
+
+  async getServerByInviteCode(code: string): Promise<Server> {
+    const server = await this.serversRepository
+      .createQueryBuilder('server')
+      .leftJoinAndSelect('server.channels', 'channel')
+      .where('server.inviteCode = :code', { code })
+      .getOne();
+
+    if (!server) {
+      throw new NotFoundException('Invalid invite code');
+    }
+
+    return server;
+  }
+
   async getPopularTags(limit: number = 20): Promise<string[]> {
     // This is a simplified version - in production you'd want a more sophisticated tag counting
     const servers = await this.serversRepository.find({

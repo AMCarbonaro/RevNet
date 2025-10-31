@@ -1,0 +1,104 @@
+<div class="revolt-landing">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading server...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <h2>⚠️ {{ error }}</h2>
+    <button class="btn-primary" (click)="$any(this).onBackClick()">
+      Browse All Revolts
+    </button>
+  </div>
+
+  <!-- Server Content -->
+  <div *ngIf="server && !isLoading" class="server-content">
+    <!-- Banner -->
+    <div class="server-banner" *ngIf="server.banner">
+      <img [src]="server.banner" [alt]="server.name + ' banner'">
+    </div>
+    <div class="server-banner-placeholder" *ngIf="!server.banner"></div>
+
+    <!-- Server Header -->
+    <div class="server-header">
+      <div class="server-icon-container">
+        <img *ngIf="server.icon" [src]="server.icon" [alt]="server.name" class="server-icon">
+        <div *ngIf="!server.icon" class="server-icon-placeholder">
+          {{ server.name.charAt(0).toUpperCase() }}
+        </div>
+      </div>
+
+      <div class="server-info">
+        <h1 class="server-name">
+          {{ server.name }}
+          <span *ngIf="server.verified" class="verified-badge">✓</span>
+        </h1>
+        <div class="server-stats">
+          <span class="stat">
+            <span class="stat-value">{{ server.memberCount | number }}</span>
+            <span class="stat-label">members</span>
+          </span>
+          <span class="stat">
+            <span class="stat-value">{{ server.onlineCount | number }}</span>
+            <span class="stat-label">online</span>
+          </span>
+          <span *ngIf="server.category" class="stat">
+            <span class="stat-label">{{ server.category }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="server-main">
+      <!-- Left Column - Server Info -->
+      <div class="server-left">
+        <div class="section description-section">
+          <h2>About This Server</h2>
+          <p class="server-description">{{ server.description || server.shortDescription || 'No description available.' }}</p>
+        </div>
+
+        <!-- Channels Section -->
+        <div class="section channels-section" *ngIf="server.channels && server.channels.length > 0">
+          <h2>Channels</h2>
+          <div class="channels-list">
+            <div *ngFor="let group of getChannelsGrouped()" class="channel-group">
+              <h3 class="channel-group-name">{{ group.name }}</h3>
+              <div *ngFor="let channel of group.channels" class="channel-item">
+                <span class="channel-icon">{{ getChannelIcon(channel) }}</span>
+                <span class="channel-name">{{ channel.name }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tags Section -->
+        <div class="section tags-section" *ngIf="server.tags && server.tags.length > 0">
+          <h2>Tags</h2>
+          <div class="tags-list">
+            <span *ngFor="let tag of server.tags" class="tag">{{ tag }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Join Card -->
+      <div class="server-right">
+        <div class="join-card">
+          <div class="join-card-header">
+            <h3>Join Server</h3>
+          </div>
+          <div class="join-card-content">
+            <p>Click the button below to join this server and start collaborating!</p>
+            <button class="btn-join-large" (click)="onJoinClick()">
+              Join Server
+            </button>
+            <p class="join-note">Free to join • No credit card required</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

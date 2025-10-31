@@ -33,5 +33,7 @@ export const routes: Routes = [
               loadChildren: () => import('./features/revnet/revnet.routes').then(m => m.REVNET_ROUTES)
             },
   { path: 'revolts', component: RevoltsPageComponent },
+  { path: 'revolts/:id', loadComponent: () => import('./features/revolts/revolt-landing/revolt-landing.component').then(m => m.RevoltLandingComponent) },
+  { path: 'invite/:code', loadComponent: () => import('./features/revolts/revolt-landing/revolt-landing.component').then(m => m.RevoltLandingComponent) },
   { path: '**', redirectTo: '' }
 ];

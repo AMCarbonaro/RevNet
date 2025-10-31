@@ -90,6 +90,14 @@ export class ServerDiscoveryService {
     });
   }
 
+  getPublicServerById(id: string): Observable<Server> {
+    return this.http.get<Server>(`${this.apiUrl}/public/${id}`);
+  }
+
+  getServerByInviteCode(code: string): Observable<Server> {
+    return this.http.get<Server>(`${this.apiUrl}/invite/${code}`);
+  }
+
   joinServer(serverId: string): Observable<Server> {
     // This would typically require authentication and a different endpoint
     // For now, we'll return a mock response

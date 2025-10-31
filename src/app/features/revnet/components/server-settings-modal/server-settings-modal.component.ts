@@ -1196,7 +1196,8 @@ export class ServerSettingsModalComponent implements OnInit, OnDestroy {
   }
 
   copyInvite(code: string): void {
-    navigator.clipboard.writeText(`https://revnet.app/invite/${code}`);
+    const currentHost = window.location.host;
+    navigator.clipboard.writeText(`${window.location.protocol}//${currentHost}/invite/${code}`);
     // Show success message
   }
 
