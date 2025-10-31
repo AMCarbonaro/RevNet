@@ -1,47 +1,66 @@
-@import '../../styles/variables';
-@import '../../styles/mixins';
-
 .member-list {
   width: 240px;
-  background: $revnet-bg-secondary;
-  border-left: 1px solid $revnet-bg-accent;
+  background: #2f3136;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+  flex-shrink: 0;
+  
+  @media (max-width: 1024px) {
+    width: 200px;
+  }
+  
+  @media (max-width: 768px) {
+    width: 180px;
+  }
+  
+  @media (max-width: 480px) {
+    position: fixed;
+    right: -240px;
+    transition: right 0.3s ease;
+    z-index: 999;
+    height: 100vh;
+    width: 240px;
+    
+    &.mobile-open {
+      right: 0;
+    }
+  }
 }
 
 .member-list-header {
-  padding: $space-3;
-  border-bottom: 1px solid $revnet-bg-accent;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
   flex-shrink: 0;
 
   h3 {
-    margin: 0 0 $space-2 0;
-    color: $revnet-text-normal;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
+    color: #72767d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 8px 0;
   }
 
   .search-box {
     .search-input {
       width: 100%;
-      background: $revnet-bg-primary;
-      border: 1px solid $revnet-bg-accent;
+      background: #202225;
+      border: none;
       border-radius: 6px;
       padding: 8px 12px;
-      color: $revnet-text-normal;
+      color: #fff;
       font-size: 12px;
-      transition: all $transition-fast;
+      transition: all 0.15s ease;
 
       &:focus {
         outline: none;
-        border-color: $revnet-blurple;
         box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.2);
       }
 
       &::placeholder {
-        color: $revnet-text-muted;
+        color: #72767d;
       }
     }
   }
@@ -50,18 +69,21 @@
 .member-sections {
   flex: 1;
   overflow-y: auto;
-  @include scrollbar-thin;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .member-section {
-  margin-bottom: $space-2;
+  margin-bottom: 8px;
 
   .section-header {
     display: flex;
     align-items: center;
-    gap: $space-2;
-    padding: $space-2 $space-3;
-    color: $revnet-text-muted;
+    gap: 8px;
+    padding: 8px 12px;
+    color: #72767d;
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
@@ -74,19 +96,19 @@
       flex-shrink: 0;
 
       &.online {
-        background: $revnet-green;
+        background: #23a55a;
       }
 
       &.away {
-        background: $revnet-yellow;
+        background: #f0b232;
       }
 
       &.dnd {
-        background: $revnet-red;
+        background: #f23f42;
       }
 
       &.offline {
-        background: $revnet-text-muted;
+        background: #80848e;
       }
     }
 
@@ -104,108 +126,152 @@
 .member-item {
   display: flex;
   align-items: center;
-  gap: $space-2;
-  padding: $space-2 $space-3;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
   cursor: pointer;
-  transition: all $transition-fast;
-  position: relative;
 
   &:hover {
-    background: $revnet-bg-accent;
+    background: rgba(255, 255, 255, 0.05);
   }
-
+  
   &.owner {
-    border-left: 3px solid $revnet-blurple;
+    border-left: 3px solid #5865f2;
   }
 
   &.admin {
-    border-left: 3px solid $revnet-red;
+    border-left: 3px solid #f23f42;
   }
+}
 
-  .member-avatar {
-    width: 32px;
-    height: 32px;
+.member-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #5865f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  border: 2px solid;
+  position: relative;
+  flex-shrink: 0;
+  
+  .status-dot {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: $revnet-blurple;
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 12px;
-    flex-shrink: 0;
-    position: relative;
+    border: 2px solid #2f3136;
 
-    .status-dot {
-      position: absolute;
-      bottom: -2px;
-      right: -2px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 2px solid $revnet-bg-secondary;
+    &.online {
+      background: #23a55a;
+    }
 
-      &.online {
-        background: $revnet-green;
-      }
+    &.away {
+      background: #f0b232;
+    }
 
-      &.away {
-        background: $revnet-yellow;
-      }
+    &.dnd {
+      background: #f23f42;
+    }
 
-      &.dnd {
-        background: $revnet-red;
-      }
-
-      &.offline {
-        background: $revnet-text-muted;
-      }
+    &.offline {
+      background: #80848e;
     }
   }
+}
 
-  .member-info {
-    flex: 1;
-    min-width: 0;
+.status-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #2f3136;
+}
 
-    .member-name {
-      font-weight: 500;
-      color: $revnet-text-normal;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: $space-1;
-      margin-bottom: 2px;
+.member-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 
-      .member-badge {
-        background: $revnet-bg-accent;
-        color: $revnet-text-muted;
-        padding: 2px 6px;
-        border-radius: 8px;
-        font-size: 10px;
-        font-weight: 600;
-        text-transform: uppercase;
+.member-name {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  .member-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: #8e9297;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
 
-        &.admin {
-          background: $revnet-red;
-          color: #ffffff;
-        }
-      }
+    &.admin {
+      background: #f23f42;
+      color: #ffffff;
     }
+  }
+}
 
-    .member-roles {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
+.member-roles {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  
+  .role-tag {
+    background: #313338;
+    color: #8e9297;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+}
 
-      .role-tag {
-        background: $revnet-bg-primary;
-        color: $revnet-text-muted;
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 10px;
-        font-weight: 500;
-      }
-    }
+.role-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: rgba(88, 101, 242, 0.2);
+  color: #5865f2;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+// Scrollbar styling
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -222,7 +288,7 @@
     position: relative;
     box-shadow: none;
     
-    &__header {
+    .member-list-header {
       padding: 12px 16px;
       
       h3 {

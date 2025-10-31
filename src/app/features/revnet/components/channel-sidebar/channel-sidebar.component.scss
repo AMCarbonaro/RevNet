@@ -1,179 +1,193 @@
-@import '../../../../../styles/variables';
-@import '../../../../../styles/mixins';
-
 .channel-sidebar {
-  background: $revnet-bg-secondary;
+  width: 240px;
+  background: #2f3136;
   height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  overflow: hidden;
-
-  &__header {
-    padding: $space-4;
-    border-bottom: 1px solid $revnet-bg-accent;
-    background: $revnet-bg-secondary;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    h2 {
-      margin: 0;
-      color: $revnet-text-normal;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .settings-btn {
-      @include button-reset;
-      color: $revnet-text-muted;
-      padding: $space-1;
-      border-radius: 4px;
-      transition: all $transition-fast;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &:hover {
-        background: $revnet-bg-accent;
-        color: $revnet-text-normal;
-      }
-
-      svg {
-        fill: currentColor;
-      }
-    }
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  flex-shrink: 0;
+  
+  @media (max-width: 1024px) {
+    width: 200px;
   }
-
-  &__content {
-    padding: $space-2;
-    overflow-y: auto;
-    @include scrollbar-thin;
-    display: flex;
-    flex-direction: column;
-    gap: $space-1;
+  
+  @media (max-width: 768px) {
+    width: 180px;
   }
-
-  &__user-panel {
-    background: $revnet-bg-secondary;
-    border-top: 1px solid $revnet-bg-accent;
-    padding: $space-2;
+  
+  @media (max-width: 480px) {
+    position: fixed;
+    left: -240px;
+    top: 0;
+    transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    z-index: 999;
+    height: 100vh;
+    width: 240px;
+    
+    &.mobile-open {
+      left: 72px !important;
+    }
   }
 }
 
-.channel-item {
-  padding: $space-2 $space-3;
-  color: $revnet-text-muted;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all $transition-fast;
-  position: relative;
+.channel-sidebar__header {
+  padding: 15px;
+  font-weight: 600;
+  font-size: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 15px;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $space-2;
+  
+  h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .settings-btn {
+    background: none;
+    border: none;
+    color: #8e9297;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+    
+    svg {
+      fill: currentColor;
+    }
+  }
+}
+
+.channel-sidebar__content {
+  padding: 0 15px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+}
+
+.channel-item {
+  padding: 8px 10px;
+  border-radius: 4px;
+  color: #8e9297;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #dcddde;
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-weight: 500;
+  }
+  
+  &.voice-channel {
+    color: #8e9297;
+    
+    &:hover {
+      color: #dcddde;
+    }
+    
+    &.active {
+      color: #fff;
+    }
+  }
 
   .channel-content {
     display: flex;
     align-items: center;
-    gap: $space-2;
+    gap: 8px;
     flex: 1;
     min-width: 0;
+  }
+
+  .channel-icon {
+    font-weight: 600;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+
+  .channel-hash {
+    flex-shrink: 0;
+    font-weight: 500;
+    opacity: 0.7;
   }
 
   .channel-name {
     flex: 1;
-    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-
-  &:hover {
-    background: $revnet-bg-accent;
-    color: $revnet-text-normal;
-  }
-
-  &.active {
-    background: $revnet-bg-accent;
-    color: $revnet-text-normal;
-    font-weight: 500;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      left: -12px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 3px;
-      height: 16px;
-      background: $revnet-text-normal;
-      border-radius: 0 2px 2px 0;
-    }
-  }
-
-  &.voice-channel {
-    color: $revnet-text-muted;
-    
-    &:hover {
-      color: $revnet-text-normal;
-    }
-    
-    &.active {
-      color: $revnet-text-normal;
-    }
-  }
 }
 
-.channel-icon {
-  flex-shrink: 0;
-  color: inherit;
-}
-
-.channel-hash {
-  flex-shrink: 0;
-  font-weight: 500;
-  opacity: 0.7;
+.channel-sidebar__user-panel {
+  background: #2f3136;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: $space-2;
+  gap: 8px;
 }
 
 .user-controls {
   display: flex;
-  gap: $space-1;
+  gap: 4px;
   margin-left: auto;
 }
 
 .control-btn {
   background: none;
   border: none;
-  color: $revnet-text-muted;
+  color: #8e9297;
   cursor: pointer;
-  padding: $space-1;
+  padding: 4px;
   border-radius: 4px;
-  transition: all $transition-fast;
+  transition: all 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 
   &:hover {
-    background: $revnet-bg-accent;
-    color: $revnet-text-normal;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
   }
 
   &.active {
-    color: $revnet-red;
-    background: rgba($revnet-red, 0.1);
+    color: #f23f42;
+    background: rgba(242, 63, 66, 0.2);
   }
 }
 
 .user-avatar {
   width: 32px;
   height: 32px;
-  background: $revnet-blurple;
+  background: #5865f2;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -187,62 +201,41 @@
 }
 
 .username {
-  color: $revnet-text-normal;
+  color: #fff;
   font-weight: 500;
   font-size: 14px;
 }
 
 .status {
-  color: $revnet-text-muted;
+  color: #8e9297;
   font-size: 12px;
 }
 
 .connection-status {
   font-size: 11px;
-  color: $revnet-text-muted;
+  color: #8e9297;
   margin-top: 1px;
   
   &.connected {
-    color: $revnet-status-success;
+    color: #23a55a;
   }
 }
 
-// Mobile styles
-@media (max-width: 768px) {
-  .channel-sidebar {
-    width: 100%;
-    border-left: none; // avoid double divider; rely on servers rail border
-    
-    &__header {
-      padding: 12px 16px;
-      
-      h2 {
-        font-size: 18px;
-      }
-    }
-    
-    .channel-item {
-      font-size: 16px;
-      padding: 14px 16px;
-      min-height: 48px;
-      display: flex;
-      align-items: center;
-    }
-    
-    .channel-category {
-      padding: 8px 16px;
-      font-size: 14px;
-    }
-  }
+// Scrollbar styling
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-  .channel-sidebar__user-panel {
-    position: sticky;
-    bottom: 0;
-    z-index: 1;
-  }
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
 
-  // Keep active indicator inside the channel list on mobile
-  .channel-item.active::before {
-    left: 0;
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.3);
   }
 }
