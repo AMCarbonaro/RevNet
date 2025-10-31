@@ -273,7 +273,14 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
             console.error('Error loading messages:', err);
-            this.error = 'Failed to load messages';
+            console.error('Error details:', {
+              status: err.status,
+              statusText: err.statusText,
+              message: err.message,
+              error: err.error,
+              url: err.url
+            });
+            this.error = `Failed to load messages${err.status ? ` (${err.status})` : ''}. ${err.error?.message || err.message || ''}`;
             this.loading = false;
           }
         });

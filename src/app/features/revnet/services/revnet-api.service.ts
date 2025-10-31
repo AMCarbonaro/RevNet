@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Server, Channel, Message } from '../store/models/revnet.models';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +11,22 @@ import { environment } from '../../../../environments/environment';
 export class RevNetApiService {
   private readonly apiUrl = `${environment.apiUrl}/api/revnet`;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   private getHeaders(): HttpHeaders {
-    // For now, return empty headers since we're using mock auth in backend
-    // In production, you'd get the JWT token from your auth service
-    return new HttpHeaders({
+    const token = this.authService.getToken();
+    const headers: { [key: string]: string } = {
       'Content-Type': 'application/json'
-    });
+    };
+    
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    return new HttpHeaders(headers);
   }
 
   getServers(): Observable<Server[]> {
