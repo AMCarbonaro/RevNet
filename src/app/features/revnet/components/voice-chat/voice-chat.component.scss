@@ -1,0 +1,220 @@
+.voice-channel-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #36393f;
+  overflow: hidden;
+
+  .voice-header {
+    padding: 15px 20px;
+    background: #2f3136;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+
+    .voice-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .voice-icon {
+        color: #b9bbbe;
+      }
+
+      .channel-name {
+        color: #fff;
+        font-weight: 600;
+        font-size: 16px;
+      }
+    }
+
+    .participant-count {
+      color: #b9bbbe;
+      font-size: 13px;
+    }
+  }
+
+  .voice-participants {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 0;
+
+    .participant-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+
+      &.speaking {
+        border-color: rgba(35, 165, 90, 0.5);
+        background: rgba(35, 165, 90, 0.1);
+      }
+
+      &.muted {
+        opacity: 0.6;
+      }
+
+      .participant-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #5865f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 600;
+        font-size: 18px;
+        position: relative;
+        flex-shrink: 0;
+
+        .speaking-indicator {
+          position: absolute;
+          inset: -3px;
+          border-radius: 50%;
+          border: 3px solid #23a55a;
+          animation: pulse 1.5s infinite;
+        }
+
+        .audio-wave {
+          position: absolute;
+          inset: -3px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 2px;
+
+          span {
+            width: 3px;
+            height: 15px;
+            background: #23a55a;
+            border-radius: 2px;
+            animation: wave 1s infinite;
+
+            &:nth-child(2) { animation-delay: 0.2s; }
+            &:nth-child(3) { animation-delay: 0.4s; }
+          }
+        }
+
+        .muted-indicator {
+          position: absolute;
+          bottom: -5px;
+          right: -5px;
+          background: #f23f42;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+        }
+      }
+
+      .participant-info {
+        flex: 1;
+        min-width: 0;
+
+        .participant-name {
+          color: #fff;
+          font-weight: 600;
+          margin-bottom: 5px;
+        }
+
+        .participant-status {
+          font-size: 13px;
+
+          .status-muted {
+            color: #f23f42;
+          }
+
+          .status-deafened {
+            color: #f23f42;
+          }
+
+          .status-normal {
+            color: #23a55a;
+          }
+        }
+      }
+
+      .audio-level {
+        width: 30px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        display: flex;
+        align-items: flex-end;
+        padding: 5px;
+
+        .audio-bar {
+          width: 100%;
+          background: linear-gradient(180deg, #23a55a, #5865f2);
+          border-radius: 2px;
+          transition: height 0.2s;
+        }
+      }
+    }
+  }
+
+  .voice-controls {
+    padding: 15px 20px;
+    background: #2f3136;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .control-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      font-weight: 600;
+      font-size: 14px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      &.active {
+        background: #f23f42;
+      }
+
+      &.leave {
+        background: #f23f42;
+        
+        &:hover {
+          background: #d84040;
+        }
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+@keyframes wave {
+  0%, 100% { height: 10px; }
+  50% { height: 20px; }
+}

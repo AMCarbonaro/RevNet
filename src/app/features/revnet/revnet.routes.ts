@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { RevNetLayoutComponent } from './components/revnet-layout/revnet-layout.component';
+import { DashboardLayoutComponent } from './components/dashboard-layout/dashboard-layout.component';
 
 export const REVNET_ROUTES: Routes = [
   {
     path: '',
-    component: RevNetLayoutComponent
+    component: DashboardLayoutComponent
   }
 ];

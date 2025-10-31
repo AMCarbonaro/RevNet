@@ -1,0 +1,65 @@
+<div class="dashboard-layout">
+  <button 
+    class="mobile-menu-toggle"
+    (click)="toggleMobileMenu()"
+    [attr.aria-label]="mobileMenuOpen ? 'Close menu' : 'Open menu'"
+    type="button">
+    {{ mobileMenuOpen ? '✕' : '☰' }}
+  </button>
+
+  <div class="mobile-overlay" 
+       *ngIf="mobileMenuOpen"
+       (click)="toggleMobileMenu()">
+  </div>
+
+  <app-server-sidebar
+    [class.mobile-open]="mobileMenuOpen"
+    [servers]="servers"
+    [selectedServerId]="selectedServerId"
+    [mobileOpen]="mobileMenuOpen"
+    (serverSelected)="onServerSelected($event)">
+  </app-server-sidebar>
+
+  <app-channel-sidebar
+    [class.mobile-open]="channelSidebarOpen || mobileMenuOpen"
+    [channels]="channels"
+    [selectedChannelId]="selectedChannelId"
+    [serverName]="selectedServer?.name || ''"
+    [currentUser]="currentUser"
+    [mobileOpen]="channelSidebarOpen || mobileMenuOpen"
+    (channelSelected)="onChannelSelected($event)">
+  </app-channel-sidebar>
+
+  <div class="main-content">
+    <div class="content-wrapper">
+      <div *ngIf="loading" class="loading-indicator">
+        Loading...
+      </div>
+      
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+
+      <app-chat-area
+        *ngIf="selectedChannel && selectedChannel.type === 0 && !loading && !error"
+        [messages]="messages"
+        [channelName]="selectedChannel.name || 'general'"
+        [channelType]="0"
+        (toggleChannelSidebar)="toggleChannelSidebar()"
+        (toggleMemberList)="toggleMemberList()">
+      </app-chat-area>
+
+      <app-voice-chat
+        *ngIf="selectedChannel && selectedChannel.type === 2 && !loading && !error"
+        [participants]="voiceParticipants"
+        [channelName]="selectedChannel.name || 'Voice Channel'">
+      </app-voice-chat>
+    </div>
+  </div>
+
+  <app-member-list
+    [class.mobile-open]="memberListOpen"
+    [members]="members"
+    [mobileOpen]="memberListOpen">
+  </app-member-list>
+</div>

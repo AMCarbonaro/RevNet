@@ -1,0 +1,58 @@
+<div class="voice-channel-window">
+  <div class="voice-header">
+    <div class="voice-info">
+      <svg class="voice-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>
+      </svg>
+      <span class="channel-name">{{ channelName }}</span>
+    </div>
+    <div class="participant-count">{{ participants.length }} connected</div>
+  </div>
+
+  <div class="voice-participants">
+    <div 
+      *ngFor="let participant of participants" 
+      class="participant-card"
+      [class.speaking]="participant.isSpeaking"
+      [class.muted]="participant.isMuted">
+      <div class="participant-avatar">
+        {{ getUserInitials(participant.username) }}
+        <div class="speaking-indicator" *ngIf="participant.isSpeaking">
+          <div class="audio-wave">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="muted-indicator" *ngIf="participant.isMuted">🔇</div>
+      </div>
+      <div class="participant-info">
+        <div class="participant-name">{{ participant.username }}</div>
+        <div class="participant-status">
+          <span *ngIf="participant.isMuted" class="status-muted">Muted</span>
+          <span *ngIf="participant.isDeafened" class="status-deafened">Deafened</span>
+          <span *ngIf="!participant.isMuted && !participant.isDeafened" class="status-normal">Connected</span>
+        </div>
+      </div>
+      <div class="audio-level" *ngIf="!participant.isMuted">
+        <div class="audio-bar" [style.height.%]="getAudioLevel(participant) * 100"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="voice-controls">
+    <button class="control-btn mute" [class.active]="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2"/>
+      </svg>
+      <span>Mute</span>
+    </button>
+    <button class="control-btn deafen" [class.active]="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>
+      </svg>
+      <span>Deafen</span>
+    </button>
+    <button class="control-btn leave">
+      <span>Leave Channel</span>
+    </button>
+  </div>
+</div>

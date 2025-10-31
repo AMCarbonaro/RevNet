@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -30,8 +30,22 @@ import { MobileLayoutService } from '../../services/mobile-layout.service';
   template: `
     <div class="chat-area">
       <div class="chat-area__header">
-        <!-- Server Channel Header -->
-        <div *ngIf="(selectedChannel$ | async) as channel" class="channel-header">
+        <!-- Server Channel Header (Input Mode) -->
+        <div *ngIf="useInputs && channelName" class="channel-header">
+          <button 
+            *ngIf="isMobile"
+            class="back-btn"
+            (click)="toggleChannelSidebar.emit()"
+            title="Back to channels">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+          </button>
+          <h1>{{ channelType === 0 ? '#' : '' }} {{ channelName }}</h1>
+        </div>
+        
+        <!-- Server Channel Header (NgRx Mode) -->
+        <div *ngIf="!useInputs && (selectedChannel$ | async) as channel" class="channel-header">
           <button 
             *ngIf="isMobile"
             class="back-btn"
@@ -92,9 +106,9 @@ import { MobileLayoutService } from '../../services/mobile-layout.service';
             </div>
             
             <div
-              *ngFor="let message of messages$ | async"
+              *ngFor="let message of (useInputs ? displayMessages : (messages$ | async))"
               [attr.data-message-id]="message.id"
-              [class.highlighted]="(highlightedMessageId$ | async) === message.id">
+              [class.highlighted]="!useInputs && (highlightedMessageId$ | async) === message.id">
               <app-message-item
                 [message]="message"
                 (messageDeleted)="onMessageDeleted($event)"
@@ -118,7 +132,7 @@ import { MobileLayoutService } from '../../services/mobile-layout.service';
                 (input)="onInputChange()"
                 (focus)="onInputFocus()"
                 (blur)="onInputBlur()"
-                [placeholder]="'Message #' + ((selectedChannel$ | async)?.name || 'channel')"
+                [placeholder]="useInputs ? ('Message #' + channelName) : ('Message #' + ((selectedChannel$ | async)?.name || 'channel'))"
                 class="message-input"
                 [class.mobile-input]="isMobile">
           <button 
@@ -166,6 +180,14 @@ import { MobileLayoutService } from '../../services/mobile-layout.service';
 export class ChatAreaComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('messagesContainer', { static: false }) messagesContainer!: ElementRef;
 
+  // Optional inputs for dashboard-layout compatibility
+  @Input() messages: Message[] | null = null;
+  @Input() channelName: string = '';
+  @Input() channelType: number = 0;
+  @Output() toggleChannelSidebar = new EventEmitter<void>();
+  @Output() toggleMemberList = new EventEmitter<void>();
+
+  // NgRx observables (used when inputs not provided)
   selectedChannel$: Observable<Channel | null>;
   selectedDMChannel$: Observable<DMChannel | null>;
   messages$: Observable<Message[]>;
@@ -178,6 +200,15 @@ export class ChatAreaComponent implements OnInit, OnDestroy, AfterViewInit {
   showThread = false;
   selectedMessageForThread: Message | null = null;
   typingUsers: any[] = [];
+
+  // Use inputs if provided, otherwise use NgRx
+  get useInputs(): boolean {
+    return this.messages !== null;
+  }
+
+  get displayMessages(): Message[] {
+    return this.useInputs ? (this.messages || []) : [];
+  }
   
   // Pull-to-refresh properties
   isPullToRefresh = false;

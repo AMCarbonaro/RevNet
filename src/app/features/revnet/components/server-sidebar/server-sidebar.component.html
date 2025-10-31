@@ -1,0 +1,12 @@
+<div class="server-sidebar" [class.mobile-open]="mobileOpen">
+  <div class="server-list">
+    <button 
+      *ngFor="let server of servers"
+      class="server-icon"
+      [class.active]="selectedServerId === server.id"
+      (click)="onServerClick(server.id)"
+      [title]="server.name">
+      {{ getServerInitials(server.name) }}
+    </button>
+  </div>
+</div>

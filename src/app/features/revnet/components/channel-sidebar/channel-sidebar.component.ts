@@ -1,25 +1,26 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { selectSelectedServer, selectChannelsByServer, selectSelectedChannelId, selectSelectedChannel, selectWebsocketConnected } from '../../store/selectors/revnet.selectors';
 import { RevNetActions } from '../../store/actions/revnet.actions';
-import { Server, Channel } from '../../store/models/revnet.models';
+import { Server, Channel, User } from '../../store/models/revnet.models';
 import { VoiceChatService } from '../../services/voice-chat.service';
 import { VoiceChannelComponent } from '../voice-channel/voice-channel.component';
 import { ServerSettingsModalComponent } from '../server-settings-modal/server-settings-modal.component';
 import { UnreadBadgeComponent } from '../unread-badge/unread-badge.component';
 import { StatusDropdownComponent } from '../status-dropdown/status-dropdown.component';
+import { UserPanelComponent } from '../user-panel/user-panel.component';
 
 @Component({
   selector: 'app-channel-sidebar',
   standalone: true,
-  imports: [CommonModule, VoiceChannelComponent, ServerSettingsModalComponent, UnreadBadgeComponent, StatusDropdownComponent],
+  imports: [CommonModule, VoiceChannelComponent, ServerSettingsModalComponent, UnreadBadgeComponent, StatusDropdownComponent, UserPanelComponent],
   template: `
-    <div class="channel-sidebar">
+    <div class="channel-sidebar" [class.mobile-open]="mobileOpen">
       <div class="channel-sidebar__header">
-        <h2>{{ (selectedServer$ | async)?.name || 'Select a Revolt' }}</h2>
-        <button class="settings-btn" (click)="openSettings()" *ngIf="selectedServer$ | async">
+        <h2>{{ useInputs ? serverName : ((selectedServer$ | async)?.name || 'Select a Revolt') }}</h2>
+        <button class="settings-btn" (click)="openSettings()" *ngIf="!useInputs && (selectedServer$ | async)">
           <svg width="16" height="16" viewBox="0 0 24 24">
             <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
           </svg>
@@ -27,9 +28,9 @@ import { StatusDropdownComponent } from '../status-dropdown/status-dropdown.comp
       </div>
       <div class="channel-sidebar__content">
         <div 
-          *ngFor="let channel of channels$ | async" 
+          *ngFor="let channel of (useInputs ? channels : (channels$ | async))" 
           class="channel-item"
-          [class.active]="(selectedChannelId$ | async) === channel.id"
+          [class.active]="useInputs ? (selectedChannelId === channel.id) : ((selectedChannelId$ | async) === channel.id)"
           [class.voice-channel]="channel.type === 2"
           (click)="selectChannel(channel.id)"
           [title]="channel.name">
@@ -55,7 +56,12 @@ import { StatusDropdownComponent } from '../status-dropdown/status-dropdown.comp
         *ngIf="(selectedChannel$ | async)?.type === 2">
       </app-voice-channel>
       
-      <div class="channel-sidebar__user-panel">
+      <app-user-panel
+        *ngIf="useInputs && currentUser"
+        [user]="currentUser">
+      </app-user-panel>
+      
+      <div class="channel-sidebar__user-panel" *ngIf="!useInputs">
         <div class="user-info">
           <div class="user-avatar">U</div>
           <div class="user-details">
@@ -100,6 +106,15 @@ import { StatusDropdownComponent } from '../status-dropdown/status-dropdown.comp
   styleUrl: './channel-sidebar.component.scss'
 })
 export class ChannelSidebarComponent implements OnInit, OnDestroy {
+  // Optional inputs for dashboard-layout compatibility
+  @Input() channels: Channel[] | null = null;
+  @Input() selectedChannelId: string | null = null;
+  @Input() serverName: string = '';
+  @Input() currentUser: User | null = null;
+  @Input() mobileOpen: boolean = false;
+  @Output() channelSelected = new EventEmitter<string>();
+
+  // NgRx observables (used when inputs not provided)
   selectedServer$: Observable<Server | null>;
   channels$: Observable<Channel[]>;
   selectedChannelId$: Observable<string | null>;
@@ -110,6 +125,11 @@ export class ChannelSidebarComponent implements OnInit, OnDestroy {
   isDeafened = false;
   showSettingsModal = false;
   private destroy$ = new Subject<void>();
+
+  // Use inputs if provided, otherwise use NgRx
+  get useInputs(): boolean {
+    return this.channels !== null;
+  }
 
   constructor(
     private store: Store,
@@ -141,8 +161,12 @@ export class ChannelSidebarComponent implements OnInit, OnDestroy {
   }
 
   selectChannel(channelId: string): void {
-    this.store.dispatch(RevNetActions.selectChannel({ channelId }));
-    this.store.dispatch(RevNetActions.loadMessages({ channelId }));
+    if (this.useInputs) {
+      this.channelSelected.emit(channelId);
+    } else {
+      this.store.dispatch(RevNetActions.selectChannel({ channelId }));
+      this.store.dispatch(RevNetActions.loadMessages({ channelId }));
+    }
   }
 
   toggleMute(): void {

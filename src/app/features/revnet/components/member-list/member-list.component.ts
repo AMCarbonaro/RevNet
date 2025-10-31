@@ -23,9 +23,9 @@ interface Member {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="member-list" *ngIf="isVisible">
+    <div class="member-list" [class.mobile-open]="mobileOpen" *ngIf="isVisible || useInputs">
       <div class="member-list-header">
-        <h3>Members ({{ members.length }})</h3>
+        <h3>Members ({{ displayMembers.length }})</h3>
         <div class="search-box">
           <input
             type="text"
@@ -167,13 +167,21 @@ interface Member {
 })
 export class MemberListComponent implements OnInit, OnDestroy {
   @Input() isVisible = false;
+  // Optional inputs for dashboard-layout compatibility
+  @Input() members: Member[] | null = null;
+  @Input() mobileOpen: boolean = false;
 
-  members: Member[] = [];
+  private _members: Member[] = [];
   searchTerm = '';
   currentUser$: Observable<User | null>;
   selectedServer$: Observable<any>;
 
   private destroy$ = new Subject<void>();
+
+  // Use inputs if provided, otherwise use NgRx
+  get useInputs(): boolean {
+    return this.members !== null;
+  }
 
   constructor(
     private store: Store,
@@ -184,7 +192,9 @@ export class MemberListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadMembers();
+    if (!this.useInputs) {
+      this.loadMembers();
+    }
   }
 
   ngOnDestroy(): void {
@@ -194,7 +204,7 @@ export class MemberListComponent implements OnInit, OnDestroy {
 
   private loadMembers(): void {
     // Mock member data - in real app, this would come from API
-    this.members = [
+    this._members = [
       {
         id: '1',
         username: 'CurrentUser',
@@ -243,9 +253,13 @@ export class MemberListComponent implements OnInit, OnDestroy {
     ];
   }
 
+  get displayMembers(): Member[] {
+    return this.useInputs ? (this.members || []) : this._members;
+  }
+
   get filteredMembers(): Member[] {
-    if (!this.searchTerm) return this.members;
-    return this.members.filter(member =>
+    if (!this.searchTerm) return this.displayMembers;
+    return this.displayMembers.filter(member =>
       member.username.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
