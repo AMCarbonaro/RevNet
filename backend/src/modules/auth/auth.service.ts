@@ -106,20 +106,30 @@ export class AuthService {
     const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
     const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
 
+    // Check if email service is configured by checking for SENDGRID_API_KEY
+    const sendGridApiKey = this.configService.get<string>('SENDGRID_API_KEY');
+    const isEmailConfigured = !!sendGridApiKey;
+
     // Send verification email
     let emailSent = false;
-    try {
-      await this.emailService.sendVerificationEmail(
-        savedUser.email,
-        verificationToken,
-        savedUser.username,
-      );
-      emailSent = true;
-      console.log(`✅ Verification email sent to ${savedUser.email}`);
-    } catch (error) {
-      console.error('Error sending verification email:', error);
-      // In development mode, the link is logged to console
-      // We'll also return it in the response so users can access it
+    if (isEmailConfigured) {
+      try {
+        await this.emailService.sendVerificationEmail(
+          savedUser.email,
+          verificationToken,
+          savedUser.username,
+        );
+        emailSent = true;
+        console.log(`✅ Verification email sent to ${savedUser.email}`);
+      } catch (error) {
+        console.error('Error sending verification email:', error);
+        // If sending fails, still return link as fallback
+        emailSent = false;
+      }
+    } else {
+      console.log(`📧 Email service not configured - returning verification link for ${savedUser.email}`);
+      // Email service not configured - always return link
+      emailSent = false;
     }
 
     return {
@@ -196,24 +206,36 @@ export class AuthService {
     const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
     const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
 
+    // Check if email service is configured by checking for SENDGRID_API_KEY
+    const sendGridApiKey = this.configService.get<string>('SENDGRID_API_KEY');
+    const isEmailConfigured = !!sendGridApiKey;
+
     // Send verification email
     let emailSent = false;
-    try {
-      await this.emailService.sendVerificationEmail(
-        user.email,
-        verificationToken,
-        user.username,
-      );
-      emailSent = true;
-      console.log(`✅ Verification email sent to ${user.email}`);
-    } catch (error) {
-      console.error('Error sending verification email:', error);
-      // In development mode, return the link so user can verify
+    if (isEmailConfigured) {
+      try {
+        await this.emailService.sendVerificationEmail(
+          user.email,
+          verificationToken,
+          user.username,
+        );
+        emailSent = true;
+        console.log(`✅ Verification email sent to ${user.email}`);
+      } catch (error) {
+        console.error('Error sending verification email:', error);
+        // If sending fails, still return link as fallback
+        emailSent = false;
+      }
+    } else {
+      console.log(`📧 Email service not configured - returning verification link for ${user.email}`);
+      // Email service not configured - always return link
+      emailSent = false;
     }
 
     return {
       success: true,
       message: emailSent ? 'Verification email sent' : 'Verification link generated',
+      // Always return link if email wasn't actually sent (either not configured or failed)
       verificationLink: emailSent ? undefined : verificationLink,
     };
   }
