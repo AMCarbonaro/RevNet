@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { User } from './entities/user.entity';
 import { EmailService } from './services/email.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -20,8 +21,8 @@ import { EmailService } from './services/email.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, EmailService],
-  exports: [AuthService],
+  providers: [AuthService, EmailService, JwtAuthGuard],
+  exports: [AuthService, JwtAuthGuard],
 })
 export class AuthModule {}
 

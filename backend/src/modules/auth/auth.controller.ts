@@ -29,7 +29,11 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getProfile(@Request() req: any) {
-    return this.authService.getProfile(req.user.userId);
+    const userId = req.user?.userId || req.user?.id;
+    if (!userId) {
+      throw new Error('User ID not found in request');
+    }
+    return this.authService.getProfile(userId);
   }
 
   @Post('request-password-reset')
