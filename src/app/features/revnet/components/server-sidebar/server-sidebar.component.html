@@ -1,5 +1,6 @@
 <div class="server-sidebar" [class.mobile-open]="mobileOpen">
   <div class="server-list">
+    <!-- Always show server list, even if empty -->
     <button 
       *ngFor="let server of servers"
       class="server-icon"
@@ -8,5 +9,11 @@
       [title]="server.name">
       {{ getServerInitials(server.name) }}
     </button>
+    
+    <!-- Empty state when no servers -->
+    <div *ngIf="!servers || servers.length === 0" class="server-empty-state">
+      <div class="empty-icon">🏛️</div>
+      <div class="empty-text">No servers</div>
+    </div>
   </div>
 </div>
