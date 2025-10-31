@@ -316,11 +316,11 @@ export class AuthService {
     const payload = { sub: userId };
 
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: this.configService.get<string>('JWT_EXPIRATION') || '1h',
+      expiresIn: (this.configService.get<string>('JWT_EXPIRATION') || '1h') as string,
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '7d',
+      expiresIn: '7d' as string,
     });
 
     return {

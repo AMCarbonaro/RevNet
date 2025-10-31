@@ -28,16 +28,16 @@ export class User {
   verified: boolean;
 
   @Column({ nullable: true })
-  emailVerificationToken: string;
+  emailVerificationToken: string | null;
 
   @Column({ nullable: true })
-  emailVerificationExpires: Date;
+  emailVerificationExpires: Date | null;
 
   @Column({ nullable: true })
-  passwordResetToken: string;
+  passwordResetToken: string | null;
 
   @Column({ nullable: true })
-  passwordResetExpires: Date;
+  passwordResetExpires: Date | null;
 
   @Column({ default: false })
   mfaEnabled: boolean;
