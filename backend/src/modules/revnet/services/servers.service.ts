@@ -238,60 +238,81 @@ export class ServersService {
 
   // Discovery methods
   async findPublicServers(query: ServerDiscoveryQueryDto): Promise<{ servers: Server[], total: number, page: number, totalPages: number }> {
-    const { search, category, tags, sortBy, page = 1, limit = 20 } = query;
-    const skip = (page - 1) * limit;
+    try {
+      const { search, category, tags, sortBy, page = 1, limit = 20 } = query;
+      const skip = (page - 1) * limit;
 
-    const queryBuilder = this.serversRepository
-      .createQueryBuilder('server')
-      .leftJoinAndSelect('server.channels', 'channel')
-      .where('server.isDiscoverable = :discoverable', { discoverable: true })
-      .andWhere('server.isActive = :active', { active: true });
+      const queryBuilder = this.serversRepository
+        .createQueryBuilder('server')
+        .leftJoinAndSelect('server.channels', 'channel')
+        .where('server.isDiscoverable = :discoverable', { discoverable: true })
+        .andWhere('server.isActive = :active', { active: true });
 
-    // Search filter
-    if (search) {
-      queryBuilder.andWhere(
-        '(server.name ILIKE :search OR server.description ILIKE :search OR server.shortDescription ILIKE :search)',
-        { search: `%${search}%` }
-      );
+      // Search filter
+      if (search) {
+        queryBuilder.andWhere(
+          '(server.name ILIKE :search OR server.description ILIKE :search OR server.shortDescription ILIKE :search)',
+          { search: `%${search}%` }
+        );
+      }
+
+      // Category filter
+      if (category) {
+        queryBuilder.andWhere('server.category = :category', { category });
+      }
+
+      // Tags filter - for simple-array type, check if any tag exists in comma-separated string
+      if (tags && tags.length > 0) {
+        const tagConditions = tags.map((tag, index) => {
+          const paramName = `tag${index}`;
+          queryBuilder.setParameter(paramName, `%,${tag},%`);
+          return `server.tags LIKE :${paramName}`;
+        });
+        // Also check for tags at start or end of string
+        const tagConditionsStartEnd = tags.map((tag, index) => {
+          const paramNameStart = `tagStart${index}`;
+          const paramNameEnd = `tagEnd${index}`;
+          queryBuilder.setParameter(paramNameStart, `${tag},%`);
+          queryBuilder.setParameter(paramNameEnd, `%,${tag}`);
+          return `(server.tags LIKE :${paramNameStart} OR server.tags LIKE :${paramNameEnd})`;
+        });
+        const allConditions = [...tagConditions, ...tagConditionsStartEnd];
+        queryBuilder.andWhere(`(${allConditions.join(' OR ')})`);
+      }
+
+      // Sort by
+      switch (sortBy) {
+        case ServerSortBy.POPULAR:
+          queryBuilder.orderBy('server.memberCount', 'DESC');
+          break;
+        case ServerSortBy.RECENT:
+          queryBuilder.orderBy('server.createdAt', 'DESC');
+          break;
+        case ServerSortBy.ACTIVE:
+          queryBuilder.orderBy('server.messageCount', 'DESC');
+          break;
+        default:
+          queryBuilder.orderBy('server.memberCount', 'DESC');
+      }
+
+      // Pagination
+      queryBuilder.skip(skip).take(limit);
+
+      const [servers, total] = await queryBuilder.getManyAndCount();
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        servers,
+        total,
+        page,
+        totalPages
+      };
+    } catch (error) {
+      console.error('[ServersService] Error in findPublicServers:', error);
+      console.error('[ServersService] Query:', query);
+      console.error('[ServersService] Error stack:', error.stack);
+      throw error;
     }
-
-    // Category filter
-    if (category) {
-      queryBuilder.andWhere('server.category = :category', { category });
-    }
-
-    // Tags filter
-    if (tags && tags.length > 0) {
-      queryBuilder.andWhere('server.tags && :tags', { tags });
-    }
-
-    // Sort by
-    switch (sortBy) {
-      case ServerSortBy.POPULAR:
-        queryBuilder.orderBy('server.memberCount', 'DESC');
-        break;
-      case ServerSortBy.RECENT:
-        queryBuilder.orderBy('server.createdAt', 'DESC');
-        break;
-      case ServerSortBy.ACTIVE:
-        queryBuilder.orderBy('server.messageCount', 'DESC');
-        break;
-      default:
-        queryBuilder.orderBy('server.memberCount', 'DESC');
-    }
-
-    // Pagination
-    queryBuilder.skip(skip).take(limit);
-
-    const [servers, total] = await queryBuilder.getManyAndCount();
-    const totalPages = Math.ceil(total / limit);
-
-    return {
-      servers,
-      total,
-      page,
-      totalPages
-    };
   }
 
   async searchServers(query: ServerDiscoveryQueryDto): Promise<{ servers: Server[], total: number, page: number, totalPages: number }> {
