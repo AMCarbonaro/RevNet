@@ -162,8 +162,8 @@
     margin-bottom: 2rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-primary);
-    touch-action: pan-x; /* Allow horizontal swipes, prevent vertical scrolling */
-    user-select: none; /* Prevent text selection during swipes */
+    touch-action: pan-y pan-x; /* Allow both vertical and horizontal scrolling */
+    user-select: text; /* Allow text selection for reading */
     
     .swipe-indicator {
       display: flex;
@@ -575,6 +575,6 @@
 
 @media (max-width: 768px) {
   .letter-reader .letter-content {
-    touch-action: pan-x;
+    touch-action: pan-y pan-x; /* Allow both scroll directions */
   }
 }
