@@ -68,8 +68,11 @@ export class EmailVerificationComponent implements OnInit {
   }
 
   async resendVerificationEmail(): Promise<void> {
+    console.log('resendVerificationEmail called, email:', this.email);
+    
     if (!this.email) {
       this.errorMessage = 'Email address is required to resend verification';
+      console.error('No email found in component');
       return;
     }
 
@@ -79,24 +82,32 @@ export class EmailVerificationComponent implements OnInit {
     this.successMessage = '';
 
     try {
+      console.log('Calling authService.resendVerificationEmail with:', this.email);
       const response = await this.authService.resendVerificationEmail(this.email);
+      console.log('Response received:', response);
+      
       if (response.success) {
         this.resendSuccess = true;
         
         // If verification link is provided, update it in the component
         if (response.verificationLink) {
+          console.log('Verification link received:', response.verificationLink);
           this.verificationLink = response.verificationLink;
           this.successMessage = 'Verification link generated! Click the button below to verify.';
         } else {
+          console.log('No verification link in response (email service configured)');
           this.successMessage = 'Verification email sent! Please check your inbox.';
         }
       } else {
+        console.error('Response not successful:', response);
         this.errorMessage = response.message || 'Failed to resend verification email';
       }
     } catch (error: any) {
-      this.errorMessage = error.message || 'Failed to resend verification email';
+      console.error('Error in resendVerificationEmail:', error);
+      this.errorMessage = error.message || error.error?.message || 'Failed to resend verification email';
     } finally {
       this.resendLoading = false;
+      console.log('resendLoading set to false');
     }
   }
 

@@ -96,24 +96,21 @@ export class AuthService {
 
   async resendVerificationEmail(email: string): Promise<{ success: boolean; message: string; verificationLink?: string }> {
     try {
+      console.log('AuthService: Calling /auth/resend-verification with email:', email);
       const response = await this.http.post<{ success: boolean; message: string; verificationLink?: string }>(
         `${environment.apiUrl}/auth/resend-verification`,
         { email }
       ).toPromise();
       
-      if (response?.verificationLink) {
-        // Update URL with verification link if provided
-        this.router.navigate(['/verify-email'], { 
-          queryParams: { 
-            email,
-            verificationLink: response.verificationLink 
-          } 
-        });
-      }
+      console.log('AuthService: Response received:', response);
+      
+      // Don't navigate - let the component handle the verificationLink update
+      // The component will update its own verificationLink property from the response
       
       return response || { success: false, message: 'Failed to resend verification email' };
     } catch (error: any) {
-      throw new Error(error.error?.message || 'Failed to resend verification email');
+      console.error('AuthService: Error in resendVerificationEmail:', error);
+      throw new Error(error.error?.message || error.message || 'Failed to resend verification email');
     }
   }
 

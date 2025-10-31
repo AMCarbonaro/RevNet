@@ -26,13 +26,12 @@
       </div>
 
       <div *ngIf="!isVerified && !isLoading">
-        <div *ngIf="errorMessage" class="error-message">
-          <i class="icon-x"></i>
-          {{ errorMessage }}
+        <div *ngIf="errorMessage" class="error-message" style="margin-bottom: 15px; padding: 15px; background: #ed4245; color: white; border-radius: 4px;">
+          <strong>⚠️ Error:</strong> {{ errorMessage }}
         </div>
 
-        <div *ngIf="resendSuccess" class="success-message">
-          <p>{{ successMessage }}</p>
+        <div *ngIf="resendSuccess && successMessage" class="success-message" style="margin-bottom: 15px; padding: 15px; background: #43b581; color: white; border-radius: 4px;">
+          <strong>✓</strong> {{ successMessage }}
         </div>
 
         <!-- Show verification link if email service is not configured -->
@@ -65,6 +64,9 @@
         <div *ngIf="!token && !verificationLink" class="no-token-message">
           <p>No verification token found. Please check your email and click the verification link.</p>
           <p *ngIf="email">Click the button below to get your verification link:</p>
+          <p *ngIf="!email" style="color: #f04747; margin-top: 10px;">
+            ⚠️ Email not found. Please register again or contact support.
+          </p>
           <button 
             class="btn-primary" 
             (click)="resendVerificationEmail()"
@@ -75,6 +77,9 @@
           </button>
           <p style="margin-top: 15px; font-size: 0.9rem; color: #72767d;">
             If email service is not configured, this will show you the verification link directly.
+          </p>
+          <p *ngIf="email" style="margin-top: 10px; font-size: 0.85rem; color: #99aab5;">
+            Debug: Email = {{ email }}
           </p>
         </div>
 
