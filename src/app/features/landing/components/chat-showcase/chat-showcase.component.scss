@@ -114,6 +114,103 @@
           padding: 10px 0;
           font-size: 0.9rem;
         }
+
+        .message-item-demo {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 20px;
+          padding: 10px;
+          border-radius: 4px;
+          transition: background 0.2s;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.02);
+          }
+
+          .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #5865f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+            flex-shrink: 0;
+          }
+
+          .message-body {
+            flex: 1;
+
+            .message-header {
+              margin-bottom: 5px;
+
+              .username {
+                font-weight: 600;
+                color: #fff;
+                margin-right: 6px;
+              }
+
+              .discriminator {
+                color: #72767d;
+                margin-right: 6px;
+              }
+
+              .timestamp {
+                color: #72767d;
+                font-size: 0.75rem;
+              }
+            }
+
+            .message-text {
+              color: #dcddde;
+              line-height: 1.375;
+              word-wrap: break-word;
+
+              ::ng-deep {
+                strong {
+                  font-weight: 600;
+                }
+
+                em {
+                  font-style: italic;
+                }
+
+                code {
+                  background: rgba(0, 0, 0, 0.3);
+                  padding: 2px 4px;
+                  border-radius: 3px;
+                  font-family: 'Consolas', 'Monaco', monospace;
+                  font-size: 0.9em;
+                }
+              }
+            }
+
+            .message-reactions {
+              display: flex;
+              gap: 8px;
+              margin-top: 8px;
+              flex-wrap: wrap;
+
+              .reaction-item {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
+                padding: 4px 8px;
+                font-size: 0.85rem;
+                color: #dcddde;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                &:hover {
+                  background: rgba(255, 255, 255, 0.1);
+                  border-color: rgba(255, 255, 255, 0.2);
+                }
+              }
+            }
+          }
+        }
       }
 
       .message-input-demo {

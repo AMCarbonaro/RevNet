@@ -2,12 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DemoDataService } from '../../../../core/services/demo-data.service';
 import { Message } from '../../../../features/revnet/store/models/revnet.models';
-import { MessageItemComponent } from '../../../../features/revnet/components/message-item/message-item.component';
 
 @Component({
   selector: 'app-chat-showcase',
   standalone: true,
-  imports: [CommonModule, MessageItemComponent],
+  imports: [CommonModule],
   templateUrl: './chat-showcase.component.html',
   styleUrls: ['./chat-showcase.component.scss']
 })
@@ -86,6 +85,31 @@ export class ChatShowcaseComponent implements OnInit, OnDestroy {
   onReactionToggled(event: any): void {
     // Demo mode - reactions are visual only
     console.log('Reaction toggled:', event);
+  }
+
+  formatTimestamp(timestamp: string): string {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'now';
+    if (diffMins < 60) return `${diffMins}m`;
+    if (diffHours < 24) return `${diffHours}h`;
+    if (diffDays < 7) return `${diffDays}d`;
+
+    return date.toLocaleDateString();
+  }
+
+  formatMessageContent(content: string): string {
+    // Basic formatting
+    return content
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code>$1</code>')
+      .replace(/\n/g, '<br>');
   }
 }
 

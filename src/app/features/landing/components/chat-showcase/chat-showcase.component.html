@@ -33,14 +33,27 @@
           
           <div class="messages-container">
             <div class="messages-list">
-              <app-message-item
-                *ngFor="let message of messages"
-                [message]="message"
-                (reactionToggled)="onReactionToggled($event)">
-              </app-message-item>
+              <div class="message-item-demo" *ngFor="let message of messages">
+                <div class="message-avatar">{{ (message.author?.username || 'U').charAt(0).toUpperCase() }}</div>
+                <div class="message-body">
+                  <div class="message-header">
+                    <span class="username">{{ message.author?.username || 'User' }}</span>
+                    <span class="discriminator">#{{ message.author?.discriminator || '0000' }}</span>
+                    <span class="timestamp">{{ formatTimestamp(message.timestamp) }}</span>
+                  </div>
+                  <div class="message-text" [innerHTML]="formatMessageContent(message.content)"></div>
+                  <div class="message-reactions" *ngIf="message.reactions && message.reactions.length > 0">
+                    <span 
+                      *ngFor="let reaction of message.reactions" 
+                      class="reaction-item">
+                      {{ reaction.emoji?.name || '👍' }} {{ reaction.count }}
+                    </span>
+                  </div>
+                </div>
+              </div>
               
               <div class="typing-indicator" *ngIf="isTyping">
-                <span *ngFor="let user of typingUsers">{{ user }}</span> is typing...
+                <span *ngFor="let user of typingUsers; let last = last">{{ user }}<span *ngIf="!last">, </span></span> is typing...
               </div>
             </div>
           </div>
