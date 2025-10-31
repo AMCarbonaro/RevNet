@@ -6,12 +6,12 @@
       </svg>
       <span class="channel-name">{{ channelName }}</span>
     </div>
-    <div class="participant-count">{{ participants.length }} connected</div>
+    <div class="participant-count">{{ displayParticipants.length }} connected</div>
   </div>
 
   <div class="voice-participants">
     <div 
-      *ngFor="let participant of participants" 
+      *ngFor="let participant of displayParticipants" 
       class="participant-card"
       [class.speaking]="participant.isSpeaking"
       [class.muted]="participant.isMuted">
@@ -39,19 +39,30 @@
   </div>
 
   <div class="voice-controls">
-    <button class="control-btn mute" [class.active]="false">
+    <button 
+      class="control-btn mute" 
+      [class.active]="isMuted"
+      (click)="toggleMute()"
+      *ngIf="useService">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2"/>
+        <path [attr.d]="isMuted ? 'M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07' : 'M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07'"/>
       </svg>
-      <span>Mute</span>
+      <span>{{ isMuted ? 'Unmute' : 'Mute' }}</span>
     </button>
-    <button class="control-btn deafen" [class.active]="false">
+    <button 
+      class="control-btn deafen" 
+      [class.active]="isDeafened"
+      (click)="toggleDeafen()"
+      *ngIf="useService">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>
+        <path [attr.d]="isDeafened ? 'M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8' : 'M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8'"/>
       </svg>
-      <span>Deafen</span>
+      <span>{{ isDeafened ? 'Undeafen' : 'Deafen' }}</span>
     </button>
-    <button class="control-btn leave">
+    <button 
+      class="control-btn leave"
+      (click)="leaveChannel()"
+      *ngIf="useService">
       <span>Leave Channel</span>
     </button>
   </div>

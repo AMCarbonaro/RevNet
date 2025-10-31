@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { take as takeOperator } from 'rxjs/operators';
 import { RevNetWebSocketService, WebRTCSignal } from './revnet-websocket.service';
 import { Store } from '@ngrx/store';
 import { selectSelectedServerId } from '../store/selectors/revnet.selectors';
@@ -103,6 +104,27 @@ export class VoiceChatService {
 
       // Start speaking detection
       this.startSpeakingDetection();
+
+      // Add local stream tracks to peer connections for existing participants
+      // This will be called when we receive other users' offers
+      if (this.localStream) {
+        this.localStream.getAudioTracks().forEach(track => {
+          // Track will be added to peer connections when offers are received
+          console.log('Local audio track ready:', track);
+        });
+      }
+
+      // Subscribe to voice channel users to create peer connections
+      this.webSocketService.voiceChannelUsers$
+        .pipe(takeOperator(1))
+        .subscribe(users => {
+          // For each user already in the channel, create peer connection
+          users.forEach(user => {
+            if (user.userId !== 'local' && !this.peerConnections.has(user.userId)) {
+              this.createPeerConnectionForUser(user.userId, channelId);
+            }
+          });
+        });
 
       console.log('Joined voice channel:', channelId);
     } catch (error) {
@@ -208,17 +230,28 @@ export class VoiceChatService {
 
   private async handleOffer(fromUserId: string, channelId: string, offer: RTCSessionDescriptionInit): Promise<void> {
     try {
-      const connection = new RTCPeerConnection({
-        iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' }
-        ]
-      });
+      let connection = this.peerConnections.get(fromUserId);
+      
+      if (!connection) {
+        connection = new RTCPeerConnection({
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+          ]
+        });
 
-      this.peerConnections.set(fromUserId, connection);
+        this.peerConnections.set(fromUserId, connection);
 
-      // Set up connection event handlers
-      this.setupPeerConnection(fromUserId, connection);
+        // Set up connection event handlers
+        this.setupPeerConnection(fromUserId, connection);
+
+        // Add local stream to connection
+        if (this.localStream) {
+          this.localStream.getAudioTracks().forEach(track => {
+            connection!.addTrack(track, this.localStream!);
+          });
+        }
+      }
 
       // Set remote description
       await connection.setRemoteDescription(offer);
@@ -257,6 +290,36 @@ export class VoiceChatService {
       }
     } catch (error) {
       console.error('Error handling ICE candidate:', error);
+    }
+  }
+
+  private async createPeerConnectionForUser(userId: string, channelId: string): Promise<void> {
+    try {
+      const connection = new RTCPeerConnection({
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' }
+        ]
+      });
+
+      this.peerConnections.set(userId, connection);
+      this.setupPeerConnection(userId, connection);
+
+      // Add local stream to connection
+      if (this.localStream) {
+        this.localStream.getAudioTracks().forEach(track => {
+          connection.addTrack(track, this.localStream!);
+        });
+      }
+
+      // Create and send offer
+      const offer = await connection.createOffer();
+      await connection.setLocalDescription(offer);
+      this.webSocketService.sendVoiceOffer(channelId, userId, offer);
+
+      console.log('Created peer connection and sent offer to:', userId);
+    } catch (error) {
+      console.error('Error creating peer connection:', error);
     }
   }
 

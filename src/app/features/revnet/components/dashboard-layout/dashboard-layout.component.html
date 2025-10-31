@@ -59,7 +59,9 @@
       <app-voice-chat
         *ngIf="selectedChannel && selectedChannel.type === 2 && !loading && !error"
         [participants]="voiceParticipants"
-        [channelName]="selectedChannel.name || 'Voice Channel'">
+        [channelName]="selectedChannel.name || 'Voice Channel'"
+        [channelId]="selectedChannelId"
+        [useService]="true">
       </app-voice-chat>
     </div>
   </div>
