@@ -204,7 +204,33 @@ export class DashboardLayoutComponent implements OnInit, OnDestroy {
 
     if (channel.type === ChannelType.VOICE) {
       // For voice channels, load participants
-      this.voiceParticipants = []; // TODO: Load from API
+      // TODO: Load from API - for now using demo data
+      this.voiceParticipants = [
+        {
+          id: 'user1',
+          username: 'You',
+          isMuted: false,
+          isDeafened: false,
+          isSpeaking: true,
+          audioLevel: 0.8
+        },
+        {
+          id: 'user2',
+          username: 'Friend',
+          isMuted: false,
+          isDeafened: false,
+          isSpeaking: true,
+          audioLevel: 0.6
+        },
+        {
+          id: 'user3',
+          username: 'Member',
+          isMuted: true,
+          isDeafened: false,
+          isSpeaking: false,
+          audioLevel: 0.2
+        }
+      ];
       this.messages = [];
       this.loading = false;
       
