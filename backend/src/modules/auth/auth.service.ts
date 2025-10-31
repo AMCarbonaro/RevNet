@@ -315,12 +315,14 @@ export class AuthService {
   private async generateTokens(userId: string): Promise<{ accessToken: string; refreshToken: string }> {
     const payload = { sub: userId };
 
+    const jwtExpiration = this.configService.get<string>('JWT_EXPIRATION') || '1h';
+
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: (this.configService.get<string>('JWT_EXPIRATION') || '1h') as string,
+      expiresIn: jwtExpiration as any,
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '7d' as string,
+      expiresIn: '7d' as any,
     });
 
     return {
