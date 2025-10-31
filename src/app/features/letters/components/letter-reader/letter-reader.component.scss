@@ -207,7 +207,16 @@
       color: var(--text-primary);
       
       p {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        margin-top: 0;
+        
+        &:first-child {
+          margin-top: 0;
+        }
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
       
       h2, h3 {
@@ -483,6 +492,19 @@
       .letter-body {
         font-size: 1rem;
         line-height: 1.6;
+        
+        p {
+          margin-bottom: 1.5rem;
+          margin-top: 0;
+          
+          &:first-child {
+            margin-top: 0;
+          }
+          
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
         
         h2 {
           font-size: 1.5rem;
